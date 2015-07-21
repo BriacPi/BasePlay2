@@ -1,7 +1,46 @@
-@(message: String)
+@(errorsTreated: List[ErrorBPCE],errorsProcessing: List[ErrorBPCE],errorsNotTreated: List[ErrorBPCE])
 
-@main("Welcome to Play") {
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+@import library.AbnormalityHandling._
 
-    @play20.welcome(message)
+
+@main("BPCE errors") {
+
+<h1> errors(s)</h1>
+
+<h2>Not Treated</h2>
+<li>date caisse groupe agence pdv abnormalMetric errorType DetectionDate status comment admin</li>
+<ul>
+    @errorsNotTreated.map { error =>
+
+
+          <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin</li>
+
+    }
+</ul>
+
+<h2>Processing</h2>
+<li>date caisse groupe agence pdv abnormalMetric errorType DetectionDate status comment admin</li>
+<ul>
+    @errorsProcessing.map { error =>
+
+
+    <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin</li>
+
+    }
+</ul>
+
+<h2>Treated</h2>
+<li>date caisse groupe agence pdv abnormalMetric errorType DetectionDate status comment admin</li>
+<ul>
+    @errorsTreated.map { error =>
+
+
+    <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin</li>
+
+    }
+</ul>
 
 }

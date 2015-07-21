@@ -3,9 +3,11 @@ package controllers
 import java.util.Calendar
 import javax.inject.Inject
 
+
 import library.AbnormalityDetection._
 import library.CodesToNames
 import library.CodesToNames._
+
 import library.Engine._
 import models.{AbnormalityList, Configuration}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -13,6 +15,8 @@ import play.api.libs.ws.WSClient
 import play.api.mvc._
 
 import scala.concurrent.Future
+import models.ErrorBPCE
+import library.AbnormalityHandling._
 
 
 class Application @Inject()(ws: WSClient) extends Controller {
@@ -40,7 +44,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
     month <- 1 to 12
   } yield year + "-" + month + "-1").toList
 
-
+  val error1 = ErrorBPCE("2014-12-1","1","2","3","4","RDV05","Saisi","2013-17-2","done","RAS","Nicolas")
   //List("2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1")
 
   def sendRequestToApi() = Action.async {
@@ -51,5 +55,25 @@ class Application @Inject()(ws: WSClient) extends Controller {
       val abnormalityListList: Future[List[AbnormalityList]] = getAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN)
       abnormalityListList.map(abnormalityList => Ok(abnormalityList.toString()))
     }
+  }
+  def add (date : String,caisse : String, groupe : String, agence :String,pdv :String, abnormalMetric :String ): Action[AnyContent] = Action {
+    val currentDate = java.time.LocalDate.now().toString
+    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,abnormalMetric,"To be specified",currentDate,"Not treated","","To be specified")
+    AbnormalityHandling.add(error)
+    Ok("test")
+  }
+
+  def all (): Action[AnyContent] = Action {
+    Ok(views.html.index(AbnormalityHandling.filter("Treated"),AbnormalityHandling.filter("Processing"),AbnormalityHandling.filter("Not treated")))
+  }
+
+  def findById(date : String,caisse : String, groupe : String, agence :String,pdv :String): Action[AnyContent] = Action{
+    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,"find","To be specified","","Not treated","","To be specified")
+    val existingError = AbnormalityHandling.findErrorById(error)
+    existingError match {
+      case Some(e) => Ok(views.html.index(e::List(),List(),List()))
+      case None  => Ok("Not found")
+    }
+
   }
 }
