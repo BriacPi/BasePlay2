@@ -1,7 +1,7 @@
 package library
 
 import library.utils.Math
-import models.{Abnormality, Row}
+import models.{Abnormality, AbnormalityList, Row}
 
 object AbnormalityDetection {
   // List of operations
@@ -18,30 +18,41 @@ object AbnormalityDetection {
   }
 
   // Apply operations
-  def operationByDate(rows: List[Row], operation: List[Row] => Double): Map[java.time.LocalDate, Double] = {
-    rows.groupBy((row: Row) => row.date).mapValues(operation)
+  def groupByDate(rows: List[Row]): Map[java.time.LocalDate, List[Row]] = {
+    rows.groupBy((row: Row) => row.date)
   }
 
-  def operationByDimensions(rows: List[Row], operation: List[Row] => Double): Map[List[String], Double] = {
-    rows.groupBy((row: Row) => row.dimensions).mapValues(operation)
+  def groupByDimensions(rows: List[Row]): Map[List[String], List[Row]] = {
+    rows.groupBy((row: Row) => row.dimensions)
   }
+
+  def operationByDate(grouped: Map[java.time.LocalDate, List[Row]], operation: List[Row] => Double, row: Row): Double = {
+    operation(grouped(row.date))
+  }
+
+  def operationByDimensions(grouped: Map[List[String], List[Row]], operation: List[Row] => Double, row: Row): Double = {
+    operation(grouped(row.dimensions))
+  }
+
 
   // Ways to Detect Abnormalities
-  def getAbnormalitiesFromDistanceToMean(rows: List[Row],numberOfStdDev:Int): List[Abnormality] = {
-    val averageByDate = operationByDate(rows, average)
-    val averageByDimensions = operationByDimensions(rows, average)
-    val standardDeviationByDate = operationByDate(rows, standardDeviation)
-    val standardDeviationByDimensions = operationByDimensions(rows, standardDeviation)
-
+  def getAbnormalitiesFromDistanceToMean(rows: List[Row], numberOfStdDev: Int): List[Abnormality] = {
+    val groupedByDate = groupByDate(rows)
     val abnormalitiesBecauseOfDistanceToMeanByDate = rows.flatMap { row =>
-      if (row.metric > averageByDate(row.date) + numberOfStdDev * standardDeviationByDate(row.date) ||
-        row.metric < averageByDate(row.date) - numberOfStdDev * standardDeviationByDate(row.date))
+      val averageByDate = operationByDate(groupedByDate, average, row)
+      val standardDeviationByDate = operationByDate(groupedByDate, standardDeviation, row)
+      if (row.metric > averageByDate + numberOfStdDev * standardDeviationByDate ||
+        row.metric < averageByDate - numberOfStdDev * standardDeviationByDate)
         List(Abnormality(row, List("TooFarFromMeanByDate")))
       else List.empty[Abnormality]
     }
+
+    val groupedByDimensions = groupByDimensions(rows)
     val abnormalitiesBecauseOfDistanceToMeanByDimensions = rows.flatMap { row =>
-      if (row.metric > averageByDimensions(row.dimensions) + numberOfStdDev * standardDeviationByDimensions(row.dimensions) ||
-        row.metric < averageByDimensions(row.dimensions) - numberOfStdDev * standardDeviationByDimensions(row.dimensions))
+      val averageByDimensions = operationByDimensions(groupedByDimensions, average, row)
+      val standardDeviationByDimensions = operationByDimensions(groupedByDimensions, standardDeviation, row)
+      if (row.metric > averageByDimensions + numberOfStdDev * standardDeviationByDimensions ||
+        row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions)
         List(Abnormality(row, List("TooFarFromMeanByDimensions")))
       else List.empty[Abnormality]
     }
@@ -49,7 +60,9 @@ object AbnormalityDetection {
   }
 
   def mergeAbnormalities(listOfAbnormality: List[Abnormality]): List[Abnormality] = {
-    def mergeAbnormalitiesWithSameRow(listWithSameRow: List[Abnormality]): Abnormality = {Abnormality(listWithSameRow.head.row, listWithSameRow.flatMap(_.reasons))}
+    def mergeAbnormalitiesWithSameRow(listWithSameRow: List[Abnormality]): Abnormality = {
+      Abnormality(listWithSameRow.head.row, listWithSameRow.flatMap(_.reasons))
+    }
 
     val hashMapByRow: Map[Row, List[Abnormality]] = listOfAbnormality.groupBy(abnormality => abnormality.row)
     hashMapByRow.foldLeft(List.empty[Abnormality]) { (acc: List[Abnormality], kv: (Row, List[Abnormality])) =>
@@ -57,8 +70,19 @@ object AbnormalityDetection {
     }
   }
 
-  def getAllAbnormalities(rows: List[Row]): List[Abnormality] = {
-    val abnormalitiesFromDistanceToMean = getAbnormalitiesFromDistanceToMean(rows,6)
-    mergeAbnormalities(abnormalitiesFromDistanceToMean)
+  def getAllAbnormalities(rows: List[Row], mapCodesToNames: Map[String, String], metric: String): AbnormalityList = {
+    val abnormalitiesFromDistanceToMean = getAbnormalitiesFromDistanceToMean(rows, 6)
+    val mergedAbnormalities: List[Abnormality] = mergeAbnormalities(abnormalitiesFromDistanceToMean ::: Nil)
+
+
+    val mergedAbnormalitiesWithNames: List[Abnormality] = mergedAbnormalities.map { abnormality =>
+      val row = abnormality.row
+      val dimensionsWithNames = row.dimensions.map(dimension =>
+        if (mapCodesToNames.contains(dimension)) mapCodesToNames(dimension)
+        else dimension)
+      Abnormality(Row(row.date, dimensionsWithNames, row.metric), abnormality.reasons)
+    }
+    AbnormalityList(metric, mergedAbnormalitiesWithNames)
+
   }
 }
