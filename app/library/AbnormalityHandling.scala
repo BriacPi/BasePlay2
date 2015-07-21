@@ -9,6 +9,8 @@ import models.ErrorBPCE
 import play.api.Play.current
 import play.api.db._
 
+
+
 object AbnormalityHandling {
 
   def getAll(): List[ErrorBPCE] = {
@@ -33,10 +35,17 @@ object AbnormalityHandling {
           'caisse -> error.caisse,
           'groupe -> error.groupe,
           'agence -> error.agence,
-          'AbnormalMetric -> error.metric,
-          'pdv -> error.pdv
+          'pdv -> error.pdv,
+        'AbnormalMetric -> error.metric
         ).as(error1.singleOpt)
     }
+  }
+
+  def contains(error: ErrorBPCE): Boolean = {
+   findErrorById(error) match{
+     case None => false
+     case Some(errorBPCE)=>true
+   }
   }
 
   def editStatus(error: ErrorBPCE, newStatus: String) = {
@@ -107,7 +116,7 @@ object AbnormalityHandling {
     DB.withConnection {
       implicit c =>
         SQL(
-          "insert into testing (date,caisse,groupe,agence,pdv,AbnormalMetric,type,firstDateDetection,status,comment, admin) values ({date},{caisse},{groupe},{agence},{pdv},{AbnormalMetric},{type},{firstDateDetection},{status},{comment},{admin})").on(
+          "insert into testing (date,caisse,groupe,agence,pdv,AbnormalMetric,type,firstDateDetection,status,comment, admin,reasonForDetection) values ({date},{caisse},{groupe},{agence},{pdv},{AbnormalMetric},{type},{firstDateDetection},{status},{comment},{admin},{reasonForDetection})").on(
             'date -> error.date,
             'caisse -> error.caisse,
             'groupe -> error.groupe,
@@ -125,6 +134,18 @@ object AbnormalityHandling {
     }
   }
 
+  def getStatus(error:ErrorBPCE):String=findErrorById(error).head.status
+
+  def getErrorType(error:ErrorBPCE):String=findErrorById(error).head.errorType
+
+
+  def addProtected(error: ErrorBPCE) = {
+   if (contains(error)) {
+     if (getStatus(error)=="Treated" && getErrorType(error)=="Anomaly") {editStatus(error,"Not treated")}
+
+   }
+    else add(error)
+  }
 
 
 

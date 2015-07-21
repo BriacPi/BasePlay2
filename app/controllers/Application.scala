@@ -3,12 +3,11 @@ package controllers
 import java.util.Calendar
 import javax.inject.Inject
 
-<<<<<<< HEAD
+
 
 import library.AbnormalityDetection._
 import library.{AbnormalityHandling, CodesToNames}
-=======
->>>>>>> merge
+
 import library.CodesToNames._
 import library.Engine._
 import library.{AbnormalityHandling, CodesToNames}
@@ -23,7 +22,7 @@ import scala.concurrent.Future
 class Application @Inject()(ws: WSClient) extends Controller {
 
   // List of metrics to analyse
-  val metrics = List("COL01", "COL02")
+  val metrics = List("COL01")
 
   // Dimensions **** TIME MUST BE THE FIRST DIMENSION FOR EACH****
   val dimensionsList = List(List("time:weekly", "groupe", "agence", "pdv"))
@@ -62,8 +61,8 @@ class Application @Inject()(ws: WSClient) extends Controller {
             val currentDate = java.time.LocalDate.now().toString
             val error = ErrorBPCE(abnormality.row.date.toString, abnormality.row.dimensions.head, abnormality.row.dimensions(1),
               abnormality.row.dimensions(2), abnormality.row.dimensions(3), abnormalityList.metric,
-              "To be specified", currentDate, "Not treated", "", "To be specified")
-            AbnormalityHandling.add(error)
+              "To be specified", currentDate, "Not treated", "", "To be specified",abnormality.reasons.mkString)
+            AbnormalityHandling.addProtected(error)
           }
           )
         )
