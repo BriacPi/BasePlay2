@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 
 import library.AbnormalityDetection._
-import library.CodesToNames
+import library.{AbnormalityHandling, CodesToNames}
 import library.CodesToNames._
 
 import library.Engine._
@@ -44,7 +44,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
     month <- 1 to 12
   } yield year + "-" + month + "-1").toList
 
-  val error1 = ErrorBPCE("2014-12-1","1","2","3","4","RDV05","Saisi","2013-17-2","done","RAS","Nicolas")
+  val error1 = ErrorBPCE("2014-12-1","1","2","3","4","RDV05","Saisi","2013-17-2","done","RAS","Nicolas","Unknown")
   //List("2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1")
 
   def sendRequestToApi() = Action.async {
@@ -58,7 +58,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
   }
   def add (date : String,caisse : String, groupe : String, agence :String,pdv :String, abnormalMetric :String ): Action[AnyContent] = Action {
     val currentDate = java.time.LocalDate.now().toString
-    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,abnormalMetric,"To be specified",currentDate,"Not treated","","To be specified")
+    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,abnormalMetric,"To be specified",currentDate,"Not treated","","To be specified","Unknown")
     AbnormalityHandling.add(error)
     Ok("test")
   }
@@ -67,8 +67,8 @@ class Application @Inject()(ws: WSClient) extends Controller {
     Ok(views.html.index(AbnormalityHandling.filter("Treated"),AbnormalityHandling.filter("Processing"),AbnormalityHandling.filter("Not treated")))
   }
 
-  def findById(date : String,caisse : String, groupe : String, agence :String,pdv :String): Action[AnyContent] = Action{
-    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,"find","To be specified","","Not treated","","To be specified")
+  def findById(date : String,caisse : String, groupe : String, agence :String,pdv :String, metric :String): Action[AnyContent] = Action{
+    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,metric,"To be specified","","Not treated","","To be specified","Unknown")
     val existingError = AbnormalityHandling.findErrorById(error)
     existingError match {
       case Some(e) => Ok(views.html.index(e::List(),List(),List()))
@@ -76,4 +76,30 @@ class Application @Inject()(ws: WSClient) extends Controller {
     }
 
   }
+  def editStatus(date : String,caisse : String, groupe : String, agence :String,pdv :String,metric :String,status : String): Action[AnyContent] = Action{
+    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,metric,"To be specified","","Not treated","","To be specified","Unknown")
+    val existingError = AbnormalityHandling.editStatus(error,status)
+   Ok(views.html.index(AbnormalityHandling.filter("Treated"),AbnormalityHandling.filter("Processing"),AbnormalityHandling.filter("Not treated")))
+
+  }
+  def editType(date : String,caisse : String, groupe : String, agence :String,pdv :String,metric :String,errorType : String): Action[AnyContent] = Action{
+    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,metric,"To be specified","","Not treated","","To be specified","Unknown")
+    val existingError = AbnormalityHandling.editType(error,errorType)
+    Ok(views.html.index(AbnormalityHandling.filter("Treated"),AbnormalityHandling.filter("Processing"),AbnormalityHandling.filter("Not treated")))
+
+  }
+  def editComment(date : String,caisse : String, groupe : String, agence :String,pdv :String,metric :String,comment: String): Action[AnyContent] = Action{
+    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,metric,"To be specified","","Not treated","","To be specified","Unknown")
+    val existingError = AbnormalityHandling.editComment(error,comment)
+    Ok(views.html.index(AbnormalityHandling.filter("Treated"),AbnormalityHandling.filter("Processing"),AbnormalityHandling.filter("Not treated")))
+
+  }
+  def editAdmin(date : String,caisse : String, groupe : String, agence :String,pdv :String,metric :String,admin: String): Action[AnyContent] = Action{
+    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,metric,"To be specified","","Not treated","","To be specified","Unknown")
+    val existingError = AbnormalityHandling.editAdmin(error,admin)
+    Ok(views.html.index(AbnormalityHandling.filter("Treated"),AbnormalityHandling.filter("Processing"),AbnormalityHandling.filter("Not treated")))
+
+  }
+
+
 }

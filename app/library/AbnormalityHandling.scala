@@ -2,38 +2,103 @@ package library
 
 import anorm.SqlParser._
 import anorm._
+import library.utils.dateParser._
 import models.ErrorBPCE
 import play.api.Play.current
 import play.api.db._
-import utils.dateParser._
 
 object AbnormalityHandling {
 
   def getAll(): List[ErrorBPCE] = {
-    DB.withConnection{
+    DB.withConnection {
       implicit c =>
         SQL("select * from testing").as(error1 *)
     }
   }
 
-  def filter (status :String): List[ErrorBPCE] ={
-    DB.withConnection{
+  def filter(status: String): List[ErrorBPCE] = {
+    DB.withConnection {
       implicit c =>
-        SQL("select * from testing where status = {status}").on('status->status).as(error1 *)
+        SQL("select * from testing where status = {status}").on('status -> status).as(error1 *)
     }
   }
 
-  def findErrorById(error :ErrorBPCE) :Option[ErrorBPCE] = {
-    DB.withConnection{
+  def findErrorById(error: ErrorBPCE): Option[ErrorBPCE] = {
+    DB.withConnection {
       implicit c =>
-        SQL("select * from testing where date={date} and caisse = {caisse} and groupe = {groupe} and agence ={agence} and pdv ={pdv}").on(
-        'date -> error.date,
-        'caisse -> error.caisse,
-        'groupe -> error.groupe,
-        'agence -> error.agence,
-        'pdv -> error.pdv
+        SQL("select * from testing where date={date} and caisse = {caisse} and groupe = {groupe} and agence ={agence} and pdv ={pdv} and AbnormalMetric = {AbnormalMetric}").on(
+          'date -> error.date,
+          'caisse -> error.caisse,
+          'groupe -> error.groupe,
+          'agence -> error.agence,
+          'AbnormalMetric -> error.metric,
+          'pdv -> error.pdv
         ).as(error1.singleOpt)
     }
+  }
+
+  def editStatus(error: ErrorBPCE, newStatus: String) = {
+    DB.withConnection {
+      implicit c =>
+        SQL("update testing set  status = {status} where date={date} and caisse = {caisse} and groupe = {groupe} and agence ={agence} and pdv ={pdv} and AbnormalMetric = {AbnormalMetric}").on(
+          'date -> error.date,
+          'caisse -> error.caisse,
+          'groupe -> error.groupe,
+          'agence -> error.agence,
+          'pdv -> error.pdv,
+          'AbnormalMetric -> error.metric,
+          'status -> newStatus
+        ).executeUpdate()
+    }
+
+  }
+
+  def editType(error: ErrorBPCE, newErrorType: String) = {
+    DB.withConnection {
+      implicit c =>
+        SQL("update testing set  type = {type} where date={date} and caisse = {caisse} and groupe = {groupe} and agence ={agence} and pdv ={pdv} and AbnormalMetric = {AbnormalMetric}").on(
+          'date -> error.date,
+          'caisse -> error.caisse,
+          'groupe -> error.groupe,
+          'agence -> error.agence,
+          'pdv -> error.pdv,
+          'AbnormalMetric -> error.metric,
+          'type -> newErrorType
+        ).executeUpdate()
+    }
+
+  }
+
+  def editComment(error: ErrorBPCE, newComment: String) = {
+    DB.withConnection {
+      implicit c =>
+        SQL("update testing set  comment = {comment} where date={date} and caisse = {caisse} and groupe = {groupe} and agence ={agence} and pdv ={pdv}  and AbnormalMetric = {AbnormalMetric}").on(
+          'date -> error.date,
+          'caisse -> error.caisse,
+          'groupe -> error.groupe,
+          'agence -> error.agence,
+          'pdv -> error.pdv,
+          'AbnormalMetric -> error.metric,
+          'comment -> newComment
+        ).executeUpdate()
+    }
+
+  }
+
+  def editAdmin(error: ErrorBPCE, newAdmin: String) = {
+    DB.withConnection {
+      implicit c =>
+        SQL("update testing set  admin = {admin} where date={date} and caisse = {caisse} and groupe = {groupe} and agence ={agence} and pdv ={pdv} and AbnormalMetric = {AbnormalMetric}").on(
+          'date -> error.date,
+          'caisse -> error.caisse,
+          'groupe -> error.groupe,
+          'agence -> error.agence,
+          'pdv -> error.pdv,
+          'AbnormalMetric -> error.metric,
+          'admin -> newAdmin
+        ).executeUpdate()
+    }
+
   }
 
   def add(error: ErrorBPCE) = {
@@ -51,14 +116,15 @@ object AbnormalityHandling {
             'firstDateDetection -> error.firstDate,
             'status -> error.status,
             'comment -> error.comment,
-            'admin -> error.admin
+            'admin -> error.admin,
+            'reasonForDetection -> error.reasonForDetection
 
           ).executeUpdate()
     }
   }
 
   val error1 = {
-      get[java.sql.Date]("date") ~
+    get[java.sql.Date]("date") ~
       get[String]("caisse") ~
       get[String]("groupe") ~
       get[String]("agence") ~
@@ -68,9 +134,10 @@ object AbnormalityHandling {
       get[java.sql.Date]("firstDateDetection") ~
       get[String]("status") ~
       get[String]("comment") ~
-      get[String]("admin") map {
-      case date ~ caisse ~ groupe ~ agence ~ pdv ~ abnormalMetric ~ errorType ~ firstDateDetection ~ status ~ comment ~ admin =>
-        ErrorBPCE(date.toString, caisse, groupe, agence, pdv, abnormalMetric, errorType, firstDateDetection.toString, status, comment, admin)
+      get[String]("admin") ~
+      get[String]("reasonForDetection") map {
+      case date ~ caisse ~ groupe ~ agence ~ pdv ~ abnormalMetric ~ errorType ~ firstDateDetection ~ status ~ comment ~ admin ~ reasonForDetection =>
+        ErrorBPCE(date.toString, caisse, groupe, agence, pdv, abnormalMetric, errorType, firstDateDetection.toString, status, comment, admin, reasonForDetection)
     }
   }
 
