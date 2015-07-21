@@ -11,12 +11,12 @@
 <h1> errors(s)</h1>
 
 <h2>Not Treated</h2>
-<li>date caisse groupe agence pdv abnormalMetric errorType DetectionDate status comment admin</li>
+<li>date caisse groupe agence pdv abnormalMetric errorType DetectionDate status comment admin reasonForDetection</li>
 <ul>
     @errorsNotTreated.map { error =>
 
 
-          <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin</li>
+          <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin @error.reasonForDetection</li>
 
     }
 </ul>
@@ -27,7 +27,7 @@
     @errorsProcessing.map { error =>
 
 
-    <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin</li>
+    <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin @error.reasonForDetection</li>
 
     }
 </ul>
@@ -38,7 +38,7 @@
     @errorsTreated.map { error =>
 
 
-    <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin</li>
+    <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin @error.reasonForDetection</li>
 
     }
 </ul>
