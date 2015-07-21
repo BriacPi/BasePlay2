@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
   "org.scalatestplus" %% "play" % "1.4.0-M3" % "test",
   "com.typesafe.play" %% "anorm" % "2.3.6"
 )
-
+libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.27"
 
 //resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 

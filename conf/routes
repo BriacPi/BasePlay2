@@ -5,5 +5,8 @@
 
 
 # Map static resources from the /public folder to the /assets URL path
+GET  /add/:date/:caisse/:groupe/:agence/:pdv/:abnormalMetric                       controllers.Application.add(date : String,caisse : String, groupe : String, agence :String,pdv :String, abnormalMetric :String )
+GET /find/:date/:caisse/:groupe/:agence/:pdv                                       controllers.Application.findById(date : String,caisse : String, groupe : String, agence :String,pdv :String)
+GET  /all                            controllers.Application.all()
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 GET    /data                    controllers.Application.sendRequestToApi()
