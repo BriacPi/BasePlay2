@@ -2,8 +2,10 @@ package library
 
 import anorm.SqlParser._
 import anorm._
+
 import library.utils.dateParser._
 import models.ErrorBPCE
+
 import play.api.Play.current
 import play.api.db._
 
@@ -122,6 +124,10 @@ object AbnormalityHandling {
           ).executeUpdate()
     }
   }
+
+
+
+
 
   val error1 = {
     get[java.sql.Date]("date") ~
