@@ -2,7 +2,8 @@ package library
 
 import java.util.concurrent.TimeoutException
 
-import models.{Configuration, Row}
+import library.AbnormalityDetection._
+import models.{AbnormalityList, Configuration, Row}
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.{WS, WSRequest, WSResponse}
@@ -10,6 +11,17 @@ import play.api.libs.ws.{WS, WSRequest, WSResponse}
 import scala.concurrent.Future
 
 object Engine {
+
+  def getAbnormalitiesForAllConfigurations(caisseList: List[String], configurationList: List[Configuration], monthList: List[String]
+                                           , mapCodesToNames: Map[String, String]): Future[List[AbnormalityList]] = {
+    configurationList.foldLeft(Future.successful(List.empty[AbnormalityList]))((acc: Future[List[AbnormalityList]], config: Configuration) =>
+      acc.flatMap((listOfAbnormalities: List[AbnormalityList]) => getDataForAllCaisses(caisseList, config, monthList).map((rows: List[Row]) => {
+        val abnormalities: AbnormalityList = getAllAbnormalities(rows, mapCodesToNames, config.metric)
+        abnormalities :: listOfAbnormalities
+      }
+      )
+      ))
+  }
 
   def getDataForAllCaisses(caisseList: List[String], config: Configuration, monthList: List[String]): Future[List[Row]] = {
     caisseList.foldLeft(Future.successful(List.empty[Row]))((acc: Future[List[Row]], caisse: String) => acc.flatMap(
