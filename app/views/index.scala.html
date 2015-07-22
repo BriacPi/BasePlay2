@@ -7,40 +7,154 @@
 
 
 @main("BPCE errors") {
+<script type="text/javascript" class="init">
 
-<h1> errors(s)</h1>
 
+            $(document).ready(function() {
+	        $('#test').DataTable();
+            } );
+
+
+</script>
+<script type="text/javascript" class="init">
+
+
+            $(document).ready(function() {
+	        $('#test2').DataTable();
+            } );
+
+
+</script>
+<script type="text/javascript" class="init">
+
+
+            $(document).ready(function() {
+	        $('#test3').DataTable();
+            } );
+
+
+</script>
 <h2>Not Treated</h2>
-<li>date caisse groupe agence pdv abnormalMetric errorType DetectionDate status comment admin reasonForDetection</li>
-<ul>
-    @errorsNotTreated.map { error =>
+<table id="test" class="display" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+        <th>Dates</th>
+        <th>Caisse</th>
+        <th>Groupe</th>
+        <th>Agence</th>
+        <th>Point de vente</th>
+        <th>Suspected Metric</th>
+        <th>Error Type</th>
+        <th>Detection Date</th>
+        <th>Status</th>
+        <th>Comment</th>
+        <th>Admin</th>
+        <th>Reason for Detection</th>
+    </tr>
+    </thead>
+    <tbody>
+
+        @errorsNotTreated.map { error =>
+        <tr>
+            <td>@error.date</td>
+            <td>@error.caisse</td>
+            <td>@error.groupe</td>
+            <td>@error.agence</td>
+            <td>@error.pdv</td>
+            <td>@error.metric</td>
+            <td>@error.errorType</td>
+            <td>@error.firstDate</td>
+            <td>@error.status</td>
+            <td>@error.comment</td>
+            <td>@error.admin</td>
+            <td>@error.reasonForDetection</td>
+        </tr>
+        }
 
 
-          <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin @error.reasonForDetection</li>
-
-    }
-</ul>
+    </tbody>
+</table>
 
 <h2>Processing</h2>
-<li>date caisse groupe agence pdv abnormalMetric errorType DetectionDate status comment admin</li>
-<ul>
+<table id="test2" class="display" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+        <th>Dates</th>
+        <th>Caisse</th>
+        <th>Groupe</th>
+        <th>Agence</th>
+        <th>Point de vente</th>
+        <th>Suspected Metric</th>
+        <th>Error Type</th>
+        <th>Detection Date</th>
+        <th>Status</th>
+        <th>Comment</th>
+        <th>Admin</th>
+        <th>Reason for Detection</th>
+    </tr>
+    </thead>
+    <tbody>
+
     @errorsProcessing.map { error =>
-
-
-    <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin @error.reasonForDetection</li>
-
+    <tr>
+        <td>@error.date</td>
+        <td>@error.caisse</td>
+        <td>@error.groupe</td>
+        <td>@error.agence</td>
+        <td>@error.pdv</td>
+        <td>@error.metric</td>
+        <td>@error.errorType</td>
+        <td>@error.firstDate</td>
+        <td>@error.status</td>
+        <td>@error.comment</td>
+        <td>@error.admin</td>
+        <td>@error.reasonForDetection</td>
+    </tr>
     }
-</ul>
+
+
+    </tbody>
+</table>
 
 <h2>Treated</h2>
-<li>date caisse groupe agence pdv abnormalMetric errorType DetectionDate status comment admin</li>
-<ul>
+<table id="test3" class="display" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+        <th>Dates</th>
+        <th>Caisse</th>
+        <th>Groupe</th>
+        <th>Agence</th>
+        <th>Point de vente</th>
+        <th>Suspected Metric</th>
+        <th>Error Type</th>
+        <th>Detection Date</th>
+        <th>Status</th>
+        <th>Comment</th>
+        <th>Admin</th>
+        <th>Reason for Detection</th>
+    </tr>
+    </thead>
+    <tbody>
+
     @errorsTreated.map { error =>
-
-
-    <li> @error.date @error.caisse @error.groupe @error.agence @error.pdv @error.metric @error.errorType @error.firstDate @error.status @error.comment @error.admin @error.reasonForDetection</li>
-
+    <tr>
+        <td>@error.date</td>
+        <td>@error.caisse</td>
+        <td>@error.groupe</td>
+        <td>@error.agence</td>
+        <td>@error.pdv</td>
+        <td>@error.metric</td>
+        <td>@error.errorType</td>
+        <td>@error.firstDate</td>
+        <td>@error.status</td>
+        <td>@error.comment</td>
+        <td>@error.admin</td>
+        <td>@error.reasonForDetection</td>
+    </tr>
     }
-</ul>
+
+
+    </tbody>
+</table>
 
 }
