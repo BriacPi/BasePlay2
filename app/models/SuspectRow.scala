@@ -67,31 +67,34 @@ object SuspectRow {
   }
 
 
-  def create(suspectRow: SuspectRow,reason:ReasonForDetection): Unit = {
+  def create(suspectRow: SuspectRow, reason: ReasonForDetection): Unit = {
     DB.withConnection { implicit c =>
-      val id: Option[Long] =
-        SQL("insert into suspect_rows (date,caisse,groupe,agence,pdv,metric,status,nature,first_date,admin, comment) values " +
-          "({date},{caisse},{groupe},{agence},{pdv},{metric},{status},{nature},{firstDate},{admin},{comment})").on(
-            'date -> suspectRow.date.toString,
-            'caisse -> suspectRow.caisse,
-            'groupe -> suspectRow.groupe,
-            'agence -> suspectRow.agence,
-            'pdv -> suspectRow.pdv,
-            'metric -> suspectRow.metric,
-            'status -> suspectRow.status.toString,
-            'nature -> suspectRow.nature.toString,
-            'firstDate -> suspectRow.firstDate.toString,
-            'admin -> suspectRow.admin,
-            'comment -> suspectRow.comment
-          ).executeInsert()
-      id match {
-        case None =>
-        case Some(i) => ReasonForDetection.addReasonForDetection(i,reason)}
-
+      getId(suspectRow) match {
+        case None => {
+          val id: Option[Long] =
+            SQL("insert into suspect_rows (date,caisse,groupe,agence,pdv,metric,status,nature,first_date,admin, comment) values " +
+              "({date},{caisse},{groupe},{agence},{pdv},{metric},{status},{nature},{firstDate},{admin},{comment})").on(
+                'date -> suspectRow.date.toString,
+                'caisse -> suspectRow.caisse,
+                'groupe -> suspectRow.groupe,
+                'agence -> suspectRow.agence,
+                'pdv -> suspectRow.pdv,
+                'metric -> suspectRow.metric,
+                'status -> suspectRow.status.toString,
+                'nature -> suspectRow.nature.toString,
+                'firstDate -> suspectRow.firstDate.toString,
+                'admin -> suspectRow.admin,
+                'comment -> suspectRow.comment
+              ).executeInsert()
+          id match {
+            case None =>
+            case Some(i) => ReasonForDetection.addReasonForDetection(i, reason)
+          }
+        }
+        case Some(id) => ReasonForDetection.addReasonForDetection(id, reason)
+      }
     }
   }
-
-
 
 
   def filterOnStatus(status: Status): List[SuspectRow] = {
@@ -112,17 +115,32 @@ object SuspectRow {
     ).as(suspectRow.singleOpt)
   }
 
-  def findById(id:Long): Option[SuspectRow] = DB.withConnection { implicit c =>
+  def findById(id: Long): Option[SuspectRow] = DB.withConnection { implicit c =>
     SQL("select * from suspect_rows where id={id} ").on(
       'id -> id
     ).as(suspectRow.singleOpt)
   }
 
+  def getId(suspect: SuspectRow): Option[Long] = DB.withConnection { implicit c =>
+    val optionOfRow: Option[SuspectRow] = SQL("select * from suspect_rows where date={date} and caisse = {caisse} and groupe = {groupe} and agence ={agence} and pdv ={pdv} and metric = {metric}").on(
+      'date -> suspect.date.toString,
+      'caisse -> suspect.caisse,
+      'groupe -> suspect.groupe,
+      'agence -> suspect.agence,
+      'pdv -> suspect.pdv,
+      'metric -> suspect.metric
+    ).as(suspectRow.singleOpt)
+    optionOfRow match {
+      case None => None
+      case Some(row) => Some(row.id)
+    }
+  }
+
   def contains(suspectRow: SuspectRow): Boolean = {
-       findById(suspectRow.id) match{
-         case None => false
-         case Some(suspectrow)=>true
-       }
-      }
+    findByKey(suspectRow.date.toString, suspectRow.caisse, suspectRow.groupe, suspectRow.agence, suspectRow.pdv, suspectRow.metric) match {
+      case None => false
+      case Some(suspectrow) => true
+    }
+  }
 }
 
