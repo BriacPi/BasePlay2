@@ -1,6 +1,7 @@
 package library
 
 import library.utils.Math
+import models.ReasonForDetection.{TooFarFromMeanByDimensions, TooFarFromMeanByDate}
 import models.{Row, SuspectRow}
 
 object AbnormalityDetection {
@@ -43,7 +44,7 @@ object AbnormalityDetection {
       val standardDeviationByDate = operationByDate(groupedByDate, standardDeviation, row)
       if (row.metric > averageByDate + numberOfStdDev * standardDeviationByDate ||
         row.metric < averageByDate - numberOfStdDev * standardDeviationByDate) {
-        SuspectRow.create(new SuspectRow(row, metric))
+        SuspectRow.create(new SuspectRow(row, metric),TooFarFromMeanByDate)
       }
     }
     val groupedByDimensions = groupByDimensions(rows)
@@ -52,7 +53,7 @@ object AbnormalityDetection {
       val standardDeviationByDimensions = operationByDimensions(groupedByDimensions, standardDeviation, row)
       if (row.metric > averageByDimensions + numberOfStdDev * standardDeviationByDimensions ||
         row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions)
-        SuspectRow.create(new SuspectRow(row, metric))
+        SuspectRow.create(new SuspectRow(row, metric),TooFarFromMeanByDimensions)
     }
 
   }
