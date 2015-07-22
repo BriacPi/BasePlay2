@@ -1,36 +1,32 @@
-@(errorsTreated: List[ErrorBPCE],errorsProcessing: List[ErrorBPCE],errorsNotTreated: List[ErrorBPCE])
+@(suspectRowsTreated: List[SuspectRow],suspectRowsProcessing: List[SuspectRow],suspectRowsNotTreated: List[SuspectRow])
 
 @import helper._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
-@import library.AbnormalityHandling._
+@import models.SuspectRow._
 
 
 @main("BPCE errors") {
 <script type="text/javascript" class="init">
 
 
-            $(document).ready(function() {
-	        $('#test').DataTable();
-            } );
+<h1> suspectRow</h1>
+
+<h2>Not Treated</h2>
+<li>date caisse groupe agence pdv abnormalMetric errorType DetectionDate status comment admin</li>
+<ul>
+    @suspectRowsNotTreated.map { suspectRow =>
 
 
-</script>
-<script type="text/javascript" class="init">
+          <li> @suspectRow.date @suspectRow.caisse @suspectRow.groupe @suspectRow.agence @suspectRow.pdv @suspectRow.metric @suspectRow.nature.toString  n</li>
 
 
-            $(document).ready(function() {
-	        $('#test2').DataTable();
-            } );
 
 
-</script>
-<script type="text/javascript" class="init">
-
-
-            $(document).ready(function() {
-	        $('#test3').DataTable();
-            } );
+<h2>Processing</h2>
+<li>date caisse groupe agence pdv abnormalMetric errorType DetectionDate status comment admin</li>
+<ul>
+    @suspectRowsProcessing.map { suspectRow =>
 
 
 </script>
@@ -75,25 +71,9 @@
     </tbody>
 </table>
 
-<h2>Processing</h2>
-<table id="test2" class="display" cellspacing="0" width="100%">
-    <thead>
-    <tr>
-        <th>Dates</th>
-        <th>Caisse</th>
-        <th>Groupe</th>
-        <th>Agence</th>
-        <th>Point de vente</th>
-        <th>Suspected Metric</th>
-        <th>Error Type</th>
-        <th>Detection Date</th>
-        <th>Status</th>
-        <th>Comment</th>
-        <th>Admin</th>
-        <th>Reason for Detection</th>
-    </tr>
-    </thead>
-    <tbody>
+
+    <li> @suspectRow.date @suspectRow.caisse @suspectRow.groupe @suspectRow.agence @suspectRow.pdv @suspectRow.metric @suspectRow.nature.toString  n</li>
+
 
     @errorsProcessing.map { error =>
     <tr>
@@ -113,28 +93,18 @@
     }
 
 
+<h2>Treated</h2>
+<li>date caisse groupe agence pdv abnormalMetric errorType DetectionDate status comment admin</li>
+<ul>
+    @suspectRowsTreated.map { suspectRow =>
+
+
     </tbody>
 </table>
 
-<h2>Treated</h2>
-<table id="test3" class="display" cellspacing="0" width="100%">
-    <thead>
-    <tr>
-        <th>Dates</th>
-        <th>Caisse</th>
-        <th>Groupe</th>
-        <th>Agence</th>
-        <th>Point de vente</th>
-        <th>Suspected Metric</th>
-        <th>Error Type</th>
-        <th>Detection Date</th>
-        <th>Status</th>
-        <th>Comment</th>
-        <th>Admin</th>
-        <th>Reason for Detection</th>
-    </tr>
-    </thead>
-    <tbody>
+
+    <li> @suspectRow.date @suspectRow.caisse @suspectRow.groupe @suspectRow.agence @suspectRow.pdv @suspectRow.metric @suspectRow.nature.toString  n</li>
+
 
     @errorsTreated.map { error =>
     <tr>
