@@ -67,7 +67,7 @@ object SuspectRow {
   }
 
 
-  def create(suspectRow: SuspectRow): Unit = {
+  def create(suspectRow: SuspectRow,reason:ReasonForDetection): Unit = {
     DB.withConnection { implicit c =>
       val id: Option[Long] =
         SQL("insert into suspect_rows (date,caisse,groupe,agence,pdv,metric,status,nature,first_date,admin, comment) values " +
@@ -84,8 +84,15 @@ object SuspectRow {
             'admin -> suspectRow.admin,
             'comment -> suspectRow.comment
           ).executeInsert()
+      id match {
+        case None =>
+        case Some(i) => ReasonForDetection.addReasonForDetection(i,reason)}
+
     }
   }
+
+
+
 
   def filterOnStatus(status: Status): List[SuspectRow] = {
     DB.withConnection {

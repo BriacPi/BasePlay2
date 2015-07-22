@@ -6,6 +6,7 @@ import javax.inject.Inject
 import library.CodesToNames._
 import library.Engine._
 import library.{ CodesToNames}
+import models.ReasonForDetection.NotSpecified
 import models.{Configuration, SuspectRow}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
@@ -55,7 +56,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
   def add(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action {
     val currentDate = java.time.LocalDate.now()
 
-    SuspectRow.create(new SuspectRow(java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric, models.Status.DetectedOnly, models.Nature.NotSpecified, currentDate, "Nobody", " "))
+    SuspectRow.create(new SuspectRow(java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric, models.Status.DetectedOnly, models.Nature.NotSpecified, currentDate, "Nobody", " "),NotSpecified)
     Ok(views.html.index(SuspectRow.filterOnStatus(models.Status.Solved), SuspectRow.filterOnStatus(models.Status.BeingProcessed), SuspectRow.filterOnStatus(models.Status.DetectedOnly)))
   }
 
