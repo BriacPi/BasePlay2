@@ -37,7 +37,9 @@ case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, group
     case Abnormality => true
     case NotAbnormality => false
     case NotSpecified => false
-
+  }
+  def reasonsForDetection:List[ReasonForDetection]={
+    ReasonForDetection.getReasonsForDetection(id)
   }
 }
 
