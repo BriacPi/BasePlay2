@@ -18,7 +18,7 @@
     @suspectRowsTreated.map { suspectRow =>
 
 
-          <li> @suspectRow.date @suspectRow.caisse @suspectRow.groupe @suspectRow.agence @suspectRow.pdv @suspectRow.metric @suspectRow.nature.toString  n</li>}
+          <li> @suspectRow.date @suspectRow.caisse @suspectRow.groupe @suspectRow.agence @suspectRow.pdv @suspectRow.metric @suspectRow.nature.toString  @suspectRow.reasonsForDetection.toString n</li>}
 
 </ul>
 
@@ -28,7 +28,7 @@
     @suspectRowsProcessing.map { suspectRow =>
 
 
-          <li> @suspectRow.date @suspectRow.caisse @suspectRow.groupe @suspectRow.agence @suspectRow.pdv @suspectRow.metric @suspectRow.nature.toString  n</li>}
+          <li> @suspectRow.date @suspectRow.caisse @suspectRow.groupe @suspectRow.agence @suspectRow.pdv @suspectRow.metric @suspectRow.nature.toString @suspectRow.reasonsForDetection.toString n</li>}
 </ul>
 
 <h2>Not Treated</h2>
@@ -37,6 +37,6 @@
     @suspectRowsNotTreated.map { suspectRow =>
 
 
-          <li> @suspectRow.date @suspectRow.caisse @suspectRow.groupe @suspectRow.agence @suspectRow.pdv @suspectRow.metric @suspectRow.nature.toString  n</li>}
+          <li> @suspectRow.date @suspectRow.caisse @suspectRow.groupe @suspectRow.agence @suspectRow.pdv @suspectRow.metric @suspectRow.nature.toString @suspectRow.reasonsForDetection.toString n</li>}
             </ul>
  }
