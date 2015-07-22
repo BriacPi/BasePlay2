@@ -1,7 +1,7 @@
 package library
 
 import library.utils.Math
-import models.{Abnormality, AbnormalityList, Row}
+import models.{Row, SuspectRow}
 
 object AbnormalityDetection {
   // List of operations
@@ -36,53 +36,37 @@ object AbnormalityDetection {
 
 
   // Ways to Detect Abnormalities
-  def getAbnormalitiesFromDistanceToMean(rows: List[Row], numberOfStdDev: Int): List[Abnormality] = {
+  def filterAbnormalitiesFromDistanceToMean(rows: List[Row], numberOfStdDev: Int, metric: String): Unit = {
     val groupedByDate = groupByDate(rows)
-    val abnormalitiesBecauseOfDistanceToMeanByDate = rows.flatMap { row =>
+    rows.foreach { row =>
       val averageByDate = operationByDate(groupedByDate, average, row)
       val standardDeviationByDate = operationByDate(groupedByDate, standardDeviation, row)
       if (row.metric > averageByDate + numberOfStdDev * standardDeviationByDate ||
-        row.metric < averageByDate - numberOfStdDev * standardDeviationByDate)
-        List(Abnormality(row, List("TooFarFromMeanByDate")))
-      else List.empty[Abnormality]
+        row.metric < averageByDate - numberOfStdDev * standardDeviationByDate) {
+        SuspectRow.create(new SuspectRow(row, metric))
+      }
     }
-
     val groupedByDimensions = groupByDimensions(rows)
-    val abnormalitiesBecauseOfDistanceToMeanByDimensions = rows.flatMap { row =>
+    rows.foreach { row =>
       val averageByDimensions = operationByDimensions(groupedByDimensions, average, row)
       val standardDeviationByDimensions = operationByDimensions(groupedByDimensions, standardDeviation, row)
       if (row.metric > averageByDimensions + numberOfStdDev * standardDeviationByDimensions ||
         row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions)
-        List(Abnormality(row, List("TooFarFromMeanByDimensions")))
-      else List.empty[Abnormality]
+        SuspectRow.create(new SuspectRow(row, metric))
     }
-    abnormalitiesBecauseOfDistanceToMeanByDate ::: abnormalitiesBecauseOfDistanceToMeanByDimensions
+
   }
 
-  def mergeAbnormalities(listOfAbnormality: List[Abnormality]): List[Abnormality] = {
-    def mergeAbnormalitiesWithSameRow(listWithSameRow: List[Abnormality]): Abnormality = {
-      Abnormality(listWithSameRow.head.row, listWithSameRow.flatMap(_.reasons))
-    }
 
-    val hashMapByRow: Map[Row, List[Abnormality]] = listOfAbnormality.groupBy(abnormality => abnormality.row)
-    hashMapByRow.foldLeft(List.empty[Abnormality]) { (acc: List[Abnormality], kv: (Row, List[Abnormality])) =>
-      mergeAbnormalitiesWithSameRow(kv._2) :: acc
-    }
-  }
-
-  def getAllAbnormalities(rows: List[Row], mapCodesToNames: Map[String, String], metric: String): AbnormalityList = {
-    val abnormalitiesFromDistanceToMean = getAbnormalitiesFromDistanceToMean(rows, 6)
-    val mergedAbnormalities: List[Abnormality] = mergeAbnormalities(abnormalitiesFromDistanceToMean ::: Nil)
-
-
-    val mergedAbnormalitiesWithNames: List[Abnormality] = mergedAbnormalities.map { abnormality =>
-      val row = abnormality.row
+  def filterAllAbnormalities(rows: List[Row], mapCodesToNames: Map[String, String], metric: String): Unit = {
+    val rowsWithNames = rows.map(row => {
       val dimensionsWithNames = row.dimensions.map(dimension =>
         if (mapCodesToNames.contains(dimension)) mapCodesToNames(dimension)
         else dimension)
-      Abnormality(Row(row.date, dimensionsWithNames, row.metric), abnormality.reasons)
+      Row(row.date,dimensionsWithNames,row.metric)
     }
-    AbnormalityList(metric, mergedAbnormalitiesWithNames)
+    )
+    filterAbnormalitiesFromDistanceToMean(rowsWithNames, 6, metric)
 
   }
 }

@@ -6,7 +6,6 @@
 
 # Map static resources from the /public folder to the /assets URL path
 GET  /add/:date/:caisse/:groupe/:agence/:pdv/:abnormalMetric                        controllers.Application.add(date : String,caisse : String, groupe : String, agence :String,pdv :String, abnormalMetric :String )
-GET  /find/:date/:caisse/:groupe/:agence/:pdv/:metric                               controllers.Application.findById(date : String,caisse : String, groupe : String, agence :String,pdv :String,metric :String)
 GET  /editStatus/:date/:caisse/:groupe/:agence/:pdv/:metric/:status                         controllers.Application.editStatus(date : String,caisse : String, groupe : String, agence :String,pdv :String ,metric :String,status:String)
 GET  /editType/:date/:caisse/:groupe/:agence/:pdv/:metric/:errorType                        controllers.Application.editType(date : String,caisse : String, groupe : String, agence :String,pdv :String ,metric :String,errorType:String)
 GET  /editComment/:date/:caisse/:groupe/:agence/:pdv/:metric/:comment                       controllers.Application.editComment(date : String,caisse : String, groupe : String, agence :String,pdv :String ,metric :String,comment:String)
