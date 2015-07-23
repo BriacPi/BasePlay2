@@ -18,7 +18,19 @@
 
 <script type="text/javascript" class="init">
             $(document).ready(function() {
-	        $('#BeingProcessed').DataTable();
+	        oTable=$('#BeingProcessed').DataTable(
+	        {
+                 "columnDefs": [
+                                {
+                                 "targets": [ 0 ],
+                                 "visible": false,
+                                 "searchable": false
+                                 }
+                                ]
+            }
+	        );
+
+
             } );
 </script>
 
@@ -47,9 +59,9 @@
     <tbody>
 
     @rows.map { suspectRow =>
-    <tr>
+    <tr class="gradeA" onclick="window.location.href='/SuspectRow/@suspectRow.id';">
         <td>@suspectRow.id</td>
-        <td><a href="@routes.Application.findWithId(suspectRow.id)">@suspectRow.date</a></td>
+        <td>@suspectRow.date</td>
         <td>@suspectRow.caisse</td>
         <td>@suspectRow.groupe</td>
         <td>@suspectRow.agence</td>
