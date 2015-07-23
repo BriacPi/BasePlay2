@@ -170,7 +170,7 @@ object SuspectRow {
       implicit c =>
         SQL("update suspect_rows set  comment = {comment} where id = {id}").on(
           'id -> id,
-          'nature -> newComment
+          'comment -> newComment
         ).executeUpdate()
     }
   }
