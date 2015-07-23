@@ -88,7 +88,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
   def add(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action { implicit request =>
     val currentDate = java.time.LocalDate.now()
 
-    SuspectRow.create(new SuspectRow(java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric, models.Status.DetectedOnly, models.Nature.NotSpecified, currentDate, "Nobody", " "), NotSpecified)
+    SuspectRow.create(new SuspectRow(java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric,0.0, models.Status.DetectedOnly, models.Nature.NotSpecified, currentDate, "Nobody", " "), NotSpecified)
     Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
   }
 

@@ -10,27 +10,27 @@ import scala.language.postfixOps
 
 
 case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, agence: String, pdv: String,
-                      metric: String, status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) {
+                      metric: String,value:Double, status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) {
 
   // Constructeurs
-  def this(date: java.time.LocalDate, caisse: String, groupe: String, agence: String, pdv: String, metric: String,
+  def this(date: java.time.LocalDate, caisse: String, groupe: String, agence: String, pdv: String, metric: String,value:Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(0, date, caisse, groupe, agence, pdv, metric, status, nature, firstDate, admin, comment)
+    this(0, date, caisse, groupe, agence, pdv, metric,value, status, nature, firstDate, admin, comment)
 
-  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, agence: String, metric: String,
+  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, agence: String, metric: String,value:Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(id: Long, date, caisse, groupe, agence, "Aggregated", metric, status, nature, firstDate, admin, comment)
+    this(id: Long, date, caisse, groupe, agence, "Aggregated", metric,value, status, nature, firstDate, admin, comment)
 
-  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, metric: String,
+  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, metric: String,value:Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(id, date, caisse, groupe, "Aggregated", "Aggregated", metric, status, nature, firstDate, admin, comment)
+    this(id, date, caisse, groupe, "Aggregated", "Aggregated", metric,value, status, nature, firstDate, admin, comment)
 
-  def this(id: Long, date: java.time.LocalDate, caisse: String, metric: String,
+  def this(id: Long, date: java.time.LocalDate, caisse: String, metric: String,value:Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(id, date, caisse, "Aggregated", "Aggregated", "Aggregated", metric, status, nature, firstDate, admin, comment)
+    this(id, date, caisse, "Aggregated", "Aggregated", "Aggregated", metric,value, status, nature, firstDate, admin, comment)
 
   def this(row: Row, metric: String) =
-    this(0, row.date, row.dimensions.head, row.dimensions(1), row.dimensions(2), row.dimensions(3), metric, Status.DetectedOnly, Nature.NotSpecified, java.time.LocalDate.now, "", "")
+    this(0, row.date, row.dimensions.head, row.dimensions(1), row.dimensions(2), row.dimensions(3), metric,row.metric, Status.DetectedOnly, Nature.NotSpecified, java.time.LocalDate.now, "", "")
 
   //Methodes
   def isAbnormal: Boolean = this.nature match {
@@ -53,14 +53,15 @@ object SuspectRow {
       get[String]("agence") ~
       get[String]("pdv") ~
       get[String]("metric") ~
+      get[Double]("value") ~
       get[String]("status") ~
       get[String]("nature") ~
       get[String]("first_date") ~
       get[String]("admin") ~
       get[String]("comment") ~
       get[String]("date") map {
-      case id ~ caisse ~ groupe ~ agence ~ pdv ~ metric ~ status ~ nature ~ firstDate ~ admin ~ comment ~ date =>
-        SuspectRow(id, java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric, Status.withName(status),
+      case id ~ caisse ~ groupe ~ agence ~ pdv ~ metric~ value ~ status ~ nature ~ firstDate ~ admin ~ comment ~ date =>
+        SuspectRow(id, java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric,value, Status.withName(status),
           Nature.withName(nature), java.time.LocalDate.parse(firstDate), admin, comment)
     }
   }
@@ -75,14 +76,15 @@ object SuspectRow {
       getId(suspectRow) match {
         case None =>
           val id: Option[Long] =
-            SQL("insert into suspect_rows (date,caisse,groupe,agence,pdv,metric,status,nature,first_date,admin, comment) values " +
-              "({date},{caisse},{groupe},{agence},{pdv},{metric},{status},{nature},{firstDate},{admin},{comment})").on(
+            SQL("insert into suspect_rows (date,caisse,groupe,agence,pdv,metric,value,status,nature,first_date,admin, comment) values " +
+              "({date},{caisse},{groupe},{agence},{pdv},{metric},{value},{status},{nature},{firstDate},{admin},{comment})").on(
                 'date -> suspectRow.date.toString,
                 'caisse -> suspectRow.caisse,
                 'groupe -> suspectRow.groupe,
                 'agence -> suspectRow.agence,
                 'pdv -> suspectRow.pdv,
                 'metric -> suspectRow.metric,
+                'value -> suspectRow.value,
                 'status -> suspectRow.status.toString,
                 'nature -> suspectRow.nature.toString,
                 'firstDate -> suspectRow.firstDate.toString,
