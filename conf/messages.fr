@@ -1,2 +1,0 @@
-home.header = Centre de Santé des Données BPCE
-home.title = Données suspectes BPCE
