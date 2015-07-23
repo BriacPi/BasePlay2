@@ -38,14 +38,15 @@ case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, group
     case NotAbnormality => false
     case NotSpecified => false
   }
-  def reasonsForDetection:List[ReasonForDetection]={
+
+  def reasonsForDetection: List[ReasonForDetection] = {
     ReasonForDetection.getReasonsForDetection(id)
   }
 }
 
 // Data Base
 object SuspectRow {
-  val suspectRow = {
+  val suspectRows = {
     get[Long]("id") ~
       get[String]("caisse") ~
       get[String]("groupe") ~
@@ -72,7 +73,7 @@ object SuspectRow {
   def create(suspectRow: SuspectRow, reason: ReasonForDetection): Unit = {
     DB.withConnection { implicit c =>
       getId(suspectRow) match {
-        case None => {
+        case None =>
           val id: Option[Long] =
             SQL("insert into suspect_rows (date,caisse,groupe,agence,pdv,metric,status,nature,first_date,admin, comment) values " +
               "({date},{caisse},{groupe},{agence},{pdv},{metric},{status},{nature},{firstDate},{admin},{comment})").on(
@@ -92,7 +93,6 @@ object SuspectRow {
             case None =>
             case Some(i) => ReasonForDetection.addReasonForDetection(i, reason)
           }
-        }
         case Some(id) => ReasonForDetection.addReasonForDetection(id, reason)
       }
     }
@@ -102,7 +102,7 @@ object SuspectRow {
   def filterOnStatus(status: Status): List[SuspectRow] = {
     DB.withConnection {
       implicit c =>
-        SQL("select * from suspect_rows where status = {status}").on('status -> status.toString).as(suspectRow *)
+        SQL("select * from suspect_rows where status = {status}").on('status -> status.toString).as(suspectRows *)
     }
   }
 
@@ -114,13 +114,13 @@ object SuspectRow {
       'agence -> agence,
       'pdv -> pdv,
       'metric -> metric
-    ).as(suspectRow.singleOpt)
+    ).as(suspectRows.singleOpt)
   }
 
   def findById(id: Long): Option[SuspectRow] = DB.withConnection { implicit c =>
     SQL("select * from suspect_rows where id={id} ").on(
       'id -> id
-    ).as(suspectRow.singleOpt)
+    ).as(suspectRows.singleOpt)
   }
 
   def getId(suspect: SuspectRow): Option[Long] = DB.withConnection { implicit c =>
@@ -131,7 +131,7 @@ object SuspectRow {
       'agence -> suspect.agence,
       'pdv -> suspect.pdv,
       'metric -> suspect.metric
-    ).as(suspectRow.singleOpt)
+    ).as(suspectRows.singleOpt)
     optionOfRow match {
       case None => None
       case Some(row) => Some(row.id)
@@ -144,5 +144,46 @@ object SuspectRow {
       case Some(suspectrow) => true
     }
   }
+
+  def editNature(suspectRow: SuspectRow, newNature: Nature) = {
+    DB.withConnection {
+      implicit c =>
+        SQL("update suspect_rows set  nature = {nature} where id = {id}").on(
+          'id -> suspectRow.id,
+          'nature -> newNature.toString
+        ).executeUpdate()
+    }
+  }
+
+  def editAdmin(suspectRow: SuspectRow, newAdmin: String) = {
+    DB.withConnection {
+      implicit c =>
+        SQL("update suspect_rows set  admin = {admin} where id = {id}").on(
+          'id -> suspectRow.id,
+          'admin -> newAdmin
+        ).executeUpdate()
+    }
+  }
+
+  def editComment(suspectRow: SuspectRow, newComment: String) = {
+    DB.withConnection {
+      implicit c =>
+        SQL("update suspect_rows set  comment = {comment} where id = {id}").on(
+          'id -> suspectRow.id,
+          'nature -> newComment
+        ).executeUpdate()
+    }
+  }
+
+  def editStatus(suspectRow: SuspectRow, newStatus: Status) = {
+    DB.withConnection {
+      implicit c =>
+        SQL("update suspect_rows set  status = {status} where id = {id}").on(
+          'id -> suspectRow.id,
+          'status -> newStatus.toString
+        ).executeUpdate()
+    }
+  }
+
 }
 
