@@ -1,4 +1,4 @@
-@(suspectRow:SuspectRow,suspectRowType :Form[String])
+@(suspectRow:SuspectRow,suspectRowNature :Form[String])
 
 @import helper._
 @import play.api.Play.current
@@ -63,7 +63,12 @@
             <td>@form(routes.Application.saveEditionNature(suspectRow.id)) {
 
 
-                @inputText(suspectRowType("new value"))
+                @inputRadioGroup(
+                suspectRowNature("new value"),
+                options = Seq("NotSpecified"->"Not Specified","Abnormality"->"Abnormality","NotAbnormality" -> "Not Abnormality"),
+                '_label -> "Nature",
+                '_error -> suspectRowNature("new value").error.map(_.withMessage("select Nature")))
+
 
                 <input type="submit" value="Edit">
                 }</td>

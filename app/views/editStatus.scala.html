@@ -76,8 +76,11 @@
             <td>@suspectRow.status.toString</td>
             <td>@form(routes.Application.saveEditionStatus(suspectRow.id)) {
 
-
-                @inputText(status("new value"))
+                @inputRadioGroup(
+                status("new value"),
+                options = Seq("Solved"->"Solved","BeingProcessed"->"Being Processed","DetectedOnly" -> "Detected Only"),
+                '_label -> "Status",
+                '_error -> status("new value").error.map(_.withMessage("select status")))
 
                 <input type="submit" value="Edit">
                 }</td>
