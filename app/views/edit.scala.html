@@ -1,9 +1,11 @@
-@(suspectRow:SuspectRow,comment:Form[String])
+@(suspectRow:SuspectRow,editionValues:Form[EditionValues])
+
 
 @import helper._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
 @import models.SuspectRow._
+
 
 @main("BPCE suspectRows") {
 <div class="page-header">
@@ -17,6 +19,8 @@
 
 <h3>suspectRow</h3>
 <div class="col-md-6">
+
+    @form(routes.Application.saveEdition(suspectRow.id)) {
     <table class="table table-striped">
         <thead>
         <tr>
@@ -59,10 +63,14 @@
         <tr>
             <th>Nature</th>
             <td>@suspectRow.nature.toString</td>
-            <td> @form(routes.Application.editNature(suspectRow.id)) {
-                <input type="submit" value="Edit">
+            <td>
 
-                }</td>
+                @inputRadioGroup(
+                editionValues("nature"),
+                options = Seq("NotSpecified"->"Not Specified","Abnormality"->"Abnormality","NotAbnormality" -> "Not Abnormality"),
+                '_label -> "Nature")
+
+                </td>
         </tr>
         <tr>
             <th>First Date Detection</th>
@@ -72,38 +80,44 @@
         <tr>
             <th>Status</th>
             <td>@suspectRow.status.toString</td>
-            <td> @form(routes.Application.editStatus(suspectRow.id)) {
-                <input type="submit" value="Edit">
+            <td>
 
-                }</td>
+                @inputRadioGroup(
+                editionValues("status"),
+                options = Seq("Solved"->"Solved","BeingProcessed"->"Being Processed","DetectedOnly" -> "Detected Only"),
+                '_label -> "Status")
+
+
+                </td>
         </tr>
         <tr>
             <th>Comment</th>
             <td>@suspectRow.comment</td>
-            <td>@form(routes.Application.saveEditionComment(suspectRow.id)) {
+            <td>
 
+                @inputText(editionValues("comment"), '_label -> "Comment")
 
-                @inputText(comment("new value"))
-
-                <input type="submit" value="Edit">
-                }</td>
+                </td>
         </tr>
         <tr>
             <th>Admin</th>
             <td>@suspectRow.admin</td>
-            <td> @form(routes.Application.editAdmin(suspectRow.id)) {
-                <input type="submit" value="Edit">
+            <td>
 
-                }</td>
+                @inputText(editionValues("admin"), '_label -> "Admin")
+
+                </td>
         </tr>
         <tr>
-            <th>Reason for Detection</th>
+            <th>Reasons for Detection</th>
             <td>@suspectRow.reasonsForDetection.mkString</td>
             <td></td>
         </tr>
 
         </tbody>
     </table>
+
+    <input type="submit" value="Save">}
 </div>
 </div>
 

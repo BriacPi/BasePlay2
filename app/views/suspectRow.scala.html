@@ -23,85 +23,76 @@
         <tr>
             <th>suspectRow Parameters</th>
             <th>Values</th>
-            <th>Edition</th>
+
         </tr>
         </thead>
         <tbody>
         <tr>
             <th>Dates</th>
             <td>@suspectRow.date</td>
-            <td></td>
+
         </tr>
         <tr>
             <th>Caisse</th>
             <td>@suspectRow.caisse</td>
-            <td></td>
+
         </tr>
         <tr>
             <th>Groupe</th>
             <td>@suspectRow.groupe</td>
-            <td></td>
+
         </tr>
         <tr>
             <th>Agence</th>
             <td>@suspectRow.agence</td>
-            <td></td>
+
         </tr>
         <tr>
             <th>Point de Vente</th>
             <td>@suspectRow.pdv</td>
-            <td></td>
+
         </tr>
         <tr>
             <th>Metric</th>
             <td>@suspectRow.metric</td>
-            <td></td>
+
         </tr>
         <tr>
             <th>Nature</th>
             <td>@suspectRow.nature.toString</td>
-            <td> @form(routes.Application.editNature(suspectRow.id)) {
-                <input type="submit" value="Edit">
 
-                }</td>
         </tr>
         <tr>
             <th>First Date Detection</th>
             <td>@suspectRow.firstDate</td>
-            <td></td>
+
         </tr>
         <tr>
             <th>Status</th>
             <td>@suspectRow.status.toString</td>
-            <td> @form(routes.Application.editStatus(suspectRow.id)) {
-                <input type="submit" value="Edit">
 
-                }</td>
         </tr>
         <tr>
             <th>Comment</th>
             <td>@suspectRow.comment</td>
-            <td> @form(routes.Application.editComment(suspectRow.id)) {
-                <input type="submit" value="Edit">
 
-                }</td>
         </tr>
         <tr>
             <th>Admin</th>
             <td>@suspectRow.admin</td>
-            <td> @form(routes.Application.editAdmin(suspectRow.id)) {
-                <input type="submit" value="Edit">
 
-                }</td>
         </tr>
         <tr>
             <th>Reason for Detection</th>
             <td>@suspectRow.reasonsForDetection</td>
-            <td></td>
+
         </tr>
 
         </tbody>
     </table>
+
+    @form(routes.Application.edit(suspectRow.id)) {
+    <input type="submit" value="Edit">}
 </div>
 </div>
 

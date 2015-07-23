@@ -145,6 +145,21 @@ object SuspectRow {
     }
   }
 
+  def edit(id:Long,newAdmin: String, newComment: String,newNature: Nature, newStatus: Status) = {
+    DB.withConnection {
+      implicit c =>
+        SQL("update suspect_rows set   admin = {admin}, comment = {comment}, nature = {nature}, status = {status} where id = {id}").on(
+          'id -> id,
+          'admin -> newAdmin,
+          'comment -> newComment,
+          'nature -> newNature.toString,
+          'status -> newStatus.toString
+        ).executeUpdate()
+
+    }
+  }
+
+
   def editNature(id:Long, newNature: Nature) = {
     DB.withConnection {
       implicit c =>

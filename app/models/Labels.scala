@@ -3,6 +3,7 @@ package models
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Reads, _}
 
+
 case class Labels(segments: Map[String, SegmentContent], eds: Map[String, EdsContent]) {
   def getCodesToNamesMap:Map[String,String]={
     eds.mapValues(_.default)
