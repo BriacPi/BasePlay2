@@ -3,11 +3,14 @@ package controllers
 import java.util.Calendar
 import javax.inject.Inject
 
+import library.CodesToNames
 import library.CodesToNames._
 import library.Engine._
-import library.{ CodesToNames}
 import models.ReasonForDetection.NotSpecified
 import models.{Configuration, SuspectRow}
+import play.api.data.Form
+import play.api.data.format.Formats._
+import play.api.data.Forms._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -40,6 +43,8 @@ class Application @Inject()(ws: WSClient) extends Controller {
     month <- 1 to 12
   } yield year + "-" + month + "-1").toList
 
+  //Userform
+  val userForm: Form[String] = Form("new value" -> of[String])
 
   //List("2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1")
 
@@ -49,29 +54,120 @@ class Application @Inject()(ws: WSClient) extends Controller {
     val mapCodesToNames: Future[Map[String, String]] = getMapCodesToNames(CodesToNames.makeRequest())
     mapCodesToNames.map { mapCtN =>
       filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN)
-      Ok(views.html.index(SuspectRow.filterOnStatus(models.Status.Solved), SuspectRow.filterOnStatus(models.Status.BeingProcessed), SuspectRow.filterOnStatus(models.Status.DetectedOnly)))
+      Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
     }
+  }
+
+  def solved(): Action[AnyContent] = Action {
+    Ok(views.html.solved(SuspectRow.filterByStatus(models.Status.Solved)))
+  }
+
+  def beingProcessed(): Action[AnyContent] = Action {
+    Ok(views.html.beingProcessed(SuspectRow.filterByStatus(models.Status.BeingProcessed)))
+  }
+
+  def detectedOnly(): Action[AnyContent] = Action {
+    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+  }
+
+  def redirect() = Action {
+    Redirect(routes.Application.detectedOnly())
   }
 
   def add(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action {
     val currentDate = java.time.LocalDate.now()
 
-    SuspectRow.create(new SuspectRow(java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric, models.Status.DetectedOnly, models.Nature.NotSpecified, currentDate, "Nobody", " "),NotSpecified)
-    Ok(views.html.index(SuspectRow.filterOnStatus(models.Status.Solved), SuspectRow.filterOnStatus(models.Status.BeingProcessed), SuspectRow.filterOnStatus(models.Status.DetectedOnly)))
+    SuspectRow.create(new SuspectRow(java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric, models.Status.DetectedOnly, models.Nature.NotSpecified, currentDate, "Nobody", " "), NotSpecified)
+    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
   }
 
-  def all(): Action[AnyContent] = Action {
-    Ok(views.html.index(SuspectRow.filterOnStatus(models.Status.Solved), SuspectRow.filterOnStatus(models.Status.BeingProcessed), SuspectRow.filterOnStatus(models.Status.DetectedOnly)))
+  def find(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action {
+    val optionOfSuspectRow = SuspectRow.findByKey(date, caisse, groupe, agence, pdv, metric)
+    optionOfSuspectRow match {
+      case Some(e) => Ok(views.html.suspectRow(e))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+    }
   }
 
+  def findWithId(id: Long): Action[AnyContent] = Action {
+    val optionOfSuspectRow = SuspectRow.findById(id)
+    optionOfSuspectRow match {
+      case Some(e) => Ok(views.html.suspectRow(e))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+    }
+  }
 
-  def editStatus(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String, status: String): Action[AnyContent] = ???
+  def editStatus(id: Long): Action[AnyContent] = Action {
+    val optionOfSuspectRow = SuspectRow.findById(id)
+    optionOfSuspectRow match {
+      case Some(e) => Ok(views.html.editStatus(e, userForm))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+    }
+  }
 
-  def editType(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String, errorType: String): Action[AnyContent] = ???
+  def editNature(id: Long): Action[AnyContent] = Action {
+    val optionOfSuspectRow = SuspectRow.findById(id)
+    optionOfSuspectRow match {
+      case Some(e) => Ok(views.html.editNature(e, userForm))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+    }
+  }
 
-  def editComment(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String, comment: String): Action[AnyContent] = ???
+  def editAdmin(id: Long): Action[AnyContent] = Action {
+    val optionOfSuspectRow = SuspectRow.findById(id)
+    optionOfSuspectRow match {
+      case Some(e) => Ok(views.html.editAdmin(e, userForm))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+    }
+  }
 
-  def editAdmin(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String, admin: String): Action[AnyContent] = ???
+  def editComment(id: Long): Action[AnyContent] = Action {
+    val optionOfSuspectRow = SuspectRow.findById(id)
+    optionOfSuspectRow match {
+      case Some(e) => Ok(views.html.editComment(e, userForm))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+    }
+  }
+
+  def saveEditionStatus(id: Long): Action[AnyContent] = Action { implicit request =>
+    userForm.bindFromRequest.fold(
+      errors => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly))),
+      l => {
+        SuspectRow.editStatus(id, models.Status.withName(l))
+        Redirect(routes.Application.findWithId(id))
+      }
+    )
+  }
+
+  def saveEditionNature(id: Long): Action[AnyContent] = Action { implicit request =>
+    userForm.bindFromRequest.fold(
+      errors => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly))),
+      l => {
+        SuspectRow.editNature(id, models.Nature.withName(l))
+        Redirect(routes.Application.findWithId(id))
+      }
+    )
+  }
+
+  def saveEditionComment(id: Long): Action[AnyContent] = Action { implicit request =>
+    userForm.bindFromRequest.fold(
+      errors => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly))),
+      l => {
+        SuspectRow.editComment(id, l)
+        Redirect(routes.Application.findWithId(id))
+      }
+    )
+  }
+
+  def saveEditionAdmin(id: Long): Action[AnyContent] = Action { implicit request =>
+    userForm.bindFromRequest.fold(
+      errors => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly))),
+      l => {
+        SuspectRow.editAdmin(id, l)
+        Redirect(routes.Application.findWithId(id))
+      }
+    )
+  }
 
 
   //  def findById(date : String,caisse : String, groupe : String, agence :String,pdv :String, metric :String): Action[AnyContent] = Action{
