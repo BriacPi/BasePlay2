@@ -66,7 +66,7 @@ object SuspectRow {
   }
 
   def all(): List[SuspectRow] = DB.withConnection { implicit c =>
-    SQL("select * from suspect_rows order by date").as(suspectRow *)
+    SQL("select * from suspect_rows order by date").as(suspectRows *)
   }
 
 
