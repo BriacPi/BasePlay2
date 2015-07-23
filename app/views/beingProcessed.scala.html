@@ -1,4 +1,4 @@
-@(rows: List[SuspectRow])
+@(rows: List[SuspectRow])(implicit lang:Lang)
 
 @import helper._
 @import play.api.Play.current
@@ -8,12 +8,12 @@
 
 @main(Messages("home.header")) {
 <div class="page-header">
-    <h1>Messages("home.title")</h1>
+    <h1>@Messages("home.title")</h1>
 </div>
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" ><a href="/DetectedOnly">Detected Only</a></li>
-    <li role="presentation" class="active"><a href="/BeingProcessed">Being Processed</a></li>
-    <li role="presentation" ><a href="/Solved">Solved</a></li>
+    <li role="presentation" ><a href="/DetectedOnly">@Messages("home.header.detectedOnly")</a></li>
+    <li role="presentation" class="active"><a href="/BeingProcessed">@Messages("home.header.beingProcessed")</a></li>
+    <li role="presentation" ><a href="/Solved">@Messages("home.header.solved")</a></li>
 </ul>
 
 <script type="text/javascript" class="init">
@@ -41,19 +41,20 @@
 <table id="BeingProcessed" class="display" cellspacing="0" width="100%">
     <thead>
     <tr>
-        <th>id</th>
-        <th>Dates</th>
-        <th>Caisse</th>
-        <th>Groupe</th>
-        <th>Agence</th>
-        <th>Point de vente</th>
-        <th>Metric</th>
-        <th>Nature</th>
-        <th>Detection Date</th>
-        <th>Status</th>
-        <th>Comment</th>
-        <th>Admin</th>
-        <th>Reasons for Detection</th>
+
+        <th>@Messages("field.dates")</th>
+        <th>@Messages("field.caisse")</th>
+        <th>@Messages("field.groupe")</th>
+        <th>@Messages("field.agence")</th>
+        <th>@Messages("field.pdv")</th>
+        <th>@Messages("field.metric")</th>
+        <th>@Messages("field.nature")</th>
+        <th>@Messages("field.detectionDate")</th>
+        <th>@Messages("field.status")</th>
+        <th>@Messages("field.comment")</th>
+        <th>@Messages("field.admin")</th>
+        <th>@Messages("field.reasonsForDetection")</th>
+
     </tr>
     </thead>
     <tbody>
@@ -67,12 +68,12 @@
         <td>@suspectRow.agence</td>
         <td>@suspectRow.pdv</td>
         <td>@suspectRow.metric</td>
-        <td>@suspectRow.nature</td>
+        <td>@Messages(suspectRow.nature.toString)</td>
         <td>@suspectRow.firstDate</td>
-        <td>@suspectRow.status</td>
+        <td>@Messages(suspectRow.status.toString)</td>
         <td>@suspectRow.comment</td>
         <td>@suspectRow.admin</td>
-        <td>@suspectRow.reasonsForDetection</td>
+        <td>@suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</td>
     </tr>
     }
 
