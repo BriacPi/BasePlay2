@@ -3,13 +3,20 @@
 # ~~~~
 
 
-
 # Map static resources from the /public folder to the /assets URL path
-GET  /add/:date/:caisse/:groupe/:agence/:pdv/:abnormalMetric                        controllers.Application.add(date : String,caisse : String, groupe : String, agence :String,pdv :String, abnormalMetric :String )
-GET  /editStatus/:date/:caisse/:groupe/:agence/:pdv/:metric/:status                         controllers.Application.editStatus(date : String,caisse : String, groupe : String, agence :String,pdv :String ,metric :String,status:String)
-GET  /editType/:date/:caisse/:groupe/:agence/:pdv/:metric/:errorType                        controllers.Application.editType(date : String,caisse : String, groupe : String, agence :String,pdv :String ,metric :String,errorType:String)
-GET  /editComment/:date/:caisse/:groupe/:agence/:pdv/:metric/:comment                       controllers.Application.editComment(date : String,caisse : String, groupe : String, agence :String,pdv :String ,metric :String,comment:String)
-GET  /editAdmin/:date/:caisse/:groupe/:agence/:pdv/:metric/:admin                           controllers.Application.editAdmin(date : String,caisse : String, groupe : String, agence :String,pdv :String ,metric :String,admin:String)
-GET  /all                                                                           controllers.Application.all()
-GET  /assets/*file                                                                  controllers.Assets.versioned(path="/public", file: Asset)
-GET  /data                                                                          controllers.Application.sendRequestToApi()
+GET  /SuspectRow/:date/:caisse/:groupe/:agence/:pdv/:metric                                 controllers.Application.find(date : String,caisse : String, groupe : String, agence :String,pdv :String,metric :String)
+GET  /SuspectRow/:id                                                                        controllers.Application.findWithId(id:Long)
+GET  /Status/:id                                                                            controllers.Application.editStatus(id:Long)
+GET  /Type/:id                                                                              controllers.Application.editNature(id:Long)
+GET  /Comment/:id                                                                           controllers.Application.editComment(id:Long)
+GET  /Admin/:id                                                                             controllers.Application.editAdmin(id:Long)
+POST /findAndEditNature/:id                                                                 controllers.Application.saveEditionNature(id:Long)
+POST /findAndEditAdmin/:id                                                                 controllers.Application.saveEditionAdmin(id:Long)
+POST /findAndEditComment/:id                                                                 controllers.Application.saveEditionComment(id:Long)
+POST /findAndEditStatus/:id                                                                 controllers.Application.saveEditionStatus(id:Long)
+GET  /DetectedOnly                                                                          controllers.Application.detectedOnly()
+GET  /BeingProcessed                                                                        controllers.Application.beingProcessed()
+GET  /Solved                                                                                controllers.Application.solved()
+GET  /assets/*file                                                                          controllers.Assets.versioned(path="/public", file: Asset)
+GET  /data                                                                                  controllers.Application.sendRequestToApi()
+GET  /                                                                                      controllers.Application.redirect()

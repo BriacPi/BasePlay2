@@ -99,7 +99,7 @@ object SuspectRow {
   }
 
 
-  def filterOnStatus(status: Status): List[SuspectRow] = {
+  def filterByStatus(status: Status): List[SuspectRow] = {
     DB.withConnection {
       implicit c =>
         SQL("select * from suspect_rows where status = {status}").on('status -> status.toString).as(suspectRows *)
@@ -145,41 +145,41 @@ object SuspectRow {
     }
   }
 
-  def editNature(suspectRow: SuspectRow, newNature: Nature) = {
+  def editNature(id:Long, newNature: Nature) = {
     DB.withConnection {
       implicit c =>
         SQL("update suspect_rows set  nature = {nature} where id = {id}").on(
-          'id -> suspectRow.id,
+          'id -> id,
           'nature -> newNature.toString
         ).executeUpdate()
     }
   }
 
-  def editAdmin(suspectRow: SuspectRow, newAdmin: String) = {
+  def editAdmin(id:Long, newAdmin: String) = {
     DB.withConnection {
       implicit c =>
         SQL("update suspect_rows set  admin = {admin} where id = {id}").on(
-          'id -> suspectRow.id,
+          'id -> id,
           'admin -> newAdmin
         ).executeUpdate()
     }
   }
 
-  def editComment(suspectRow: SuspectRow, newComment: String) = {
+  def editComment(id:Long, newComment: String) = {
     DB.withConnection {
       implicit c =>
         SQL("update suspect_rows set  comment = {comment} where id = {id}").on(
-          'id -> suspectRow.id,
+          'id -> id,
           'nature -> newComment
         ).executeUpdate()
     }
   }
 
-  def editStatus(suspectRow: SuspectRow, newStatus: Status) = {
+  def editStatus(id:Long, newStatus: Status) = {
     DB.withConnection {
       implicit c =>
         SQL("update suspect_rows set  status = {status} where id = {id}").on(
-          'id -> suspectRow.id,
+          'id ->id,
           'status -> newStatus.toString
         ).executeUpdate()
     }
