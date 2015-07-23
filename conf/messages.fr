@@ -11,6 +11,7 @@ field.agence=Agence
 field.pdv = Point de vente
 field.metric=Métrique
 field.nature=Nature
+field.value=Valeur
 field.detectionDate=Première date de détection
 field.status=Statut
 field.comment=Commentaire

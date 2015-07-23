@@ -10,6 +10,7 @@ field.groupe=Groupe
 field.agence=Agence
 field.pdv = Point de vente
 field.metric=Metric
+field.value=Value
 field.nature=Nature
 field.detectionDate=Detection Date
 field.status=Status
