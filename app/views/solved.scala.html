@@ -11,7 +11,7 @@
     <h1>BPCE Errors Reporting</h1>
 </div>
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" ><a href="/DetectedOnly">Detected Only</a></li>
+    <li role="presentation"><a href="/DetectedOnly">Detected Only</a></li>
     <li role="presentation"><a href="/BeingProcessed">Being Processed</a></li>
     <li role="presentation" class="active"><a href="/Solved">Solved</a></li>
 </ul>
@@ -20,15 +20,27 @@
             $(document).ready(function() {
 	        $('#Solved').DataTable();
             } );
+
 </script>
 
 
 
+<table id="myTable" class="display" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
 
 <table id="Solved" class="display" cellspacing="0" width="100%">
     <thead>
     <tr>
+        <th>id</th>
         <th>Dates</th>
         <th>Caisse</th>
         <th>Groupe</th>
@@ -47,6 +59,7 @@
 
     @rows.map { suspectRow =>
     <tr>
+        <td>@suspectRow.id</td>
         <td><a href="@routes.Application.findWithId(suspectRow.id)">@suspectRow.date</a></td>
         <td>@suspectRow.caisse</td>
         <td>@suspectRow.groupe</td>
