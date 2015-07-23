@@ -1,0 +1,34 @@
+home.header = BPCE Health Data Center
+home.title = BPCE suspicious Data
+home.header.solved = Solved
+home.header.beingProcessed = Being Processed
+home.header.detectedOnly = Detected Only
+
+field.dates = Date
+field.caisse= Caisse
+field.groupe=Groupe
+field.agence=Agence
+field.pdv = Point de vente
+field.metric=Metric
+field.nature=Nature
+field.detectionDate=Detection Date
+field.status=Status
+field.comment=Comment
+field.admin=Admin
+field.reasonsForDetection=Reasons for Detection
+
+sr.parameters=Parameters
+sr.values=Values
+sr.edition=Edition
+
+Abnormality=Abnormality
+NotAbnormality=NotAbnormality
+NotSpecified=NotSpecified
+
+Solved = Solved
+BeingProcessed = Being Processed
+DetectedOnly = Detected Only
+
+TooFarFromMeanByDate=TooFarFromMeanByDate
+TooFarFromMeanByDimensions=TooFarFromMeanByDimensions
+

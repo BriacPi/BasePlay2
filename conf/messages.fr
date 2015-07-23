@@ -1,0 +1,34 @@
+home.header = Centre de Santé des Données BPCE
+home.title = Données suspectes BPCE
+home.header.solved = Résolu
+home.header.beingProcessed = En cours
+home.header.detectedOnly = Non affecté
+
+field.dates = Date
+field.caisse= Caisse
+field.groupe=Groupe
+field.agence=Agence
+field.pdv = Point de vente
+field.metric=Métrique
+field.nature=Nature
+field.detectionDate=Première date de détection
+field.status=Statut
+field.comment=Commentaire
+field.admin=Responsable
+field.reasonsForDetection= Problème
+
+sr.parameters=Paramètres
+sr.values=Valeurs
+sr.edition=Édition
+
+Abnormality=Anormale
+NotAbnormality=Normale
+NotSpecified=Non Spécifiée
+
+Solved = Résolu
+BeingProcessed = En cours
+DetectedOnly = Non affecté
+
+TooFarFromMeanByDate= Trop différente des autres de même date
+TooFarFromMeanByDimensions=Trop différente des autres de mêmes dimensions
+

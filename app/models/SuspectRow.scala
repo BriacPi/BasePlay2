@@ -30,7 +30,7 @@ case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, group
     this(id, date, caisse, "Aggregated", "Aggregated", "Aggregated", metric, status, nature, firstDate, admin, comment)
 
   def this(row: Row, metric: String) =
-    this(0, row.date, row.dimensions.head, row.dimensions(1), row.dimensions(2), row.dimensions(3), metric, Status.DetectedOnly, Nature.NotSpecified, java.time.LocalDate.now, "Nobody", "")
+    this(0, row.date, row.dimensions.head, row.dimensions(1), row.dimensions(2), row.dimensions(3), metric, Status.DetectedOnly, Nature.NotSpecified, java.time.LocalDate.now, "", "")
 
   //Methodes
   def isAbnormal: Boolean = this.nature match {

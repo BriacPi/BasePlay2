@@ -1,4 +1,4 @@
-@(suspectRow:SuspectRow,editionValues:Form[EditionValues])
+@(suspectRow:SuspectRow,editionValues:Form[EditionValues])(implicit lang:Lang)
 
 
 @import helper._
@@ -7,62 +7,64 @@
 @import models.SuspectRow._
 
 
-@main("BPCE suspectRows") {
+@main(Messages("home.header")) {
 <div class="page-header">
-    <h1>BPCE suspectRows Reporting</h1>
+    <h1>@Messages("home.title")</h1>
 </div>
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" ><a href="/DetectedOnly">Detected Only</a></li>
-    <li role="presentation"><a href="/BeingProcessed">Being Processed</a></li>
-    <li role="presentation"><a href="/Solved">Solved</a></li>
+    <li role="presentation" ><a href="/DetectedOnly">@Messages("home.header.detectedOnly")</a></li>
+    <li role="presentation" ><a href="/BeingProcessed">@Messages("home.header.beingProcessed")</a></li>
+    <li role="presentation" ><a href="/Solved">@Messages("home.header.solved")</a></li>
 </ul>
 
-<h3>suspectRow</h3>
+
 <div class="col-md-6">
 
     @form(routes.Application.saveEdition(suspectRow.id)) {
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>suspectRow Parameters</th>
-            <th>Values</th>
-            <th>Edition</th>
+            <th>@Messages("sr.parameters")</th>
+            <th>@Messages("sr.values")</th>
+            <th>@Messages("sr.edition")</th>
         </tr>
         </thead>
         <tbody>
+
+
         <tr>
-            <th>Dates</th>
+            <th>@Messages("field.dates")</th>
             <td>@suspectRow.date</td>
             <td></td>
         </tr>
         <tr>
-            <th>Caisse</th>
+            <th>@Messages("field.caisse")</th>
             <td>@suspectRow.caisse</td>
             <td></td>
         </tr>
         <tr>
-            <th>Groupe</th>
+            <th>@Messages("field.groupe")</th>
             <td>@suspectRow.groupe</td>
             <td></td>
         </tr>
         <tr>
-            <th>Agence</th>
+            <th>@Messages("field.agence")</th>
             <td>@suspectRow.agence</td>
             <td></td>
         </tr>
         <tr>
-            <th>Point de Vente</th>
+            <th>@Messages("field.pdv")</th>
             <td>@suspectRow.pdv</td>
             <td></td>
         </tr>
         <tr>
-            <th>Metric</th>
+            <th>@Messages("field.metric")</th>
             <td>@suspectRow.metric</td>
             <td></td>
         </tr>
         <tr>
-            <th>Nature</th>
-            <td>@suspectRow.nature.toString</td>
+            <th>@Messages("field.nature")</th>
+            <td>@Messages(suspectRow.nature.toString)</td>
             <td>
 
                 @inputRadioGroup(
@@ -73,13 +75,13 @@
                 </td>
         </tr>
         <tr>
-            <th>First Date Detection</th>
+            <th>@Messages("field.detectionDate")</th>
             <td>@suspectRow.firstDate</td>
             <td></td>
         </tr>
         <tr>
-            <th>Status</th>
-            <td>@suspectRow.status.toString</td>
+            <th>@Messages("field.status")</th>
+            <td>@Messages(suspectRow.status.toString)</td>
             <td>
 
                 @inputRadioGroup(
@@ -91,7 +93,7 @@
                 </td>
         </tr>
         <tr>
-            <th>Comment</th>
+            <th>@Messages("field.comment")</th>
             <td>@suspectRow.comment</td>
             <td>
 
@@ -100,7 +102,7 @@
                 </td>
         </tr>
         <tr>
-            <th>Admin</th>
+            <th>@Messages("field.admin")</th>
             <td>@suspectRow.admin</td>
             <td>
 
@@ -109,8 +111,8 @@
                 </td>
         </tr>
         <tr>
-            <th>Reasons for Detection</th>
-            <td>@suspectRow.reasonsForDetection.mkString</td>
+            <th>@Messages("field.reasonsForDetection")</th>
+            <td>@suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</td>
             <td></td>
         </tr>
 

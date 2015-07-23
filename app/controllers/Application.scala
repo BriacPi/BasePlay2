@@ -69,15 +69,15 @@ class Application @Inject()(ws: WSClient) extends Controller {
     }
   }
 
-  def solved(): Action[AnyContent] = Action {
+  def solved(): Action[AnyContent] = Action { implicit request =>
     Ok(views.html.solved(SuspectRow.filterByStatus(models.Status.Solved)))
   }
 
-  def beingProcessed(): Action[AnyContent] = Action {
+  def beingProcessed(): Action[AnyContent] = Action { implicit request =>
     Ok(views.html.beingProcessed(SuspectRow.filterByStatus(models.Status.BeingProcessed)))
   }
 
-  def detectedOnly(): Action[AnyContent] = Action {
+  def detectedOnly(): Action[AnyContent] = Action { implicit request =>
     Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
   }
 
@@ -85,14 +85,14 @@ class Application @Inject()(ws: WSClient) extends Controller {
     Redirect(routes.Application.detectedOnly())
   }
 
-  def add(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action {
+  def add(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action { implicit request =>
     val currentDate = java.time.LocalDate.now()
 
     SuspectRow.create(new SuspectRow(java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric, models.Status.DetectedOnly, models.Nature.NotSpecified, currentDate, "Nobody", " "), NotSpecified)
     Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
   }
 
-  def find(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action {
+  def find(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action { implicit request =>
     val optionOfSuspectRow = SuspectRow.findByKey(date, caisse, groupe, agence, pdv, metric)
     optionOfSuspectRow match {
       case Some(e) => Ok(views.html.suspectRow(e))
@@ -100,7 +100,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
     }
   }
 
-  def findWithId(id: Long): Action[AnyContent] = Action {
+  def findWithId(id: Long): Action[AnyContent] = Action { implicit request =>
     val optionOfSuspectRow = SuspectRow.findById(id)
     optionOfSuspectRow match {
       case Some(e) => Ok(views.html.suspectRow(e))
@@ -108,7 +108,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
     }
   }
 
-  def edit(id:Long): Action[AnyContent] = Action {
+  def edit(id:Long): Action[AnyContent] = Action { implicit request =>
     val optionOfSuspectRow = SuspectRow.findById(id)
     optionOfSuspectRow match {
       case Some(e) =>
