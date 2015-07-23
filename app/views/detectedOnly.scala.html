@@ -1,0 +1,69 @@
+@(rows: List[SuspectRow])
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+@import models.SuspectRow._
+
+
+@main("BPCE Errors") {
+<div class="page-header">
+    <h1>BPCE Errors Reporting</h1>
+</div>
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation"  class="active"><a href="/DetectedOnly">Detected Only</a></li>
+    <li role="presentation"><a href="/BeingProcessed">Being Processed</a></li>
+    <li role="presentation"><a href="/Solved">Solved</a></li>
+</ul>
+
+<script type="text/javascript" class="init">
+            $(document).ready(function() {
+	        $('#DetectedOnly').DataTable();
+            } );
+</script>
+
+
+
+
+
+<table id="DetectedOnly" class="display" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+        <th>Dates</th>
+        <th>Caisse</th>
+        <th>Groupe</th>
+        <th>Agence</th>
+        <th>Point de vente</th>
+        <th>Metric</th>
+        <th>Nature</th>
+        <th>Detection Date</th>
+        <th>Status</th>
+        <th>Comment</th>
+        <th>Admin</th>
+        <th>Reasons for Detection</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    @rows.map { suspectRow =>
+    <tr>
+        <td><a href="@routes.Application.findWithId(suspectRow.id)">@suspectRow.date</a></td>
+        <td>@suspectRow.caisse</td>
+        <td>@suspectRow.groupe</td>
+        <td>@suspectRow.agence</td>
+        <td>@suspectRow.pdv</td>
+        <td>@suspectRow.metric</td>
+        <td>@suspectRow.nature</td>
+        <td>@suspectRow.firstDate</td>
+        <td>@suspectRow.status</td>
+        <td>@suspectRow.comment</td>
+        <td>@suspectRow.admin</td>
+        <td>@suspectRow.reasonsForDetection</td>
+    </tr>
+    }
+
+
+    </tbody>
+</table>
+
+}
