@@ -2,7 +2,7 @@ package library
 
 import java.util.concurrent.TimeoutException
 
-import models.Labels
+import models.Metrics
 import play.api.Play.current
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WS, WSRequest, WSResponse}
@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object MetricsToNames {
-  def makeRequest(): Future[WSResponse] = {
+  def makeMetricRequest(): Future[WSResponse] = {
     val url = "https://vpc-2-bpce-apiu.capback.fr/display/bpce.json"
     val request: WSRequest = WS.url(url)
 
@@ -21,20 +21,20 @@ object MetricsToNames {
     complexRequest.get().recoverWith {
       case e: TimeoutException =>
         println("Error in getting Metrics to Names JSON")
-        makeRequest()
+        makeMetricRequest()
     }
   }
 
-  def getMapCodesToNames(answer: Future[WSResponse]): Future[Map[String, String]] = {
+  def getMapMetricsToNames(answer: Future[WSResponse]): Future[Map[String, String]] = {
     answer.flatMap { response =>
       val json: JsValue = Json.parse(response.body)
-      val result = json.validate[Labels]
+      val result = json.validate[Metrics]
       result.fold(
         errors => {
-          println("error in reading CodesToNameJson" +errors)
-          getMapCodesToNames(makeRequest())
-        }, labels => {
-          Future.successful(labels.getCodesToNamesMap)
+          println("error in reading CodesToNameJson" + errors)
+          getMapMetricsToNames(makeMetricRequest())
+        }, metrics => {
+          Future.successful(metrics.getMetricsToNamesMap)
         })
     }
   }

@@ -4,18 +4,17 @@ import java.util.Calendar
 import javax.inject.Inject
 
 import components.mvc.AuthController
-import library.CaissesToNames
+import library.{MetricsToNames, CaissesToNames}
 import library.CaissesToNames._
 import library.Engine._
-import models.ReasonForDetection.NotSpecified
-import models.{Configuration, SuspectRow}
+import models.{Configuration, EditionValues, SuspectRow}
 import play.api.data.Form
-import play.api.data.format.Formats._
 import play.api.data.Forms._
+import play.api.data.format.Formats._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import models.EditionValues
+
 import scala.concurrent.Future
 
 
@@ -58,15 +57,21 @@ class Application @Inject()(ws: WSClient) extends AuthController {
   )
 
 
+
+
+
   //List("2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1")
 
   def sendRequestToApi() = Action.async {
     // TODO ACTOR
 
-    val mapCodesToNames: Future[Map[String, String]] = getMapCodesToNames(CaissesToNames.makeRequest())
-    mapCodesToNames.map { mapCtN =>
-      filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN)
-      Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+    val mapCaissesToNames: Future[Map[String, String]] = getMapCaissesToNames(CaissesToNames.makeRequest())
+    val mapMetricsToNames: Future[Map[String, String]] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
+
+    mapCaissesToNames.flatMap { mapCtN =>
+      mapMetricsToNames.map{mapMtN =>
+      filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN,mapMtN)
+      Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))}
     }
   }
 
@@ -86,12 +91,12 @@ class Application @Inject()(ws: WSClient) extends AuthController {
     Redirect(routes.Application.detectedOnly())
   }
 
-//  def add(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action { implicit request =>
-//    val currentDate = java.time.LocalDate.now()
-//
-//    SuspectRow.create(new SuspectRow(java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric,0.0, models.Status.DetectedOnly, models.Nature.NotSpecified, currentDate, "Nobody", " "), NotSpecified)
-//    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
-//  }
+  //  def add(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action { implicit request =>
+  //    val currentDate = java.time.LocalDate.now()
+  //
+  //    SuspectRow.create(new SuspectRow(java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric,0.0, models.Status.DetectedOnly, models.Nature.NotSpecified, currentDate, "Nobody", " "), NotSpecified)
+  //    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+  //  }
 
   def find(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val optionOfSuspectRow = SuspectRow.findByKey(date, caisse, groupe, agence, pdv, metric)
@@ -109,29 +114,26 @@ class Application @Inject()(ws: WSClient) extends AuthController {
     }
   }
 
-  def edit(id:Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
+  def edit(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val optionOfSuspectRow = SuspectRow.findById(id)
     optionOfSuspectRow match {
       case Some(e) =>
-        val filledForm = editionForm.fill(EditionValues(e.admin,e.comment,e.nature.toString,e.status.toString))
+        val filledForm = editionForm.fill(EditionValues(e.admin, e.comment, e.nature.toString, e.status.toString))
         Ok(views.html.edit(e, filledForm))
       case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
     }
   }
 
 
-  def saveEdition(id: Long): Action[AnyContent] =  AuthenticatedAction() { implicit request =>
+  def saveEdition(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     editionForm.bindFromRequest.fold(
       errors => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly))),
       l => {
-        SuspectRow.edit(id,l.admin ,l.comment,models.Nature.withName(l.nature),models.Status.withName(l.status))
+        SuspectRow.edit(id, l.admin, l.comment, models.Nature.withName(l.nature), models.Status.withName(l.status))
         Redirect(routes.Application.findWithId(id))
       }
     )
   }
-
-
-
 
 
   //  def findById(date : String,caisse : String, groupe : String, agence :String,pdv :String, metric :String): Action[AnyContent] = Action{

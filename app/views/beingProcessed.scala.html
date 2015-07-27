@@ -51,7 +51,6 @@
         <th>@Messages("field.value")</th>
         <th>@Messages("field.nature")</th>
         <th>@Messages("field.detectionDate")</th>
-        <th>@Messages("field.status")</th>
         <th>@Messages("field.comment")</th>
         <th>@Messages("field.admin")</th>
         <th>@Messages("field.reasonsForDetection")</th>
@@ -68,11 +67,10 @@
         <td>@suspectRow.groupe</td>
         <td>@suspectRow.agence</td>
         <td>@suspectRow.pdv</td>
-        <td>@suspectRow.metric</td>
+        <td>@suspectRow.metricName</td>
         <td>@suspectRow.value</td>
         <td>@Messages(suspectRow.nature.toString)</td>
         <td>@suspectRow.firstDate</td>
-        <td>@Messages(suspectRow.status.toString)</td>
         <td>@suspectRow.comment</td>
         <td>@suspectRow.admin</td>
         <td>@suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</td>
