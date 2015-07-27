@@ -6,31 +6,33 @@ import models.Nature._
 import play.api.Play.current
 import play.api.db.DB
 
+import scala.concurrent.Future
 import scala.language.postfixOps
+import scala.util.Try
 
 
 case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, agence: String, pdv: String,
-                      metric: String,value:Double, status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) {
+                      metric: String,metricName: String,value:Double, status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) {
 
   // Constructeurs
-  def this(date: java.time.LocalDate, caisse: String, groupe: String, agence: String, pdv: String, metric: String,value:Double,
+  def this(date: java.time.LocalDate, caisse: String, groupe: String, agence: String, pdv: String, metric: String,metricName: String,value:Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(0, date, caisse, groupe, agence, pdv, metric,value, status, nature, firstDate, admin, comment)
+    this(0, date, caisse, groupe, agence, pdv, metric,metricName,value, status, nature, firstDate, admin, comment)
 
-  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, agence: String, metric: String,value:Double,
+  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, agence: String, metric: String,metricName: String,value:Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(id: Long, date, caisse, groupe, agence, "Aggregated", metric,value, status, nature, firstDate, admin, comment)
+    this(id: Long, date, caisse, groupe, agence, "Aggregated", metric,metricName,value, status, nature, firstDate, admin, comment)
 
-  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, metric: String,value:Double,
+  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, metric: String,metricName: String,value:Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(id, date, caisse, groupe, "Aggregated", "Aggregated", metric,value, status, nature, firstDate, admin, comment)
+    this(id, date, caisse, groupe, "Aggregated", "Aggregated", metric,metricName,value, status, nature, firstDate, admin, comment)
 
-  def this(id: Long, date: java.time.LocalDate, caisse: String, metric: String,value:Double,
+  def this(id: Long, date: java.time.LocalDate, caisse: String, metric: String,metricName: String,value:Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(id, date, caisse, "Aggregated", "Aggregated", "Aggregated", metric,value, status, nature, firstDate, admin, comment)
+    this(id, date, caisse, "Aggregated", "Aggregated", "Aggregated", metric,metricName,value, status, nature, firstDate, admin, comment)
 
-  def this(row: Row, metric: String) =
-    this(0, row.date, row.dimensions.head, row.dimensions(1), row.dimensions(2), row.dimensions(3), metric,row.metric, Status.DetectedOnly, Nature.NotSpecified, java.time.LocalDate.now, "", "")
+  def this(row: Row, metric: String,map:Map[String,String]) =
+    this(0, row.date, row.dimensions.head, row.dimensions(1), row.dimensions(2), row.dimensions(3), metric,map(metric),row.metric, Status.DetectedOnly, Nature.NotSpecified, java.time.LocalDate.now, "", "")
 
   //Methodes
   def isAbnormal: Boolean = this.nature match {
@@ -41,6 +43,9 @@ case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, group
 
   def reasonsForDetection: List[ReasonForDetection] = {
     ReasonForDetection.getReasonsForDetection(id)
+  }
+  def withMetricName(myMap:Map[String,String]): SuspectRow ={
+    this.copy( metric= myMap(this.metric))
   }
 }
 
@@ -53,6 +58,7 @@ object SuspectRow {
       get[String]("agence") ~
       get[String]("pdv") ~
       get[String]("metric") ~
+      get[String]("metric_name") ~
       get[Double]("value") ~
       get[String]("status") ~
       get[String]("nature") ~
@@ -60,8 +66,8 @@ object SuspectRow {
       get[String]("admin") ~
       get[String]("comment") ~
       get[String]("date") map {
-      case id ~ caisse ~ groupe ~ agence ~ pdv ~ metric~ value ~ status ~ nature ~ firstDate ~ admin ~ comment ~ date =>
-        SuspectRow(id, java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric,value, Status.withName(status),
+      case id ~ caisse ~ groupe ~ agence ~ pdv ~ metric~ metricName~value ~ status ~ nature ~ firstDate ~ admin ~ comment ~ date =>
+        SuspectRow(id, java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric,metricName,value, Status.withName(status),
           Nature.withName(nature), java.time.LocalDate.parse(firstDate), admin, comment)
     }
   }
@@ -76,14 +82,15 @@ object SuspectRow {
       getId(suspectRow) match {
         case None =>
           val id: Option[Long] =
-            SQL("insert into suspect_rows (date,caisse,groupe,agence,pdv,metric,value,status,nature,first_date,admin, comment) values " +
-              "({date},{caisse},{groupe},{agence},{pdv},{metric},{value},{status},{nature},{firstDate},{admin},{comment})").on(
+            SQL("insert into suspect_rows (date,caisse,groupe,agence,pdv,metric,metric_name,value,status,nature,first_date,admin, comment) values " +
+              "({date},{caisse},{groupe},{agence},{pdv},{metric},{metricName},{value},{status},{nature},{firstDate},{admin},{comment})").on(
                 'date -> suspectRow.date.toString,
                 'caisse -> suspectRow.caisse,
                 'groupe -> suspectRow.groupe,
                 'agence -> suspectRow.agence,
                 'pdv -> suspectRow.pdv,
                 'metric -> suspectRow.metric,
+                'metricName -> suspectRow.metricName,
                 'value -> suspectRow.value,
                 'status -> suspectRow.status.toString,
                 'nature -> suspectRow.nature.toString,

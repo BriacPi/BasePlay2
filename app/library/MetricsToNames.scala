@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object MetricsToNames {
-  def makeRequest(): Future[WSResponse] = {
+  def makeMetricRequest(): Future[WSResponse] = {
     val url = "https://vpc-2-bpce-apiu.capback.fr/display/bpce.json"
     val request: WSRequest = WS.url(url)
 
@@ -21,7 +21,7 @@ object MetricsToNames {
     complexRequest.get().recoverWith {
       case e: TimeoutException =>
         println("Error in getting Metrics to Names JSON")
-        makeRequest()
+        makeMetricRequest()
     }
   }
 
@@ -32,7 +32,7 @@ object MetricsToNames {
       result.fold(
         errors => {
           println("error in reading CodesToNameJson" + errors)
-          getMapMetricsToNames(makeRequest())
+          getMapMetricsToNames(makeMetricRequest())
         }, metrics => {
           Future.successful(metrics.getMetricsToNamesMap)
         })

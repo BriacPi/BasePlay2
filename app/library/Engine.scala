@@ -13,10 +13,10 @@ import scala.concurrent.Future
 object Engine {
 
   def filterAbnormalitiesForAllConfigurations(caisseList: List[String], configurationList: List[Configuration], monthList: List[String]
-                                           , mapCodesToNames: Map[String, String]): Unit = {
+                                           , mapCaissesToNames: Map[String, String],mapMetricsToNames: Map[String, String]): Unit = {
     val iterator =configurationList.foldLeft(Future.successful(List.empty[String]))((acc: Future[List[String]], config: Configuration) =>
       acc.flatMap((listOfAbnormalities: List[String]) => getDataForAllCaisses(caisseList, config, monthList).map((rows: List[Row]) => {
-        filterAllAbnormalities(rows, mapCodesToNames, config.metric)
+        filterAllAbnormalities(rows, mapCaissesToNames, config.metric,mapMetricsToNames)
         Nil
       }
       )
