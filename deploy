@@ -1,0 +1,49 @@
+#!/bin/bash
+
+
+# Fail hard and fast
+set -eo pipefail
+
+# User variables
+
+# Default variables
+SSH_HOST="demo-iperf-rupture.capback.fr"
+SSH_USER="captain"
+SSH_URI="${SSH_USER}@${SSH_HOST}"
+SSH_KEY="${HOME}/.ssh/work"
+SCP_CMD="scp -i ${SSH_KEY}"
+SSH_CMD="ssh -i ${SSH_KEY}"
+
+LOCAL_ARCHIVE="app.tar.gz"
+REMOTE_ARCHIVE="/var/www/app.tar.gz"
+REMOTE_DIRECTORY="/var/www/app"
+
+
+sysout () {
+	echo
+	echo "#"
+	echo "# $1"
+	echo "# "
+	echo 
+}
+
+error () {
+	echo "$1" 1>&2
+}
+
+cd `dirname $0`
+
+sysout "Making Doctor-Strange..."
+
+make
+#make test
+
+sysout "Deploying Doctor-Strange..."
+
+${SCP_CMD} ${LOCAL_ARCHIVE} ${SSH_URI}:${REMOTE_ARCHIVE}
+${SSH_CMD} ${SSH_URI} "supervisorctl stop doctor-strange || true"
+${SSH_CMD} ${SSH_URI} "(rm -rf ${REMOTE_DIRECTORY} || true) && mkdir -p ${REMOTE_DIRECTORY}"
+${SSH_CMD} ${SSH_URI} "tar -C ${REMOTE_DIRECTORY} -xvf ${REMOTE_ARCHIVE}"
+${SSH_CMD} ${SSH_URI} "supervisorctl start doctor-strange"
+
+exit 0
