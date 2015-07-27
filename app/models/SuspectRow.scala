@@ -5,6 +5,7 @@ import anorm._
 import models.Nature._
 import play.api.Play.current
 import play.api.db.DB
+import repositories.MetricRepository
 
 import scala.concurrent.Future
 import scala.language.postfixOps
@@ -109,10 +110,15 @@ object SuspectRow {
 
 
   def filterByStatus(status: Status): List[SuspectRow] = {
+    val metrics = MetricRepository.listCodes()
     DB.withConnection {
       implicit c =>
         SQL("select * from suspect_rows where status = {status}").on('status -> status.toString).as(suspectRows *)
-    }
+    }.filter ( suspectRow =>
+      metrics.contains(suspectRow.metric)
+    ).filter(suspectRow =>
+      suspectRow.date.isAfter(java.time.LocalDate.parse("2013-12-31"))
+      )
   }
 
   def findByKey(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Option[SuspectRow] = DB.withConnection { implicit c =>

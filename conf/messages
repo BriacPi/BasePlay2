@@ -46,9 +46,16 @@ error.invalidUserOrPassword= Invalid User or Password.
 
 
 menu.contact = Contact
+menu.data = Data
 menu.configuration = Configuration
 menu.logout = Logout
 menu.profil = Profil
 menu.users = Users
 menu.add = add
 menu.list = Users list
+
+metric.title = Settings
+metric.metric = Metric Code
+metric.name = Metric Name
+metric.used= Used Metrics
+metric.unused= Unused Metrics

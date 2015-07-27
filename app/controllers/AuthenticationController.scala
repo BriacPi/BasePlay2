@@ -34,7 +34,6 @@ class AuthenticationController @Inject()(cache: CacheApi) extends Controller {
   )
 
   def welcome: Action[AnyContent] = Action { implicit request =>
-
      Ok(views.html.authentication.authentication(form))
 
   }
@@ -71,7 +70,6 @@ class AuthenticationController @Inject()(cache: CacheApi) extends Controller {
         }
       }
     )
-
   }
 
   def logout = Action { implicit request =>

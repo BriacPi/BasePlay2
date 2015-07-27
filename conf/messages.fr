@@ -45,9 +45,16 @@ error.invalidPassword= Mot de passe invalide.
 error.invalidUserOrPassword= Utilisateur ou Mot de passe invalide.
 
 menu.contact = Contact
+menu.data = Données
 menu.configuration = Configuration
 menu.logout = Déconnexion
 menu.profil = Profile
 menu.users = Utilisateurs
 menu.add = Ajouter un utilisateur
 menu.list = Liste des utilisateurs
+
+metric.title = Configuration
+metric.metric = Code Métrique
+metric.name = Nom de la Métrique
+metric.used= Métriques utilisées
+metric.unused= Métriques inutilisées

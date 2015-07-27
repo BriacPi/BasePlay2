@@ -1,7 +1,3 @@
-/**
- * Copyright (C) 2015 Captain Dash - All Rights Reserved
- */
-
 package repositories.authentication
 
 import anorm.SqlParser._
