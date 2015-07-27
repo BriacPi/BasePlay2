@@ -34,7 +34,9 @@ class AuthenticationController @Inject()(cache: CacheApi) extends Controller {
   )
 
   def welcome: Action[AnyContent] = Action { implicit request =>
+
      Ok(views.html.authentication.authentication(form))
+
   }
 
   def createUser(email:String,firstName:String,lastName:String,password:String,company:String): Action[AnyContent] = Action { implicit request =>
