@@ -3,6 +3,7 @@ package controllers
 import java.util.Calendar
 import javax.inject.Inject
 
+import components.mvc.AuthController
 import library.CodesToNames
 import library.CodesToNames._
 import library.Engine._
@@ -18,7 +19,7 @@ import models.EditionValues
 import scala.concurrent.Future
 
 
-class Application @Inject()(ws: WSClient) extends Controller {
+class Application @Inject()(ws: WSClient) extends AuthController {
 
   // List of metrics to analyse
   val metrics = List("COL01")
@@ -69,30 +70,30 @@ class Application @Inject()(ws: WSClient) extends Controller {
     }
   }
 
-  def solved(): Action[AnyContent] = Action { implicit request =>
+  def solved(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     Ok(views.html.solved(SuspectRow.filterByStatus(models.Status.Solved)))
   }
 
-  def beingProcessed(): Action[AnyContent] = Action { implicit request =>
+  def beingProcessed(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     Ok(views.html.beingProcessed(SuspectRow.filterByStatus(models.Status.BeingProcessed)))
   }
 
-  def detectedOnly(): Action[AnyContent] = Action { implicit request =>
+  def detectedOnly(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
   }
 
-  def redirect() = Action {
+  def redirect() = AuthenticatedAction() {
     Redirect(routes.Application.detectedOnly())
   }
 
-  def add(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action { implicit request =>
-    val currentDate = java.time.LocalDate.now()
+//  def add(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action { implicit request =>
+//    val currentDate = java.time.LocalDate.now()
+//
+//    SuspectRow.create(new SuspectRow(java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric,0.0, models.Status.DetectedOnly, models.Nature.NotSpecified, currentDate, "Nobody", " "), NotSpecified)
+//    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+//  }
 
-    SuspectRow.create(new SuspectRow(java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric,0.0, models.Status.DetectedOnly, models.Nature.NotSpecified, currentDate, "Nobody", " "), NotSpecified)
-    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
-  }
-
-  def find(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action { implicit request =>
+  def find(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val optionOfSuspectRow = SuspectRow.findByKey(date, caisse, groupe, agence, pdv, metric)
     optionOfSuspectRow match {
       case Some(e) => Ok(views.html.suspectRow(e))
@@ -100,7 +101,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
     }
   }
 
-  def findWithId(id: Long): Action[AnyContent] = Action { implicit request =>
+  def findWithId(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val optionOfSuspectRow = SuspectRow.findById(id)
     optionOfSuspectRow match {
       case Some(e) => Ok(views.html.suspectRow(e))
@@ -108,7 +109,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
     }
   }
 
-  def edit(id:Long): Action[AnyContent] = Action { implicit request =>
+  def edit(id:Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val optionOfSuspectRow = SuspectRow.findById(id)
     optionOfSuspectRow match {
       case Some(e) =>
@@ -119,7 +120,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
   }
 
 
-  def saveEdition(id: Long): Action[AnyContent] =  Action { implicit request =>
+  def saveEdition(id: Long): Action[AnyContent] =  AuthenticatedAction() { implicit request =>
     editionForm.bindFromRequest.fold(
       errors => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly))),
       l => {

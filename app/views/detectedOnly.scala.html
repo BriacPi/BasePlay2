@@ -12,9 +12,9 @@
     <h1>@Messages("home.title")</h1>
 </div>
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="/DetectedOnly">@Messages("home.header.detectedOnly")</a></li>
-    <li role="presentation" ><a href="/BeingProcessed">@Messages("home.header.beingProcessed")</a></li>
-    <li role="presentation" ><a href="/Solved">@Messages("home.header.solved")</a></li>
+    <li role="presentation" class="active"><a href="/detected">@Messages("home.header.detectedOnly")</a></li>
+    <li role="presentation" ><a href="/processed">@Messages("home.header.beingProcessed")</a></li>
+    <li role="presentation" ><a href="/solved">@Messages("home.header.solved")</a></li>
 </ul>
 
 <script type="text/javascript" class="init">
@@ -63,7 +63,7 @@
     <tbody>
 
     @rows.map { suspectRow =>
-    <tr class="gradeA" onclick="window.location.href='/SuspectRow/@suspectRow.id';">
+    <tr class="gradeA" onclick="window.location.href='/row/@suspectRow.id';">
         <td>@suspectRow.id</td>
         <td>@suspectRow.date</td>
         <td>@suspectRow.caisse</td>

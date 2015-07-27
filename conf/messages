@@ -1,3 +1,9 @@
+authentication.header=Authentication
+authentication.title= Authentication
+authentication.email= E-mail address
+authentication.password = Password
+authentication.login = Authenticate
+
 home.header = BPCE Health Data Center
 home.title = BPCE suspicious Data
 home.header.solved = Solved
@@ -32,4 +38,10 @@ DetectedOnly = Detected Only
 
 TooFarFromMeanByDate=TooFarFromMeanByDate
 TooFarFromMeanByDimensions=TooFarFromMeanByDimensions
+
+error.notAuthorizedForThisUser = This action is not allowed for this user account.
+error.userNotFound= User not found.
+error.invalidPassword= Invalid password.
+error.invalidUserOrPassword= Invalid User or Password.
+
 

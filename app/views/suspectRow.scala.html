@@ -11,9 +11,9 @@
     <h1>@Messages("home.title")</h1>
 </div>
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" ><a href="/DetectedOnly">@Messages("home.header.detectedOnly")</a></li>
-    <li role="presentation" ><a href="/BeingProcessed">@Messages("home.header.beingProcessed")</a></li>
-    <li role="presentation" ><a href="/Solved">@Messages("home.header.solved")</a></li>
+    <li role="presentation" ><a href="/detected">@Messages("home.header.detectedOnly")</a></li>
+    <li role="presentation" ><a href="/processed">@Messages("home.header.beingProcessed")</a></li>
+    <li role="presentation" ><a href="/solved">@Messages("home.header.solved")</a></li>
 </ul>
 
 
@@ -27,7 +27,7 @@
 
         </tr>
         </thead>
-        <tbody class="gradeA" onclick="window.location.href='/Edition/@suspectRow.id';">
+        <tbody class="gradeA" onclick="window.location.href='/edition/@suspectRow.id';">
         <tr>
             <th>@Messages("field.dates")</th>
             <td>@suspectRow.date</td>
@@ -65,7 +65,7 @@
         </tr>
         <tr>
             <th>@Messages("field.nature")</th>
-            <td>@Messages(suspectRow.nature.toString)/td>
+            <td>@Messages(suspectRow.nature.toString)</td>
 
         </tr>
         <tr>

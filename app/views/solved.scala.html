@@ -12,9 +12,9 @@
 </div>
 <ul class="nav nav-tabs" role="tablist">
 
-    <li role="presentation" ><a href="/DetectedOnly">@Messages("home.header.detectedOnly")</a></li>
-    <li role="presentation"><a href="/BeingProcessed">@Messages("home.header.beingProcessed")</a></li>
-    <li role="presentation"  class="active"><a href="/Solved">@Messages("home.header.solved")</a></li>
+    <li role="presentation" ><a href="/detected">@Messages("home.header.detectedOnly")</a></li>
+    <li role="presentation"><a href="/processed">@Messages("home.header.beingProcessed")</a></li>
+    <li role="presentation"  class="active"><a href="/solved">@Messages("home.header.solved")</a></li>
 
 </ul>
 
@@ -39,16 +39,6 @@
 
 
 
-<table id="myTable" class="display" cellspacing="0" width="100%">
-    <thead>
-    <tr>
-        <th>#</th>
-        <th>Date</th>
-        <th>Status</th>
-    </tr>
-    </thead>
-    <tbody></tbody>
-</table>
 
 
 <table id="Solved" class="display" cellspacing="0" width="100%">
@@ -74,7 +64,7 @@
     <tbody>
 
     @rows.map { suspectRow =>
-    <tr class="gradeA" onclick="window.location.href='/SuspectRow/@suspectRow.id';">
+    <tr class="gradeA" onclick="window.location.href='/row/@suspectRow.id';">
         <td>@suspectRow.id</td>
         <td>@suspectRow.date</td>
         <td>@suspectRow.caisse</td>
