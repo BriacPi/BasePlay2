@@ -45,3 +45,7 @@ error.invalidPassword= Invalid password.
 error.invalidUserOrPassword= Invalid User or Password.
 
 
+menu.contact = Contact
+menu.configuration = Configuration
+menu.logout = Logout
+menu.profil = Profil
