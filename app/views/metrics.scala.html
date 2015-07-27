@@ -1,0 +1,120 @@
+@import repositories.CodeMetricWithoutId
+@(metricsUsed:List[CodeMetricWithoutId],metricsUnused:List[CodeMetricWithoutId])(implicit lang:Lang)
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+
+
+@main(Messages("home.header")) {
+<div class="page-header">
+    <h1>@Messages("metric.title")</h1>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="page-header">
+            <h2>@Messages("metric.unused")</h2>
+        </div>
+        <script type="text/javascript" class="init">
+            $(document).ready(function() {
+	        oTable=$('#MetricsUnused').DataTable(
+	        {
+                 "columnDefs": [
+                                {
+                                 "targets": [ 0 ],
+                                 "visible": false,
+                                 "searchable": false
+                                 }
+                                ]
+            }
+	        );
+
+
+            } );
+</script>
+
+        <table id="MetricsUnused" class="display" cellspacing="0" width="99%">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>@Messages("metric.metric")</th>
+                <th>@Messages("metric.name")</th>
+
+
+            </tr>
+            </thead>
+
+
+            @metricsUnused.map { metric =>
+            <tr class="gradeA" onclick="window.location.href='/configuration/add/@metric.code';">
+                <td>0</td>
+                <td>@metric.code</td>
+                <td>@metric.metricName</td>
+            </tr>
+            }
+
+
+            </tr>
+        </table>
+
+
+
+    </div>
+<div class="col-md-6">
+    <div class="page-header">
+        <h2>@Messages("metric.used")</h2>
+    </div>
+    <script type="text/javascript" class="init">
+            $(document).ready(function() {
+	        oTable=$('#MetricsUsed').DataTable(
+	        {
+                 "columnDefs": [
+                                {
+                                 "targets": [ 0 ],
+                                 "visible": false,
+                                 "searchable": false
+                                 }
+                                ]
+            }
+	        );
+
+
+            } );
+</script>
+
+    <table id="MetricsUsed" class="display" cellspacing="0" width="99%">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>@Messages("metric.metric")</th>
+            <th>@Messages("metric.name")</th>
+
+
+        </tr>
+        </thead>
+
+
+        @metricsUsed.map { metric =>
+            <tr class="gradeA" onclick="window.location.href='/configuration/remove/@metric.code';">
+            <td>0</td>
+            <td>@metric.code</td>
+            <td>@metric.metricName</td>
+        </tr>
+        }
+
+
+        </tbody>
+    </table>
+
+
+
+</div>
+
+
+
+</div>
+
+}

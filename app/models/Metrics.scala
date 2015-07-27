@@ -3,14 +3,13 @@ package models
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Reads, _}
 
-
 case class Metrics(metrics: Map[String, Metric]) {
-  def getMetricsToNamesMap:Map[String,String]={
+  def getMetricsToNamesMap: Map[String, String] = {
     metrics.mapValues(_.label)
   }
 }
-case class Metric(label:String,formatString:String, growth:String, invertGrowth:Boolean, description:String, formatGrowth:String)
 
+case class Metric(label: String, formatString: String, growth: String, invertGrowth: Boolean, description: String, formatGrowth: String)
 
 
 object Metric {
@@ -25,7 +24,8 @@ object Metric {
 }
 
 
-
 object Metrics {
   implicit val metricsReader: Reads[Metrics] = Json.reads[Metrics]
 }
+
+

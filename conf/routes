@@ -19,3 +19,8 @@ GET  /                                                                          
 GET /authentication                                                                  controllers.AuthenticationController.welcome()
 POST /login                                                                          controllers.AuthenticationController.login()
 GET /logout                                                                          controllers.AuthenticationController.logout()
+
+# Configuration
+GET /configuration                                                                  controllers.Application.allUsedMetrics()
+GET /configuration/add/:code                                                       controllers.Application.addMetric(code:String)
+GET /configuration/remove/:code                                                    controllers.Application.removeMetric(code:String)

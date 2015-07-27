@@ -4,9 +4,9 @@ import java.util.Calendar
 import javax.inject.Inject
 
 import components.mvc.AuthController
-import library.{MetricsToNames, CaissesToNames}
 import library.CaissesToNames._
 import library.Engine._
+import library.{CaissesToNames, MetricsToNames}
 import models.{Configuration, EditionValues, SuspectRow}
 import play.api.data.Form
 import play.api.data.Forms._
@@ -14,23 +14,14 @@ import play.api.data.format.Formats._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 import play.api.mvc._
+import repositories.{CodeMetricWithoutId, CodeMetric, MetricRepository}
 
 import scala.concurrent.Future
 
 
 class Application @Inject()(ws: WSClient) extends AuthController {
 
-  // List of metrics to analyse
-  val metrics = List("COL01")
 
-  // Dimensions **** TIME MUST BE THE FIRST DIMENSION FOR EACH****
-  val dimensionsList = List(List("time:weekly", "groupe", "agence", "pdv"))
-
-  // Configurations
-  val configurations: List[Configuration] = for {
-    metric <- metrics
-    dimensions <- dimensionsList
-  } yield Configuration(metric, dimensions)
 
   // List of BPCE caisses to look for
   val caisseList = List("14445", "13825", "11425", "18025", "13485", "14265", "18315")
@@ -57,7 +48,7 @@ class Application @Inject()(ws: WSClient) extends AuthController {
   )
 
 
-
+  val mapMetricsToNames: Future[Map[String, String]] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
 
 
   //List("2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1")
@@ -65,13 +56,23 @@ class Application @Inject()(ws: WSClient) extends AuthController {
   def sendRequestToApi() = Action.async {
     // TODO ACTOR
 
+    // List of metrics to analyse
+    val metrics = MetricRepository.listCodes()
+    // Dimensions **** TIME MUST BE THE FIRST DIMENSION FOR EACH****
+    val dimensionsList = List(List("time:weekly", "groupe", "agence", "pdv"))
+    // Configurations
+    val configurations: List[Configuration] = for {
+      metric <- metrics
+      dimensions <- dimensionsList
+    } yield Configuration(metric, dimensions)
+
     val mapCaissesToNames: Future[Map[String, String]] = getMapCaissesToNames(CaissesToNames.makeRequest())
-    val mapMetricsToNames: Future[Map[String, String]] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
 
     mapCaissesToNames.flatMap { mapCtN =>
-      mapMetricsToNames.map{mapMtN =>
-      filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN,mapMtN)
-      Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))}
+      mapMetricsToNames.map { mapMtN =>
+        filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN, mapMtN)
+        Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+      }
     }
   }
 
@@ -135,6 +136,30 @@ class Application @Inject()(ws: WSClient) extends AuthController {
     )
   }
 
+  def allUsedMetrics(): Action[AnyContent] = AuthenticatedAction().async { implicit request =>
+    mapMetricsToNames.map { mapMtN =>
+      val allMetrics = mapMtN.toList.map(tuple => CodeMetricWithoutId( tuple._1, tuple._2)).toSet
+      val usedMetricsWithID:List[CodeMetric] = MetricRepository.list()
+      val usedMetrics =usedMetricsWithID.map(new  CodeMetricWithoutId(_)).toSet
+      val unusedMetrics = allMetrics.diff(usedMetrics)
+      Ok(views.html.metrics(usedMetrics.toList.sortBy(_.code), unusedMetrics.toList.sortBy(_.code)))
+
+    }
+  }
+
+  def addMetric(code:String): Action[AnyContent] = AuthenticatedAction().async {
+    mapMetricsToNames.map { mapMtN =>
+      MetricRepository.create(CodeMetricWithoutId(code,mapMtN(code)))
+      Redirect(routes.Application.allUsedMetrics())
+    }
+  }
+
+  def removeMetric(code:String): Action[AnyContent] = AuthenticatedAction().async {
+    mapMetricsToNames.map { mapMtN =>
+      MetricRepository.delete(code)
+      Redirect(routes.Application.allUsedMetrics())
+    }
+  }
 
   //  def findById(date : String,caisse : String, groupe : String, agence :String,pdv :String, metric :String): Action[AnyContent] = Action{
   //    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,metric,"To be specified","","Not treated","","To be specified","Unknown")
