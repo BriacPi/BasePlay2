@@ -48,3 +48,6 @@ menu.contact = Contact
 menu.configuration = Configuration
 menu.logout = Déconnexion
 menu.profil = Profile
+menu.users = Utilisateurs
+menu.add = Ajouter un utilisateur
+menu.list = Liste des utilisateurs

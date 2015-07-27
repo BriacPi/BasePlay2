@@ -49,3 +49,6 @@ menu.contact = Contact
 menu.configuration = Configuration
 menu.logout = Logout
 menu.profil = Profil
+menu.users = Users
+menu.add = add
+menu.list = Users list
