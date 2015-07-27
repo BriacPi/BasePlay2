@@ -9,7 +9,7 @@ import play.api.Play.current
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object CodesToNames {
+object CaissesToNames {
   def makeRequest(): Future[WSResponse] = {
     val url = "https://s3-eu-west-1.amazonaws.com/production-visualizations/bpce-labels.js"
     val request: WSRequest = WS.url(url)
@@ -19,7 +19,7 @@ object CodesToNames {
         .withRequestTimeout(30000)
     complexRequest.get().recoverWith {
       case e: TimeoutException =>
-        println("Error in getting Codes to Names JSON")
+        println("Error in getting Caisses to Names JSON")
         makeRequest()
     }
   }

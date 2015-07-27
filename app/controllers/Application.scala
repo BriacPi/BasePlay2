@@ -4,8 +4,8 @@ import java.util.Calendar
 import javax.inject.Inject
 
 import components.mvc.AuthController
-import library.CodesToNames
-import library.CodesToNames._
+import library.CaissesToNames
+import library.CaissesToNames._
 import library.Engine._
 import models.ReasonForDetection.NotSpecified
 import models.{Configuration, SuspectRow}
@@ -63,7 +63,7 @@ class Application @Inject()(ws: WSClient) extends AuthController {
   def sendRequestToApi() = Action.async {
     // TODO ACTOR
 
-    val mapCodesToNames: Future[Map[String, String]] = getMapCodesToNames(CodesToNames.makeRequest())
+    val mapCodesToNames: Future[Map[String, String]] = getMapCodesToNames(CaissesToNames.makeRequest())
     mapCodesToNames.map { mapCtN =>
       filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN)
       Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
