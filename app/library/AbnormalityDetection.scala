@@ -37,14 +37,14 @@ object AbnormalityDetection {
 
 
   // Ways to Detect Abnormalities
-  def filterAbnormalitiesFromDistanceToMean(rows: List[Row], numberOfStdDev: Int, metric: String): Unit = {
+  def filterAbnormalitiesFromDistanceToMean(rows: List[Row], numberOfStdDev: Int, metric: String,map:Map[String,String]): Unit = {
     val groupedByDate = groupByDate(rows)
     rows.foreach { row =>
       val averageByDate = operationByDate(groupedByDate, average, row)
       val standardDeviationByDate = operationByDate(groupedByDate, standardDeviation, row)
       if (row.metric > averageByDate + numberOfStdDev * standardDeviationByDate ||
         row.metric < averageByDate - numberOfStdDev * standardDeviationByDate) {
-        SuspectRow.create(new SuspectRow(row, metric),TooFarFromMeanByDate)
+        SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDate)
       }
     }
     val groupedByDimensions = groupByDimensions(rows)
@@ -53,13 +53,13 @@ object AbnormalityDetection {
       val standardDeviationByDimensions = operationByDimensions(groupedByDimensions, standardDeviation, row)
       if (row.metric > averageByDimensions + numberOfStdDev * standardDeviationByDimensions ||
         row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions)
-        SuspectRow.create(new SuspectRow(row, metric),TooFarFromMeanByDimensions)
+        SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDimensions)
     }
 
   }
 
 
-  def filterAllAbnormalities(rows: List[Row], mapCodesToNames: Map[String, String], metric: String): Unit = {
+  def filterAllAbnormalities(rows: List[Row], mapCodesToNames: Map[String, String], metric: String,map:Map[String,String]): Unit = {
     val rowsWithNames = rows.map(row => {
       val dimensionsWithNames = row.dimensions.map(dimension =>
         if (mapCodesToNames.contains(dimension)) mapCodesToNames(dimension)
@@ -67,7 +67,7 @@ object AbnormalityDetection {
       Row(row.date,dimensionsWithNames,row.metric)
     }
     )
-    filterAbnormalitiesFromDistanceToMean(rowsWithNames, 6, metric)
+    filterAbnormalitiesFromDistanceToMean(rowsWithNames, 6, metric,map)
 
   }
 }
