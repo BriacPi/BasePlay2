@@ -18,3 +18,4 @@ GET  /                                                                          
 # Authentication
 GET /authentication                                                                  controllers.AuthenticationController.welcome()
 POST /login                                                                          controllers.AuthenticationController.login()
+GET /logout                                                                          controllers.AuthenticationController.logout()
