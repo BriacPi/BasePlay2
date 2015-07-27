@@ -74,9 +74,8 @@ class AuthenticationController @Inject()(cache: CacheApi) extends Controller {
 
   }
 
-  def logout = Action { request =>
-    SessionManager.destroy(NoContent)
-    Ok(views.html.authentication.authentication(form))
+  def logout = Action { implicit request =>
+    SessionManager.destroy(Ok(views.html.authentication.authentication(form)))
   }
 
 }
