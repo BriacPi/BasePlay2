@@ -6,6 +6,7 @@ import javax.inject.Inject
 import components.mvc.AuthController
 import library.CaissesToNames
 import library.CaissesToNames._
+import library.MetricsToNames._
 import library.Engine._
 import models.ReasonForDetection.NotSpecified
 import models.{Configuration, SuspectRow}
@@ -17,6 +18,8 @@ import play.api.libs.ws.WSClient
 import play.api.mvc._
 import models.EditionValues
 import scala.concurrent.Future
+import spray.caching.{LruCache, Cache}
+import spray.util._
 
 
 class Application @Inject()(ws: WSClient) extends AuthController {
@@ -58,13 +61,23 @@ class Application @Inject()(ws: WSClient) extends AuthController {
   )
 
 
+  // Hash Map Metrics to Names
+  val cache: Cache[Double] = LruCache()
+  def cachedOp[T](key: T): Future[Map[String, String]] = cache(key) {
+    getMapMetricsToNames(CaissesToNames.makeRequest())
+  }
+  val mapMetricsToNames: Future[Map[String, String]] = getMapMetricsToNames(CaissesToNames.makeRequest())
+
+
+
   //List("2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1")
 
   def sendRequestToApi() = Action.async {
     // TODO ACTOR
 
-    val mapCodesToNames: Future[Map[String, String]] = getMapCodesToNames(CaissesToNames.makeRequest())
-    mapCodesToNames.map { mapCtN =>
+    val mapCaissesToNames: Future[Map[String, String]] = getMapCaissesToNames(CaissesToNames.makeRequest())
+
+    mapCaissesToNames.map { mapCtN =>
       filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN)
       Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
     }

@@ -5,7 +5,7 @@ import play.api.libs.json.{JsPath, Reads, _}
 
 
 case class Metrics(metrics: Map[String, Metric]) {
-  def getCodesToNamesMap:Map[String,String]={
+  def getMetricsToNamesMap:Map[String,String]={
     metrics.mapValues(_.label)
   }
 }

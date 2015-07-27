@@ -15,7 +15,9 @@ libraryDependencies ++= Seq(
   "org.apache.spark" % "spark-mllib_2.11" % "1.3.0",
   "com.typesafe.play" %% "anorm" % "2.4.0",
   "com.beachape" %% "enumeratum" % "1.2.2",
-  "com.beachape" %% "enumeratum-play" % "1.2.2"
+  "com.beachape" %% "enumeratum-play" % "1.2.2",
+  "io.spray" % "spray-caching" % "1.3.1"
+
 )
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.27"
 

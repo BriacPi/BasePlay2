@@ -2,7 +2,7 @@ package library
 
 import java.util.concurrent.TimeoutException
 
-import models.Labels
+import models.Metrics
 import play.api.Play.current
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WS, WSRequest, WSResponse}
@@ -25,16 +25,16 @@ object MetricsToNames {
     }
   }
 
-  def getMapCodesToNames(answer: Future[WSResponse]): Future[Map[String, String]] = {
+  def getMapMetricsToNames(answer: Future[WSResponse]): Future[Map[String, String]] = {
     answer.flatMap { response =>
       val json: JsValue = Json.parse(response.body)
-      val result = json.validate[Labels]
+      val result = json.validate[Metrics]
       result.fold(
         errors => {
-          println("error in reading CodesToNameJson" +errors)
-          getMapCodesToNames(makeRequest())
-        }, labels => {
-          Future.successful(labels.getCodesToNamesMap)
+          println("error in reading CodesToNameJson" + errors)
+          getMapMetricsToNames(makeRequest())
+        }, metrics => {
+          Future.successful(metrics.getMetricsToNamesMap)
         })
     }
   }
