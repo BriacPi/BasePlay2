@@ -1,6 +1,7 @@
 package library
 
 import java.io.File
+import java.nio.file.{Paths, Files}
 
 import library.Engine._
 import models.{Configuration, RawData, Row}
@@ -9,6 +10,7 @@ import play.api.libs.json.{JsValue, Json}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.reflect.io.Path
 
 
 object DataStorage {
@@ -34,6 +36,7 @@ object DataStorage {
 
   def sendRequestToApiWithStorage(caisse: String, config: Configuration, month: String, numberOfTry: Int): Future[List[Row]] = {
     val path = "jsonDataStorage/"
+    if (! Files.exists(Paths.get(path))) {Path(path).createDirectory()}
     val filename = configToFilename(caisse, config, month)
     if (fileExists(filename, path)) {
       val file: File = new File(path + filename)
