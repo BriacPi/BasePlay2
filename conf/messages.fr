@@ -1,3 +1,9 @@
+authentication.header=Authentification
+authentication.title= Authentification
+authentication.email= Adresse E-mail
+authentication.password = Mot de passe
+authentication.login = Connexion
+
 home.header = Centre de Santé des Données BPCE
 home.title = Données suspectes BPCE
 home.header.solved = Résolu
@@ -32,4 +38,9 @@ DetectedOnly = Non affecté
 
 TooFarFromMeanByDate= Trop différente des autres de même date
 TooFarFromMeanByDimensions=Trop différente des autres de mêmes dimensions
+
+error.notAuthorizedForThisUser = Action non authorisée pour cet utilisateur.
+error.userNotFound= Utilisateur introuvable.
+error.invalidPassword= Mot de passe invalide.
+error.invalidUserOrPassword= Utilisateur ou Mot de passe invalide.
 

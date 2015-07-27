@@ -1,0 +1,46 @@
+@import models.authentication.LoginValues
+@(loginForm:Form[LoginValues])(implicit lang:Lang)
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+@import models.SuspectRow._
+
+
+
+@main(Messages("authentication.header")) {
+
+<div class="login-container">
+    @helper.form(action = routes.AuthenticationController.login(), args = 'class -> "login-form") {
+    <div class="title">
+        <h3>@Messages("authentication.title")</h3>
+    </div>
+
+    @if(loginForm.hasGlobalErrors) {
+    <ul class="login__global-error-message">
+        @for(err <- loginForm.globalErrors.flatMap(_.messages)) {
+        <li class="error">@Messages(err)</li>
+        }
+    </ul>
+    }
+    @* views.html.admin.components.globalError(loginForm) *@
+    <div class="content">
+        <div>
+            @helper.inputText(loginForm("email"), '_label -> Messages("authentication.email"), 'required -> "required")
+        </div>
+        <div>
+            @helper.inputText(loginForm("password"), 'type -> "password", '_label -> Messages("authentication.password"), 'required -> "required")
+        </div>
+        <div class="submit">
+            <input type="submit" name="submit" value=@Messages("authentication.login")>
+        </div>
+    </div>
+
+    }
+
+</div>
+
+
+
+}

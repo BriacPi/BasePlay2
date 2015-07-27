@@ -4,13 +4,17 @@
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET  /SuspectRow/:date/:caisse/:groupe/:agence/:pdv/:metric                                 controllers.Application.find(date : String,caisse : String, groupe : String, agence :String,pdv :String,metric :String)
-GET  /SuspectRow/:id                                                                        controllers.Application.findWithId(id:Long)
-GET  /Edition/:id                                                                           controllers.Application.edit(id:Long)
-POST /findAndEdit/:id                                                                       controllers.Application.saveEdition(id:Long)
-GET  /DetectedOnly                                                                          controllers.Application.detectedOnly()
-GET  /BeingProcessed                                                                        controllers.Application.beingProcessed()
-GET  /Solved                                                                                controllers.Application.solved()
-GET  /assets/*file                                                                          controllers.Assets.versioned(path="/public", file: Asset)
-GET  /data                                                                                  controllers.Application.sendRequestToApi()
-GET  /                                                                                      controllers.Application.redirect()
+GET  /row/:date/:caisse/:groupe/:agence/:pdv/:metric                                 controllers.Application.find(date : String,caisse : String, groupe : String, agence :String,pdv :String,metric :String)
+GET  /row/:id                                                                        controllers.Application.findWithId(id:Long)
+GET  /edition/:id                                                                    controllers.Application.edit(id:Long)
+POST /update/:id                                                                     controllers.Application.saveEdition(id:Long)
+GET  /detected                                                                       controllers.Application.detectedOnly()
+GET  /processed                                                                      controllers.Application.beingProcessed()
+GET  /solved                                                                         controllers.Application.solved()
+GET  /assets/*file                                                                   controllers.Assets.versioned(path="/public", file: Asset)
+GET  /data                                                                           controllers.Application.sendRequestToApi()
+GET  /                                                                               controllers.Application.redirect()
+
+# Authentication
+GET /authentication                                                                  controllers.AuthenticationController.welcome()
+POST /login                                                                          controllers.AuthenticationController.login()

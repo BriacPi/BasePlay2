@@ -12,9 +12,9 @@
     <h1>@Messages("home.title")</h1>
 </div>
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" ><a href="/DetectedOnly">@Messages("home.header.detectedOnly")</a></li>
-    <li role="presentation" ><a href="/BeingProcessed">@Messages("home.header.beingProcessed")</a></li>
-    <li role="presentation" ><a href="/Solved">@Messages("home.header.solved")</a></li>
+    <li role="presentation" ><a href="/detected">@Messages("home.header.detectedOnly")</a></li>
+    <li role="presentation" ><a href="/processed">@Messages("home.header.beingProcessed")</a></li>
+    <li role="presentation" ><a href="/solved">@Messages("home.header.solved")</a></li>
 </ul>
 
 
@@ -74,7 +74,7 @@
 
                 @inputRadioGroup(
                 editionValues("nature"),
-                options = Seq("NotSpecified"->Messages("NotSpecified"),"Abnormality"->Messages("Abnormality"), "NotAbnormality"->Messages("NotAbnormality") ),
+                options = Seq("NotSpecified"->Messages("NotSpecified"),"Abnormality"->Messages("Abnormality"), "NotAbnormality"-> Messages("NotAbnormality")),
                 '_label -> Messages("field.nature"))
 
                 </td>
