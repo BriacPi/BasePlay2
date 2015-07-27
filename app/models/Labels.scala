@@ -5,7 +5,7 @@ import play.api.libs.json.{JsPath, Reads, _}
 
 
 case class Labels(segments: Map[String, SegmentContent], eds: Map[String, EdsContent]) {
-  def getCodesToNamesMap:Map[String,String]={
+  def getCaissesToNamesMap:Map[String,String]={
     eds.mapValues(_.default)
   }
 }

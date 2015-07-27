@@ -24,16 +24,16 @@ object CaissesToNames {
     }
   }
 
-  def getMapCodesToNames(answer: Future[WSResponse]): Future[Map[String, String]] = {
+  def getMapCaissesToNames(answer: Future[WSResponse]): Future[Map[String, String]] = {
     answer.flatMap { response =>
       val json: JsValue = Json.parse(response.body.replaceAll("cv.labels =",""))
       val result = json.validate[Labels]
       result.fold(
         errors => {
           println("error in reading CodesToNameJson" +errors)
-          getMapCodesToNames(makeRequest())
+          getMapCaissesToNames(makeRequest())
         }, labels => {
-          Future.successful(labels.getCodesToNamesMap)
+          Future.successful(labels.getCaissesToNamesMap)
         })
     }
   }
