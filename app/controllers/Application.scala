@@ -48,7 +48,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthContr
 
   def data() = AuthenticatedAction() {
     sendRequestToApi()
-    Redirect(routes.Application.allUsedMetrics())
+    Redirect(routes.Application.detectedOnly())
   }
 
 
