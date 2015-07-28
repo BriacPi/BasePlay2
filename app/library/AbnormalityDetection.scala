@@ -47,15 +47,14 @@ object AbnormalityDetection {
         SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDate)
       }
     }
-    val groupedByDimensions = groupByDimensions(rows)
-    rows.foreach { row =>
-      val averageByDimensions = operationByDimensions(groupedByDimensions, average, row)
-      val standardDeviationByDimensions = operationByDimensions(groupedByDimensions, standardDeviation, row)
-      if (row.metric > averageByDimensions + numberOfStdDev * standardDeviationByDimensions ||
-        row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions)
-        SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDimensions)
-    }
-
+//    val groupedByDimensions = groupByDimensions(rows)
+//    rows.foreach { row =>
+//      val averageByDimensions = operationByDimensions(groupedByDimensions, average, row)
+//      val standardDeviationByDimensions = operationByDimensions(groupedByDimensions, standardDeviation, row)
+//      if (row.metric > averageByDimensions + numberOfStdDev * standardDeviationByDimensions ||
+//        row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions)
+//        SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDimensions)
+//    }
   }
 
 
