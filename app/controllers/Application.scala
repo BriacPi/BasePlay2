@@ -71,7 +71,7 @@ class Application @Inject()(ws: WSClient) extends AuthController {
     mapCaissesToNames.flatMap { mapCtN =>
       mapMetricsToNames.map { mapMtN =>
         filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN, mapMtN)
-        Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+        Redirect(routes.Application.allUsedMetrics())
       }
     }
   }
@@ -142,7 +142,7 @@ class Application @Inject()(ws: WSClient) extends AuthController {
       val usedMetricsWithID:List[CodeMetric] = MetricRepository.list()
       val usedMetrics =usedMetricsWithID.map(new  CodeMetricWithoutId(_)).toSet
       val unusedMetrics = allMetrics.diff(usedMetrics)
-      Ok(views.html.metrics(usedMetrics.toList.sortBy(_.code), unusedMetrics.toList.sortBy(_.code)))
+      Ok(views.html.metrics(usedMetrics.toList, unusedMetrics.toList))
 
     }
   }

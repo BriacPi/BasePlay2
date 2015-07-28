@@ -53,6 +53,7 @@ menu.profil = Profil
 menu.users = Users
 menu.add = add
 menu.list = Users list
+menu.refresh = Refresh Analysis
 
 metric.title = Settings
 metric.metric = Metric Code
