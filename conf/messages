@@ -43,6 +43,7 @@ error.notAuthorizedForThisUser = This action is not allowed for this user accoun
 error.userNotFound= User not found.
 error.invalidPassword= Invalid password.
 error.invalidUserOrPassword= Invalid User or Password.
+error.usedEmail = E-mail already used
 
 
 menu.contact = Contact

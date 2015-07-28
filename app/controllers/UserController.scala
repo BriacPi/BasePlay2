@@ -49,14 +49,19 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
     addUserForm.bindFromRequest.fold(
       error => {
         // binding failure, you retrieve the form containing errors:
-        println(error)
+
         BadRequest(views.html.users.addUser(error))
       },
       userData => {
+        val refillForm = addUserForm.fill(userData)
+        UserRepository.findByEmail(userData.email) match {
+          case None =>val newUser = userData.copy(password = PasswordAuthentication.passwordHash(userData.password))
+            repositories.authentication.UserRepository.create(newUser)
+            Redirect(routes.UserController.allUsers)
+          case Some(u) =>BadRequest(views.html.users.addUser(refillForm.withGlobalError("error.usedEmail")))
+        }
         /* binding success, you get the actual value. */
-        val newUser = userData.copy(password = PasswordAuthentication.passwordHash(userData.password))
-        repositories.authentication.UserRepository.create(newUser)
-        Redirect(routes.UserController.allUsers)
+
       }
     )
   }
