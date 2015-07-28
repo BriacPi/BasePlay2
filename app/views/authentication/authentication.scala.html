@@ -42,7 +42,7 @@
         @if(loginForm.hasGlobalErrors) {
         <ul class="login__global-error-message">
             @for(err <- loginForm.globalErrors.flatMap(_.messages)) {
-            <li class="error errorRed">@Messages(err)</li>
+            <div class="error errorRed vertical-center">@Messages(err)</div>
             }
         </ul>
         }
