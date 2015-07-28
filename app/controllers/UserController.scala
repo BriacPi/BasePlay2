@@ -63,7 +63,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
   }
 
-  def addPage = AuthenticatedAction() { implicit request =>
+  def newUser = AuthenticatedAction() { implicit request =>
     Ok(views.html.users.addUser(addUserForm))
   }
 

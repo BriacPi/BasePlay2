@@ -27,6 +27,6 @@ GET /configuration                                                              
 GET /configuration/add/:code                                                         controllers.Application.addMetric(code:String)
 GET /configuration/remove/:code                                                      controllers.Application.removeMetric(code:String)
 
-GET /addPage                                                                         controllers.UserController.addPage()
+GET /newuser                                                                         controllers.UserController.newUser()
 POST /login                                                                          controllers.AuthenticationController.login()
-POST /addUser                                                                        controllers.UserController.addUser()
+POST /adduser                                                                        controllers.UserController.addUser()
