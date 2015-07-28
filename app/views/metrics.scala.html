@@ -21,7 +21,7 @@
         <script type="text/javascript" class="init">
             $(document).ready(function() {
 	        oTable=$('#MetricsUnused').DataTable(
-	        {
+	        {    "order": [[ 1, "asc" ]],
                  "columnDefs": [
                                 {
                                  "targets": [ 0 ],
@@ -70,7 +70,7 @@
     <script type="text/javascript" class="init">
             $(document).ready(function() {
 	        oTable=$('#MetricsUsed').DataTable(
-	        {
+	        {    "order": [[ 1, "asc" ]],
                  "columnDefs": [
                                 {
                                  "targets": [ 0 ],

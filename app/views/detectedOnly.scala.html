@@ -20,7 +20,7 @@
 <script type="text/javascript" class="init">
             $(document).ready(function() {
 	        oTable=$('#DetectedOnly').DataTable(
-	        {
+	        {    "order": [[ 1, "desc" ]],
                  "columnDefs": [
                                 {
                                  "targets": [ 0 ],
