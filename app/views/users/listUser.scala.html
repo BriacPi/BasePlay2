@@ -1,0 +1,68 @@
+@import models.authentication.User
+@(users: List[User])(implicit lang:Lang)
+
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+
+
+@main(Messages("home.header")) {
+<div class="page-header">
+    <h1>@Messages("home.title")</h1>
+</div>
+
+
+<script type="text/javascript" class="init">
+            $(document).ready(function() {
+	        oTable=$('#users1').DataTable(
+	        {
+                 "columnDefs": [
+                                {
+                                 "targets": [ 0 ],
+                                 "visible": false,
+                                 "searchable": false
+                                 }
+                                ]
+            }
+	        );
+
+
+            } );
+
+</script>
+
+
+
+
+<table id="users1" class="display" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>@Messages("user.email")</th>
+        <th>@Messages("user.lastName")</th>
+        <th>@Messages("user.firstName")</th>
+        <th>@Messages("user.company")</th>
+
+
+    </tr>
+    </thead>
+    <tbody>
+
+    @users.map { currentUser =>
+    <tr class="gradeA" onclick="window.location.href='/profil/@currentUser.id';">
+        <td>@currentUser.id</td>
+        <td>@currentUser.email</td>
+        <td>@currentUser.lastName</td>
+        <td>@currentUser.firstName</td>
+        <td>@currentUser.company</td>
+
+    </tr>
+    }
+
+
+    </tbody>
+</table>
+
+}

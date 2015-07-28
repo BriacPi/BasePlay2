@@ -5,6 +5,8 @@ import anorm._
 import models.authentication.User
 import play.api.Play.current
 import play.api.db.DB
+import models.authentication.TemporaryUser
+
 
 import scala.language.postfixOps
 
@@ -23,7 +25,7 @@ trait UserRepository {
     }
   }
 
-  def create(user: User): Unit = {
+  def create(user: TemporaryUser): Unit = {
     DB.withConnection { implicit c =>
       SQL("insert into users (email,first_name,last_name,encrypted_password,company) values " +
         "({email},{first_name},{last_name},{encrypted_password},{company})").on(

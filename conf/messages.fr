@@ -52,6 +52,7 @@ menu.profil = Profile
 menu.users = Utilisateurs
 menu.add = Ajouter un utilisateur
 menu.list = Liste des utilisateurs
+
 menu.refresh = Analyser
 
 metric.title = Configuration
@@ -59,3 +60,4 @@ metric.metric = Code Métrique
 metric.name = Nom de la Métrique
 metric.used= Métriques utilisées
 metric.unused= Métriques inutilisées
+
