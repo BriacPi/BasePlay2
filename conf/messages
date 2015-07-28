@@ -62,3 +62,7 @@ metric.name = Metric Name
 metric.used= Used Metrics
 metric.unused= Unused Metrics
 
+user.lastName = Last Name
+user.firstName = First Name
+user.company = Company
+user.add = Add user

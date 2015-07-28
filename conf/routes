@@ -23,7 +23,10 @@ GET /logout                                                                     
 
 
 # Configuration
-GET /configuration                                                                  controllers.Application.allUsedMetrics()
-GET /configuration/add/:code                                                       controllers.Application.addMetric(code:String)
-GET /configuration/remove/:code                                                    controllers.Application.removeMetric(code:String)
+GET /configuration                                                                   controllers.Application.allUsedMetrics()
+GET /configuration/add/:code                                                         controllers.Application.addMetric(code:String)
+GET /configuration/remove/:code                                                      controllers.Application.removeMetric(code:String)
 
+GET /addPage                                                                         controllers.UserController.addPage()
+POST /login                                                                          controllers.AuthenticationController.login()
+POST /addUser                                                                        controllers.UserController.addUser()
