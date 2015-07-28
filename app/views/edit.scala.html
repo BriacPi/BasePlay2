@@ -64,7 +64,7 @@
         </tr>
         <tr>
             <th>@Messages("field.value")</th>
-            <td>@suspectRow.value</td>
+            <td>@Math.ceil(suspectRow.value)</td>
             <td></td>
         </tr>
         <tr>
@@ -75,7 +75,7 @@
                 @inputRadioGroup(
                 editionValues("nature"),
                 options = Seq("NotSpecified"->Messages("NotSpecified"),"Abnormality"->Messages("Abnormality"), "NotAbnormality"-> Messages("NotAbnormality")),
-                '_label -> Messages("field.nature"))
+                '_label -> Messages("field.nature"),'required -> Messages("input.required"))
 
                 </td>
         </tr>
@@ -92,7 +92,7 @@
                 @inputRadioGroup(
                 editionValues("status"),
                 options = Seq("Solved"->Messages("Solved"),"BeingProcessed"->Messages("BeingProcessed"), "DetectedOnly"-> Messages("DetectedOnly")),
-                '_label -> Messages("field.status"))
+                '_label -> Messages("field.status"),'required -> Messages("input.required"))
 
 
                 </td>

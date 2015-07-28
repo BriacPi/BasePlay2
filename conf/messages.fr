@@ -5,7 +5,7 @@ authentication.password = Mot de passe
 authentication.login = Connexion
 
 home.header = Centre de Santé des Données BPCE
-home.title = Données suspectes BPCE
+home.title = Données en rupture BPCE
 home.header.solved = Résolu
 home.header.beingProcessed = En cours
 home.header.detectedOnly = Non affecté
@@ -40,10 +40,13 @@ TooFarFromMeanByDate= Trop différente des autres de même date
 TooFarFromMeanByDimensions=Trop différente des autres de mêmes dimensions
 
 error.notAuthorizedForThisUser = Action non authorisée pour cet utilisateur.
-error.userNotFound= Utilisateur introuvable.
-error.invalidPassword= Mot de passe invalide.
+error.userNotFound= Utilisateur ou Mot de passe invalide.
+error.invalidPassword= Utilisateur ou Mot de passe invalide.
 error.invalidUserOrPassword= Utilisateur ou Mot de passe invalide.
 error.usedEmail = E-mail déjà utilisé
+error.required = Requis
+
+constraint.required = Requis
 
 menu.contact = Contact
 menu.data = Données
@@ -69,3 +72,4 @@ user.add = Ajout utilisateur
 user.email = Adresse Mail
 
 input.delete= Supprimer
+input.required = Requis

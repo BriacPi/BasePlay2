@@ -60,7 +60,7 @@
         </tr>
         <tr>
             <th>@Messages("field.value")</th>
-            <td>@suspectRow.value</td>
+            <td>@Math.ceil(suspectRow.value)</td>
 
         </tr>
         <tr>
@@ -97,9 +97,11 @@
         </tbody>
     </table>
 
+
+</div>
+<div>
     @form(routes.Application.edit(suspectRow.id)) {
     <input type="submit" value="Edit">}
-</div>
 </div>
 
 }

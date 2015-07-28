@@ -25,20 +25,20 @@
     </div>
     }
     <div>
-        @helper.inputText(userForm("email"), '_label -> Messages("authentication.email"), 'required -> "required")
+        @helper.inputText(userForm("email"), '_label -> Messages("authentication.email"))
     </div>
 
     <div>
-        @helper.inputText(userForm("lastName"), '_label -> Messages("user.lastName"), 'required -> "required")
+        @helper.inputText(userForm("lastName"), '_label -> Messages("user.lastName"))
     </div>
     <div>
-        @helper.inputText(userForm("firstName"), '_label -> Messages("user.firstName"), 'required -> "required")
+        @helper.inputText(userForm("firstName"), '_label -> Messages("user.firstName"))
     </div>
     <div>
-        @helper.inputText(userForm("password"), 'type -> "password", '_label -> Messages("authentication.password"), 'required -> "required")
+        @helper.inputText(userForm("password"), 'type -> "password", '_label -> Messages("authentication.password"))
     </div>
     <div>
-        @helper.inputText(userForm("company"), '_label -> Messages("user.company"), 'required -> "required")
+        @helper.inputText(userForm("company"), '_label -> Messages("user.company"))
     </div>
     <div class="submit">
         <input type="submit" name="submit" value=@Messages("menu.add")>
