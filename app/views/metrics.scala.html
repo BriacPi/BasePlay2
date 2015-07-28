@@ -8,15 +8,17 @@
 
 
 @main(Messages("home.header"))("c"){
-<div class="page-header">
+<div class="page-header" style="margin-left:1em;">
     <h1>@Messages("metric.title")</h1>
 
 </div>
-
+<div>
+    <input type="submit" value=@Messages("menu.refresh") onclick="href='/data';" style="margin-left:1em;">
+</div>
 
 <div class="row">
     <div class="col-md-6">
-        <div class="page-header">
+        <div class="page-header" style="margin-left:1em;">
             <h2>@Messages("metric.unused")</h2>
         </div>
         <script type="text/javascript" class="init">
@@ -37,7 +39,7 @@
             } );
 </script>
 
-        <table id="MetricsUnused" class="display" cellspacing="0" width="99%">
+        <table id="MetricsUnused" class="display" cellspacing="0" width="99%" style="margin-left:0.5em;">
             <thead>
             <tr>
                 <th>id</th>
@@ -60,12 +62,12 @@
 
             </tr>
         </table>
-
+        <div class ="margin"></div>
 
 
     </div>
 <div class="col-md-6">
-    <div class="page-header">
+    <div class="page-header" style="margin-left:1em;">
         <h2>@Messages("metric.used")</h2>
     </div>
     <script type="text/javascript" class="init">
@@ -118,6 +120,5 @@
 
 </div>
 <a href ="/data"></a>
-<input type="submit" value=@Messages("menu.refresh") onclick="href='/data';">
-</div>
+
 }
