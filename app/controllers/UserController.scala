@@ -13,8 +13,7 @@ import play.api.data.Forms._
 
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-
-
+import repositories.authentication.UserRepository
 
 
 class UserController @Inject()(ws: WSClient) extends AuthController {
@@ -60,7 +59,12 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
         Redirect(routes.UserController.allUsers)
       }
     )
+  }
 
+  def deleteUser(email:String) = AuthenticatedAction() { implicit request =>
+    UserRepository.delete(email)
+    val userList = repositories.authentication.UserRepository.list().toList
+    Ok(views.html.users.listUser(userList))
   }
 
   def newUser = AuthenticatedAction() { implicit request =>

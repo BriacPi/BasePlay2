@@ -38,6 +38,14 @@ trait UserRepository {
     }
   }
 
+  def delete(email:String): Unit = {
+    DB.withConnection { implicit c =>
+      SQL("delete from users  where email = " +
+        "{email}").on(
+          'email -> email
+        ).executeUpdate()
+    }
+  }
 
   def list(): Seq[User] = {
     DB.withConnection { implicit current =>
