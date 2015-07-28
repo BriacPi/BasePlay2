@@ -1,38 +1,31 @@
 package controllers
 
-import java.util.Calendar
 import javax.inject.Inject
 
 import components.mvc.AuthController
-import library.CaissesToNames._
 import library.Engine._
-import library.{CaissesToNames, MetricsToNames}
-import models.{Configuration, EditionValues, SuspectRow}
+import library.MetricsToNames
+import library.actors.RefreshActor
+import library.actors.RefreshActor.Refresh
+import models.{EditionValues, SuspectRow}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.format.Formats._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import repositories.{CodeMetricWithoutId, CodeMetric, MetricRepository}
+import repositories.{CodeMetric, CodeMetricWithoutId, MetricRepository}
+import akka.actor._
 
 import scala.concurrent.Future
 
 
-class Application @Inject()(ws: WSClient) extends AuthController {
-
-
-
-  // List of BPCE caisses to look for
-  val caisseList = List("14445", "13825", "11425", "18025", "13485", "14265", "18315")
-
-  // List of Months
-  val year = Calendar.getInstance().get(Calendar.YEAR)
-  val listOfYears = (2012 to year).map(_.toString)
-  val listOfMonths = (for {
-    year <- listOfYears
-    month <- 1 to 12
-  } yield year + "-" + month + "-1").toList
+class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthController {
+  //ACTOR
+  val refreshActor = system.actorOf(RefreshActor.props, "refresh-actor")
+  import scala.concurrent.duration._
+  val cancellable = system.scheduler.schedule(
+    0.microseconds, 4.hours, refreshActor, Refresh())
 
   //Userform
   val userForm: Form[String] = Form("new value" -> of[String])
@@ -53,28 +46,11 @@ class Application @Inject()(ws: WSClient) extends AuthController {
 
   //List("2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1")
 
-  def sendRequestToApi() = Action.async {
-    // TODO ACTOR
-
-    // List of metrics to analyse
-    val metrics = MetricRepository.listCodes()
-    // Dimensions **** TIME MUST BE THE FIRST DIMENSION FOR EACH****
-    val dimensionsList = List(List("time:weekly", "groupe", "agence", "pdv"))
-    // Configurations
-    val configurations: List[Configuration] = for {
-      metric <- metrics
-      dimensions <- dimensionsList
-    } yield Configuration(metric, dimensions)
-
-    val mapCaissesToNames: Future[Map[String, String]] = getMapCaissesToNames(CaissesToNames.makeRequest())
-
-    mapCaissesToNames.flatMap { mapCtN =>
-      mapMetricsToNames.map { mapMtN =>
-        filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN, mapMtN)
-        Redirect(routes.Application.allUsedMetrics())
-      }
-    }
+  def data() = AuthenticatedAction() {
+    sendRequestToApi()
+    Redirect(routes.Application.allUsedMetrics())
   }
+
 
   def solved(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     Ok(views.html.solved(SuspectRow.filterByStatus(models.Status.Solved)))
@@ -138,23 +114,23 @@ class Application @Inject()(ws: WSClient) extends AuthController {
 
   def allUsedMetrics(): Action[AnyContent] = AuthenticatedAction().async { implicit request =>
     mapMetricsToNames.map { mapMtN =>
-      val allMetrics = mapMtN.toList.map(tuple => CodeMetricWithoutId( tuple._1, tuple._2)).toSet
-      val usedMetricsWithID:List[CodeMetric] = MetricRepository.list()
-      val usedMetrics =usedMetricsWithID.map(new  CodeMetricWithoutId(_)).toSet
+      val allMetrics = mapMtN.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2)).toSet
+      val usedMetricsWithID: List[CodeMetric] = MetricRepository.list()
+      val usedMetrics = usedMetricsWithID.map(new CodeMetricWithoutId(_)).toSet
       val unusedMetrics = allMetrics.diff(usedMetrics)
       Ok(views.html.metrics(usedMetrics.toList, unusedMetrics.toList))
 
     }
   }
 
-  def addMetric(code:String): Action[AnyContent] = AuthenticatedAction().async {
+  def addMetric(code: String): Action[AnyContent] = AuthenticatedAction().async {
     mapMetricsToNames.map { mapMtN =>
-      MetricRepository.create(CodeMetricWithoutId(code,mapMtN(code)))
+      MetricRepository.create(CodeMetricWithoutId(code, mapMtN(code)))
       Redirect(routes.Application.allUsedMetrics())
     }
   }
 
-  def removeMetric(code:String): Action[AnyContent] = AuthenticatedAction().async {
+  def removeMetric(code: String): Action[AnyContent] = AuthenticatedAction().async {
     mapMetricsToNames.map { mapMtN =>
       MetricRepository.delete(code)
       Redirect(routes.Application.allUsedMetrics())
