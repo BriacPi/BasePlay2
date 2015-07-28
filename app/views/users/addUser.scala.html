@@ -14,15 +14,16 @@
     <h1>@Messages("user.add")</h1>
 </div>
 
-@if(userForm.hasGlobalErrors) {
-<ul class="user__global-error-message">
-    @for(err <- userForm.globalErrors.flatMap(_.messages)) {
-    <li class="error">@Messages(err)</li>
-    }
-</ul>
-}
+
 @* views.html.admin.components.globalError(userForm) *@
 <div class="content">
+    @if(userForm.hasGlobalErrors) {
+    <div class="user__global-error-message vertical-center">
+        @for(err <- userForm.globalErrors.flatMap(_.messages)) {
+        <div class="error vertical-center errorRed">@Messages(err)</div>
+        }
+    </div>
+    }
     <div>
         @helper.inputText(userForm("email"), '_label -> Messages("authentication.email"), 'required -> "required")
     </div>
