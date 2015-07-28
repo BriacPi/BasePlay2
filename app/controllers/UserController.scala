@@ -4,7 +4,7 @@ package controllers
 import javax.inject.Inject
 
 import components.mvc.AuthController
-import components.user.SessionManager
+import components.user.{PasswordAuthentication, SessionManager}
 
 import models.authentication.{LoginValues, TemporaryUser}
 
@@ -55,8 +55,8 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
       },
       userData => {
         /* binding success, you get the actual value. */
-
-        repositories.authentication.UserRepository.create(userData)
+        val newUser = userData.copy(password = PasswordAuthentication.passwordHash(userData.password))
+        repositories.authentication.UserRepository.create(newUser)
         Redirect(routes.UserController.allUsers)
       }
     )
