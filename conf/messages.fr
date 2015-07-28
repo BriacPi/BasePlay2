@@ -65,3 +65,6 @@ user.lastName = Nom
 user.firstName = Prénom
 user.company = Entreprise
 user.add = Ajout utilisateur
+user.email = Adresse Mail
+
+input.delete= Supprimer

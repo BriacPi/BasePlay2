@@ -30,3 +30,4 @@ GET /configuration/remove/:code                                                 
 GET /newuser                                                                         controllers.UserController.newUser()
 POST /login                                                                          controllers.AuthenticationController.login()
 POST /adduser                                                                        controllers.UserController.addUser()
+GET /deleteuser/:email                                                               controllers.UserController.deleteUser(email:String)
