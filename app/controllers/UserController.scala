@@ -33,7 +33,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
       "password" -> nonEmptyText
     )(LoginValues.apply)(LoginValues.unapply)
   )
-  def profil(id: Long) = Action { implicit request =>
+  def profil(id: Long) = AuthenticatedAction() { implicit request =>
     val user = repositories.authentication.UserRepository.findById(id)
     user match {
       case Some(u) => Ok(views.html.users.profil(u))
@@ -42,11 +42,11 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
   }
 
-  def allUsers = Action { implicit request =>
+  def allUsers = AuthenticatedAction() { implicit request =>
     val userList = repositories.authentication.UserRepository.list().toList
     Ok(views.html.users.listUser(userList))
   }
-  def addUser = Action { implicit request =>
+  def addUser = AuthenticatedAction() { implicit request =>
     addUserForm.bindFromRequest.fold(
       error => {
         // binding failure, you retrieve the form containing errors:
@@ -63,7 +63,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
   }
 
-  def addPage = Action { implicit request =>
+  def addPage = AuthenticatedAction() { implicit request =>
     Ok(views.html.users.addUser(addUserForm))
   }
 
