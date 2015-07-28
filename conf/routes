@@ -12,7 +12,7 @@ GET  /detected                                                                  
 GET  /processed                                                                      controllers.Application.beingProcessed()
 GET  /solved                                                                         controllers.Application.solved()
 GET  /assets/*file                                                                   controllers.Assets.versioned(path="/public", file: Asset)
-GET  /data                                                                           controllers.Application.sendRequestToApi()
+GET  /data                                                                           controllers.Application.data()
 GET  /                                                                               controllers.Application.redirect()
 
 # Authentication

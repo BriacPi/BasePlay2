@@ -1,16 +1,52 @@
 package library
 
+import java.util.Calendar
 import java.util.concurrent.TimeoutException
 
 import library.AbnormalityDetection._
+import library.CaissesToNames._
 import models.{Configuration, Row}
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.{WS, WSRequest, WSResponse}
+import repositories.MetricRepository
 
 import scala.concurrent.Future
 
 object Engine {
+
+  def sendRequestToApi() = {
+    // List of BPCE caisses to look for
+    val caisseList = List("14445", "13825", "11425", "18025", "13485", "14265", "18315")
+
+    // List of Months
+    val year = Calendar.getInstance().get(Calendar.YEAR)
+    val listOfYears = (2012 to year).map(_.toString)
+    val listOfMonths = (for {
+      year <- listOfYears
+      month <- 1 to 12
+    } yield year + "-" + month + "-1").toList
+
+    val mapMetricsToNames: Future[Map[String, String]] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
+    // List of metrics to analyse
+    val metrics = MetricRepository.listCodes()
+    // Dimensions **** TIME MUST BE THE FIRST DIMENSION FOR EACH****
+    val dimensionsList = List(List("time:weekly", "groupe", "agence", "pdv"))
+    // Configurations
+    val configurations: List[Configuration] = for {
+      metric <- metrics
+      dimensions <- dimensionsList
+    } yield Configuration(metric, dimensions)
+
+    val mapCaissesToNames: Future[Map[String, String]] = getMapCaissesToNames(CaissesToNames.makeRequest())
+
+    mapCaissesToNames.flatMap { mapCtN =>
+      mapMetricsToNames.map { mapMtN =>
+        filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN, mapMtN)
+
+      }
+    }
+  }
 
   def filterAbnormalitiesForAllConfigurations(caisseList: List[String], configurationList: List[Configuration], monthList: List[String]
                                            , mapCaissesToNames: Map[String, String],mapMetricsToNames: Map[String, String]): Unit = {
