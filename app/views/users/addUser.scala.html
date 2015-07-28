@@ -16,7 +16,7 @@
 
 
 @* views.html.admin.components.globalError(userForm) *@
-<div class="content">
+<div class="content" style="margin-left:1em;">
     @if(userForm.hasGlobalErrors) {
     <div class="user__global-error-message vertical-center">
         @for(err <- userForm.globalErrors.flatMap(_.messages)) {

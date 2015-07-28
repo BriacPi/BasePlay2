@@ -7,7 +7,7 @@
 
 
 @main(Messages("home.header"))("") {
-<div class="page-header">
+<div class="page-header" style="margin-left:1em;">
     <h1>@Messages("home.title")</h1>
 </div>
 <ul class="nav nav-tabs" role="tablist">
@@ -18,7 +18,7 @@
 
 
 
-<div class="col-md-6">
+<div class="col-md-6 "style="margin-left:50%x;width:auto">
     <table class="table table-striped" >
         <thead>
         <tr>
@@ -99,9 +99,11 @@
 
 
 </div>
+
 <div>
     @form(routes.Application.edit(suspectRow.id)) {
     <input type="submit" value="Edit">}
 </div>
+
 
 }
