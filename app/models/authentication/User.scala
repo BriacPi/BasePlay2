@@ -5,10 +5,15 @@
 package models.authentication
 
 import play.api.libs.json._
+import anorm.SqlParser._
+import anorm._
+
+import scala.language.postfixOps
 
 case class User(id: Long, email: String, firstName: String, lastName: String, password: String, company:String) {
 
 }
+case class TemporaryUser(email: String, firstName: String, lastName: String, password: String, company:String)
 
 object User {
   
@@ -25,14 +30,6 @@ object User {
     )
   }
 
-  /**
-   * JSON reader serializer
-   */
-  // implicit val reader = new Reads[User] = (
-  //   (JsPath \ "id").read[Long] and
-  //   (JsPath \ "email").read[Int](min(0) keepAnd max(150)) and
-  //   (JsPath \ "role").readNullable[String]
-  // )(Resident.apply _)
 
 }
 

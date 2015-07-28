@@ -1,0 +1,52 @@
+@import models.authentication.User
+@(currentUser: User)(implicit lang:Lang)
+
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+
+
+@main(Messages("home.header")) {
+<div class="page-header">
+    <h1>@Messages("home.title")</h1>
+</div>
+
+
+
+<div class="col-md-6">
+    <table class="table table-striped" >
+        <thead>
+        <tr>
+            <th>@Messages("menu.profil")</th>
+            <th>@Messages("sr.values")</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>@Messages("user.email")</th>
+            <td>@currentUser.email</td>
+
+        </tr>
+        <tr>
+            <th>@Messages("user.lastName")</th>
+            <td>@currentUser.lastName</td>
+
+        </tr>
+        <tr>
+            <th>@Messages("user.firstName")</th>
+            <td>@currentUser.firstName</td>
+
+        </tr>
+        <tr>
+            <th>@Messages("user.company")</th>
+            <td>@currentUser.company</td>
+
+        </tr>
+
+    </table>
+</div>
+
+}

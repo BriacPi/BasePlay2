@@ -1,0 +1,51 @@
+@import models.authentication.TemporaryUser
+@(userForm:Form[TemporaryUser])(implicit lang:Lang)
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+
+
+@main(Messages("home.header")) {
+@helper.form(action = routes.UserController.addUser(), args = 'class -> "userForm"){
+<div class="centerFlex vertical-center" style="text-align: center" >
+<div class="page-header">
+
+    <h1>@Messages("user.add")</h1>
+</div>
+
+@if(userForm.hasGlobalErrors) {
+<ul class="user__global-error-message">
+    @for(err <- userForm.globalErrors.flatMap(_.messages)) {
+    <li class="error">@Messages(err)</li>
+    }
+</ul>
+}
+@* views.html.admin.components.globalError(userForm) *@
+<div class="content">
+    <div>
+        @helper.inputText(userForm("email"), '_label -> Messages("authentication.email"), 'required -> "required")
+    </div>
+
+    <div>
+        @helper.inputText(userForm("lastName"), '_label -> Messages("user.lastName"), 'required -> "required")
+    </div>
+    <div>
+        @helper.inputText(userForm("firstName"), '_label -> Messages("user.firstName"), 'required -> "required")
+    </div>
+    <div>
+        @helper.inputText(userForm("password"), 'type -> "password", '_label -> Messages("authentication.password"), 'required -> "required")
+    </div>
+    <div>
+        @helper.inputText(userForm("company"), '_label -> Messages("user.company"), 'required -> "required")
+    </div>
+    <div class="submit">
+        <input type="submit" name="submit" value=@Messages("menu.add")>
+    </div>
+</div>
+}
+
+</div>
+
+
+}

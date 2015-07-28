@@ -8,18 +8,12 @@ import javax.inject._
 
 import components.user.{PasswordAuthentication, SessionManager}
 import models.SuspectRow
-import models.authentication.{User, LoginValues}
+import models.authentication.{LoginValues, User,TemporaryUser}
 import play.api.cache.CacheApi
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Json
 import play.api.mvc._
 import repositories.authentication.UserRepository
-
-
-import scala.concurrent.Future
 
 /**
  * Controller used to manage user session.
@@ -33,14 +27,19 @@ class AuthenticationController @Inject()(cache: CacheApi) extends Controller {
     )(LoginValues.apply)(LoginValues.unapply)
   )
 
+
+
+
   def welcome: Action[AnyContent] = Action { implicit request =>
+
      Ok(views.html.authentication.authentication(form))
+
 
   }
 
-  def createUser(email:String,firstName:String,lastName:String,password:String,company:String): Action[AnyContent] = Action { implicit request =>
-      UserRepository.create(new User(0,email,firstName,lastName,PasswordAuthentication.passwordHash(password),company))
-      Ok("User created")
+  def createUser(email: String, firstName: String, lastName: String, password: String, company: String): Action[AnyContent] = Action { implicit request =>
+
+    Ok("User created")
   }
 
   def login: Action[AnyContent] = Action { implicit request =>
@@ -56,12 +55,12 @@ class AuthenticationController @Inject()(cache: CacheApi) extends Controller {
         // Request payload variables.
         val email = success.email
         val password = success.password
-        val filledForm  =  form.fill(LoginValues(email,password))
+        val filledForm = form.fill(LoginValues(email, password))
 
         UserRepository.findByEmail(email) match {
           case Some(user) =>
             if (PasswordAuthentication.authenticate(password, user.password)) {
-              SessionManager.create(Ok(views.html.solved(SuspectRow.filterByStatus(models.Status.DetectedOnly))),user)
+              SessionManager.create(Ok(views.html.solved(SuspectRow.filterByStatus(models.Status.DetectedOnly))), user)
             }
             else Unauthorized(views.html.authentication.authentication(filledForm.withGlobalError("error.invalidPassword")))
 
@@ -72,8 +71,10 @@ class AuthenticationController @Inject()(cache: CacheApi) extends Controller {
     )
   }
 
+
   def logout = Action { implicit request =>
     SessionManager.destroy(Ok(views.html.authentication.authentication(form)))
+
   }
 
 }
