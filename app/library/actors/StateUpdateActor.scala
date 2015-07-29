@@ -17,5 +17,6 @@ class StateUpdateActor extends Actor {
   def receive = {
     case "success" => StateRepository.changeState("state.majdone",java.time.LocalDateTime.now())
     case "maj" => StateRepository.changeState("state.majinprogress",java.time.LocalDateTime.now())
+    case "failure" => StateRepository.changeState("state.majfailed",java.time.LocalDateTime.now())
   }
 }
