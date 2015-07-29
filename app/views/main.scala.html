@@ -3,7 +3,7 @@
 @import helper._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
-
+@import repositories.StateRepository
 
 <!DOCTYPE html>
 
@@ -17,6 +17,7 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
     <link href="starter-template.css" rel="stylesheet">
     <link href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" rel="stylesheet">
+    <link href="@routes.Assets.versioned("stylesheets/custom-navbar.css")" rel="stylesheet">
     <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
        <script src="@routes.Assets.versioned("javascripts/jquery-2.1.4.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")" type="text/javascript"></script>
@@ -30,7 +31,7 @@
 </head>
 <body>
 @if(selected =="d" ){
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse navbar-static-top custom-navbar" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -41,8 +42,13 @@
             </button>
             <a class="navbar-brand" >@Messages("home.header")</a>
         </div>
+        <!-- Non-collapsing right-side icons -->
+        <ul class="nav navbar-nav navbar-right">
+            <li> <a> @(Messages(StateRepository.getMessage)+ " "+StateRepository.getDate+".") </a> </li>
 
-        <div class="navbar-collapse collapse">
+        </ul>
+        <!-- the collapsing menu -->
+        <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
             <ul class="nav navbar-nav">
 
                 <li class="active"><a href="/detected">@Messages("menu.data")</a></li>
@@ -57,13 +63,19 @@
                 </li>
 
                 <li><a href="/logout">@Messages("menu.logout")</a></li>
+
+
             </ul>
-        </div><!--/.nav-collapse -->
+
+
+        </div>
+
+        <!--/.nav-collapse -->
     </div>
 </nav>
 }
 @if(selected =="c" ){
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse navbar-static-top custom-navbar" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -74,12 +86,17 @@
             </button>
             <a class="navbar-brand" >@Messages("home.header")</a>
         </div>
+        <!-- Non-collapsing right-side icons -->
+        <ul class="nav navbar-nav navbar-right">
+            <li> <a> @(Messages(StateRepository.getMessage)+ " "+StateRepository.getDate+".") </a> </li>
 
-        <div class="navbar-collapse collapse">
+        </ul>
+        <!-- the collapsing menu -->
+        <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
             <ul class="nav navbar-nav">
 
                 <li ><a href="/detected">@Messages("menu.data")</a></li>
-                <li class="active" ><a href="/configuration">@Messages("menu.configuration")</a></li>
+                <li class="active"><a href="/configuration">@Messages("menu.configuration")</a></li>
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="caret"></span></a>
@@ -90,13 +107,19 @@
                 </li>
 
                 <li><a href="/logout">@Messages("menu.logout")</a></li>
+
+
             </ul>
-        </div><!--/.nav-collapse -->
+
+
+        </div>
+
+        <!--/.nav-collapse -->
     </div>
 </nav>
 }
 @if(selected =="u" ){
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse navbar-static-top custom-navbar" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -107,8 +130,13 @@
             </button>
             <a class="navbar-brand" >@Messages("home.header")</a>
         </div>
+        <!-- Non-collapsing right-side icons -->
+        <ul class="nav navbar-nav navbar-right">
+            <li> <a> @(Messages(StateRepository.getMessage)+ " "+StateRepository.getDate+".") </a> </li>
 
-        <div class="navbar-collapse collapse">
+        </ul>
+        <!-- the collapsing menu -->
+        <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
             <ul class="nav navbar-nav">
 
                 <li ><a href="/detected">@Messages("menu.data")</a></li>
@@ -123,13 +151,19 @@
                 </li>
 
                 <li><a href="/logout">@Messages("menu.logout")</a></li>
+
+
             </ul>
-        </div><!--/.nav-collapse -->
+
+
+        </div>
+
+        <!--/.nav-collapse -->
     </div>
 </nav>
 }
 @if(selected==""){
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse navbar-static-top custom-navbar" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -140,8 +174,13 @@
             </button>
             <a class="navbar-brand" >@Messages("home.header")</a>
         </div>
+        <!-- Non-collapsing right-side icons -->
+        <ul class="nav navbar-nav navbar-right">
+            <li> <a> @(Messages(StateRepository.getMessage)+ " "+StateRepository.getDate+".") </a> </li>
 
-        <div class="navbar-collapse collapse">
+        </ul>
+        <!-- the collapsing menu -->
+        <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
             <ul class="nav navbar-nav">
 
                 <li class="active"><a href="/detected">@Messages("menu.data")</a></li>
@@ -157,8 +196,14 @@
                 </li>
 
                 <li><a href="/logout">@Messages("menu.logout")</a></li>
+
+
             </ul>
-        </div><!--/.nav-collapse -->
+
+
+        </div>
+
+        <!--/.nav-collapse -->
     </div>
 </nav>
 }

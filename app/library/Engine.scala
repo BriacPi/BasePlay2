@@ -9,13 +9,14 @@ import models.{Configuration, Row}
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.{WS, WSRequest, WSResponse}
-import repositories.MetricRepository
+import repositories.{StateRepository, MetricRepository}
 
 import scala.concurrent.Future
+import scala.util.{Success, Failure}
 
 object Engine {
+  def sendRequestToApi():Unit = {
 
-  def sendRequestToApi() = {
     // List of BPCE caisses to look for
     val caisseList = List("14445", "13825", "11425", "18025", "13485", "14265", "18315")
 
@@ -41,18 +42,19 @@ object Engine {
     val mapCaissesToNames: Future[Map[String, String]] = getMapCaissesToNames(CaissesToNames.makeRequest())
 
     mapCaissesToNames.flatMap { mapCtN =>
-      mapMetricsToNames.map { mapMtN =>
+      mapMetricsToNames.map {mapMtN=>
         filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN, mapMtN)
-
       }
     }
+
+
   }
 
   def filterAbnormalitiesForAllConfigurations(caisseList: List[String], configurationList: List[Configuration], monthList: List[String]
-                                           , mapCaissesToNames: Map[String, String],mapMetricsToNames: Map[String, String]): Unit = {
-    val iterator =configurationList.foldLeft(Future.successful(List.empty[String]))((acc: Future[List[String]], config: Configuration) =>
+                                              , mapCaissesToNames: Map[String, String], mapMetricsToNames: Map[String, String]): Unit = {
+    val iterator = configurationList.foldLeft(Future.successful(List.empty[String]))((acc: Future[List[String]], config: Configuration) =>
       acc.flatMap((listOfAbnormalities: List[String]) => getDataForAllCaisses(caisseList, config, monthList).map((rows: List[Row]) => {
-        filterAllAbnormalities(rows, mapCaissesToNames, config.metric,mapMetricsToNames)
+        filterAllAbnormalities(rows, mapCaissesToNames, config.metric, mapMetricsToNames)
         Nil
       }
       )

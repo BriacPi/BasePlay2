@@ -70,4 +70,10 @@ user.add = Add user
 user.email= E-mail
 
 input.delete= Delete
-input.required = Required
+
+
+
+
+state.majinprogress= Update in Progress since
+state.majdone = Update completed since
+

@@ -2,10 +2,11 @@ package controllers
 
 import javax.inject.Inject
 
+import akka.actor._
 import components.mvc.AuthController
 import library.Engine._
 import library.MetricsToNames
-import library.actors.RefreshActor
+import library.actors.{StateUpdateActor, RefreshActor}
 import library.actors.RefreshActor.Refresh
 import models.{EditionValues, SuspectRow}
 import play.api.data.Form
@@ -14,18 +15,19 @@ import play.api.data.format.Formats._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import repositories.{CodeMetric, CodeMetricWithoutId, MetricRepository}
-import akka.actor._
-
+import repositories.{CodeMetric, CodeMetricWithoutId, MetricRepository, StateRepository}
 import scala.concurrent.Future
-
+import scala.util.{Success, Failure}
 
 class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthController {
   //ACTOR
-  val refreshActor = system.actorOf(RefreshActor.props, "refresh-actor")
+ val refreshActor = system.actorOf(RefreshActor.props, "refresh-actor")
+
+
   import scala.concurrent.duration._
+
   val cancellable = system.scheduler.schedule(
-    0.microseconds, 4.hours, refreshActor, Refresh())
+   0.microseconds, 4.hours, refreshActor, Refresh())
 
   //Userform
   val userForm: Form[String] = Form("new value" -> of[String])
@@ -44,10 +46,9 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthContr
   val mapMetricsToNames: Future[Map[String, String]] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
 
 
-  //List("2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1","2010-1-1")
-
   def data() = AuthenticatedAction() {
-    sendRequestToApi()
+    StateRepository.changeState("state.majinprogress",java.time.LocalDateTime.now())
+    refreshActor ! Refresh()
     Redirect(routes.Application.detectedOnly())
   }
 

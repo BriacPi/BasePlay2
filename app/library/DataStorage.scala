@@ -1,7 +1,7 @@
 package library
 
 import java.io.File
-import java.nio.file.{Paths, Files}
+import java.nio.file.{Files, Paths}
 
 import library.Engine._
 import models.{Configuration, RawData, Row}
@@ -36,7 +36,9 @@ object DataStorage {
 
   def sendRequestToApiWithStorage(caisse: String, config: Configuration, month: String, numberOfTry: Int): Future[List[Row]] = {
     val path = "jsonDataStorage/"
-    if (! Files.exists(Paths.get(path))) {Path(path).createDirectory()}
+    if (!Files.exists(Paths.get(path))) {
+      Path(path).createDirectory()
+    }
     val filename = configToFilename(caisse, config, month)
     if (fileExists(filename, path)) {
       val file: File = new File(path + filename)
@@ -46,26 +48,31 @@ object DataStorage {
 
     }
     else {
-      val answer = makeRequest(caisse, config, month, 0)
-      answer.flatMap {
-        response =>
-          response.status match {
-            case 204 => Future.successful(List.empty[Row])
-            case _ =>
-              val json: JsValue = Json.parse(response.body)
-              val result = json.validate[RawData]
-              result.fold(
-                errors => {
-                  println("errors" + caisse + " try number " + numberOfTry)
-                  sendRequestToApiWithStorage(caisse, config, month, numberOfTry + 1)
-                }, rawData => {
-                  val filename = configToFilename(caisse, config, month)
-                  val file = new File(path + filename)
-                  FileUtils.write(file, Json.stringify(json))
-                  Future.successful(rawData.toRows(caisse))
-                }
-              )
-          }
+      if (numberOfTry < 100) {
+        val answer = makeRequest(caisse, config, month, 0)
+        answer.flatMap {
+          response =>
+            response.status match {
+              case 204 => Future.successful(List.empty[Row])
+              case _ =>
+                val json: JsValue = Json.parse(response.body)
+                val result = json.validate[RawData]
+                result.fold(
+                  errors => {
+                    println("errors" + caisse + " try number " + numberOfTry)
+                    sendRequestToApiWithStorage(caisse, config, month, numberOfTry + 1)
+                  }, rawData => {
+                    val filename = configToFilename(caisse, config, month)
+                    val file = new File(path + filename)
+                    FileUtils.write(file, Json.stringify(json))
+                    Future.successful(rawData.toRows(caisse))
+                  }
+                )
+            }
+        }
+      }
+      else {
+        Future.successful(List.empty[Row])
       }
     }
 
