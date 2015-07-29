@@ -1,4 +1,5 @@
-@(rows: List[SuspectRow])(implicit lang:Lang)
+@import models.authentication.User
+@(rows: List[SuspectRow],currentUser :User)(implicit lang:Lang)
 
 @import helper._
 @import play.api.Play.current
@@ -6,7 +7,7 @@
 @import models.SuspectRow._
 
 
-@main(Messages("home.header"))("d") {
+@main(Messages("home.header"))("d")(currentUser) {
 
 <div class="page-header"style="margin-left:1em;">
     <h1>@Messages("home.title")</h1>

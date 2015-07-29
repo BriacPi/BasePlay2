@@ -43,14 +43,14 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
   def allUsers = AuthenticatedAction() { implicit request =>
     val userList = repositories.authentication.UserRepository.list().toList
-    Ok(views.html.users.listUser(userList))
+    Ok(views.html.users.listUser(userList,request.user))
   }
   def addUser = AuthenticatedAction() { implicit request =>
     addUserForm.bindFromRequest.fold(
       error => {
         // binding failure, you retrieve the form containing errors:
 
-        BadRequest(views.html.users.addUser(error))
+        BadRequest(views.html.users.addUser(error,request.user))
       },
       userData => {
         val refillForm = addUserForm.fill(userData)
@@ -58,7 +58,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
           case None =>val newUser = userData.copy(password = PasswordAuthentication.passwordHash(userData.password))
             repositories.authentication.UserRepository.create(newUser)
             Redirect(routes.UserController.allUsers)
-          case Some(u) =>BadRequest(views.html.users.addUser(refillForm.withGlobalError("error.usedEmail")))
+          case Some(u) =>BadRequest(views.html.users.addUser(refillForm.withGlobalError("error.usedEmail"),request.user))
         }
         /* binding success, you get the actual value. */
 
@@ -69,11 +69,11 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
   def deleteUser(email:String) = AuthenticatedAction() { implicit request =>
     UserRepository.delete(email)
     val userList = repositories.authentication.UserRepository.list().toList
-    Ok(views.html.users.listUser(userList))
+    Ok(views.html.users.listUser(userList,request.user))
   }
 
   def newUser = AuthenticatedAction() { implicit request =>
-    Ok(views.html.users.addUser(addUserForm))
+    Ok(views.html.users.addUser(addUserForm,request.user))
   }
 
 }

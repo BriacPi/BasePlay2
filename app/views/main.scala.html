@@ -1,4 +1,5 @@
-@(title: String)(selected : String)(content: Html)(implicit lang:Lang)
+@import models.authentication.User
+@(title: String)(selected : String)(currentUser :User)(content: Html)(implicit lang:Lang)
 
 @import helper._
 @import play.api.Play.current
@@ -31,7 +32,7 @@
 </head>
 <body>
 @if(selected =="d" ){
-<nav class="navbar navbar-inverse navbar-static-top custom-navbar" role="navigation">
+<nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -78,7 +79,7 @@
 </nav>
 }
 @if(selected =="c" ){
-<nav class="navbar navbar-inverse navbar-static-top custom-navbar" role="navigation">
+<nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -126,7 +127,7 @@
 </nav>
 }
 @if(selected =="u" ){
-<nav class="navbar navbar-inverse navbar-static-top custom-navbar" role="navigation">
+<nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -172,7 +173,7 @@
 </nav>
 }
 @if(selected =="t" ){
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -184,8 +185,11 @@
             </button>
             <a class="navbar-brand" >@Messages("home.header")</a>
         </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li> <a> @(Messages(StateRepository.getMessage)+ " "+StateRepository.getDate+".") </a> </li>
 
-        <div class="navbar-collapse collapse">
+        </ul>
+        <div class="navbar-collapse navbar-left" id="navbar-collapse-1">
             <ul class="nav navbar-nav">
 
                 <li ><a href="/detected">@Messages("menu.data")</a></li>

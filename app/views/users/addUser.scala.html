@@ -1,12 +1,13 @@
 @import models.authentication.TemporaryUser
-@(userForm:Form[TemporaryUser])(implicit lang:Lang)
+@import models.authentication.User
+@(userForm:Form[TemporaryUser],currentUser :User)(implicit lang:Lang)
 @import helper._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
 
 
 
-@main(Messages("home.header"))("u") {
+@main(Messages("home.header"))("u")(currentUser) {
 @helper.form(action = routes.UserController.addUser(), args = 'class -> "userForm"){
 <div class="centerFlex vertical-center" style="text-align: center" >
 <div class="page-header">
