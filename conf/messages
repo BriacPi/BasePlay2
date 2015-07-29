@@ -73,8 +73,8 @@ user.tasks = My Tasks
 input.delete= Delete
 
 
-
-
+state.initialisation= Application started since
+state.majfailed= Update failed since
 state.majinprogress= Update in Progress since
 state.majdone = Update completed since
 

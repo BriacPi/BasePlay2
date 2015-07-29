@@ -75,6 +75,7 @@ user.tasks = Mes Tâches
 input.delete= Supprimer
 
 
+state.initialisation= Application initialisée le
 state.majinprogress= Analyse en cours depuis le
 state.majdone = Dernière analyse faite le
 state.majfailed = Analyse échouée le
