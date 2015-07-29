@@ -7,6 +7,7 @@ import anorm.SqlParser._
 import anorm._
 import play.api.db.DB
 import play.api.Play.current
+import library.utils.dateTimeNow
 
 case class State(message: String, date: java.time.LocalDateTime) {
   def niceDate:String = date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"))
@@ -21,7 +22,7 @@ object StateRepository extends StateRepository{
   def state: State = {
     get() match {
       case None =>
-        val newState = State("state.initialisation",java.time.LocalDateTime.now())
+        val newState = State("state.initialisation",dateTimeNow.now())
         create(newState)
         newState
       case Some(somestate)=>
