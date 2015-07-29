@@ -184,41 +184,37 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" >@Messages("home.header")</a>
-        </div>
-        <ul class="nav navbar-nav navbar-right">
-            <li> <a> @(Messages(StateRepository.getMessage)+ " "+StateRepository.getDate+".") </a> </li>
-            
-        <!-- Non-collapsing right-side icons -->
-        <ul class="nav navbar-nav navbar-right">
-            <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
-
-        </ul>
-        <!-- the collapsing menu -->
-
-        <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
-
-            <ul class="nav navbar-nav">
-
-                <li ><a href="/detected">@Messages("menu.data")</a></li>
-                <li><a class="active" href="/owntasks">@Messages("user.tasks")</a></li>
-                <li ><a href="/configuration">@Messages("menu.configuration")</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
-                        <li><a onclick="href='/users';">@Messages("menu.list")</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="/logout">@Messages("menu.logout")</a></li>
-
+            <!-- Non-collapsing right-side icons -->
+            <ul class="nav navbar-nav navbar-right">
+                <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
 
             </ul>
+            <!-- the collapsing menu -->
+            <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
+                <ul class="nav navbar-nav">
+
+                    <li ><a href="/detected">@Messages("menu.data")</a></li>
+                    <li class="active"><a href="/owntasks">@Messages("user.tasks")</a></li>
+                    <li ><a href="/configuration">@Messages("menu.configuration")</a></li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
+                            <li><a onclick="href='/users';">@Messages("menu.list")</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="/logout">@Messages("menu.logout")</a></li>
 
 
-        </div><!--/.nav-collapse -->
-    </div>
+                </ul>
+
+
+            </div>
+
+            <!--/.nav-collapse -->
+        </div>
 </nav>
 }
 @if(selected==""){
