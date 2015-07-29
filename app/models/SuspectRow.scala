@@ -8,6 +8,7 @@ import play.api.Play.current
 import play.api.db.DB
 import repositories.MetricRepository
 
+
 import scala.concurrent.Future
 import scala.language.postfixOps
 import scala.util.Try
@@ -138,6 +139,12 @@ object SuspectRow {
       'id -> id
     ).as(suspectRows.singleOpt)
   }
+  def findByAdmin (admin : String): List[SuspectRow] = DB.withConnection{
+    implicit c =>
+      SQL("select * from suspect_rows where admin={admin}").on(
+      'admin -> admin
+      ).as(suspectRows *)
+  }
 
   def getId(suspect: SuspectRow): Option[Long] = DB.withConnection { implicit c =>
     val optionOfRow: Option[SuspectRow] = SQL("select * from suspect_rows where date={date} and caisse = {caisse} and groupe = {groupe} and agence ={agence} and pdv ={pdv} and metric = {metric}").on(
@@ -162,7 +169,7 @@ object SuspectRow {
   }
 
   def edit(id:Long,newAdmin: String, newComment: String,newNature: Nature, newStatus: Status) = {
-    DB.withConnection {
+    DB.withTransaction(){
       implicit c =>
         SQL("update suspect_rows set   admin = {admin}, comment = {comment}, nature = {nature}, status = {status} where id = {id}").on(
           'id -> id,
@@ -187,7 +194,7 @@ object SuspectRow {
   }
 
   def editAdmin(id:Long, newAdmin: String) = {
-    DB.withConnection {
+    DB.withTransaction(){
       implicit c =>
         SQL("update suspect_rows set  admin = {admin} where id = {id}").on(
           'id -> id,

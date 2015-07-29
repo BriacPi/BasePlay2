@@ -13,6 +13,7 @@ GET  /processed                                                                 
 GET  /solved                                                                         controllers.Application.solved()
 GET  /assets/*file                                                                   controllers.Assets.versioned(path="/public", file: Asset)
 GET  /data                                                                           controllers.Application.data()
+GET  /owntasks                                                                       controllers.Application.currentUserTasks()
 GET  /                                                                               controllers.Application.redirect()
 
 # Authentication

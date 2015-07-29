@@ -39,6 +39,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" >@Messages("home.header")</a>
         </div>
@@ -52,7 +53,9 @@
             <ul class="nav navbar-nav">
 
                 <li class="active"><a href="/detected">@Messages("menu.data")</a></li>
+                <li><a href="/owntasks">@Messages("user.tasks")</a></li>
                 <li ><a href="/configuration">@Messages("menu.configuration")</a></li>
+
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="caret"></span></a>
@@ -83,6 +86,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" >@Messages("home.header")</a>
         </div>
@@ -96,7 +100,10 @@
             <ul class="nav navbar-nav">
 
                 <li ><a href="/detected">@Messages("menu.data")</a></li>
-                <li class="active"><a href="/configuration">@Messages("menu.configuration")</a></li>
+
+                <li><a href="/owntasks">@Messages("user.tasks")</a></li>
+                <li class="active" ><a href="/configuration">@Messages("menu.configuration")</a></li>
+
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="caret"></span></a>
@@ -127,6 +134,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" >@Messages("home.header")</a>
         </div>
@@ -140,6 +148,7 @@
             <ul class="nav navbar-nav">
 
                 <li ><a href="/detected">@Messages("menu.data")</a></li>
+                <li><a href="/owntasks">@Messages("user.tasks")</a></li>
                 <li ><a href="/configuration">@Messages("menu.configuration")</a></li>
 
                 <li class="dropdown active">
@@ -162,12 +171,48 @@
     </div>
 </nav>
 }
+@if(selected =="t" ){
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" >@Messages("home.header")</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+
+                <li ><a href="/detected">@Messages("menu.data")</a></li>
+                <li class ="active"><a href="/owntasks">@Messages("user.tasks")</a></li>
+                <li ><a href="/configuration">@Messages("menu.configuration")</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
+                        <li><a onclick="href='/users';">@Messages("menu.list")</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="/logout">@Messages("menu.logout")</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+}
 @if(selected==""){
 <nav class="navbar navbar-inverse navbar-static-top custom-navbar" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -184,6 +229,7 @@
             <ul class="nav navbar-nav">
 
                 <li class="active"><a href="/detected">@Messages("menu.data")</a></li>
+                <li><a href="/owntasks">@Messages("user.tasks")</a></li>
                 <li ><a href="/configuration">@Messages("menu.configuration")</a></li>
 
 
