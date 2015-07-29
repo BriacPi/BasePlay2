@@ -60,7 +60,7 @@ object DataStorage {
                 result.fold(
                   errors => {
                     println("errors" + caisse + "on Json parsing")
-                    Future.successful(List.empty[Row])
+                    throw new Exception("Failed Json Parsing")
                   }, rawData => {
                     val filename = configToFilename(caisse, config, month)
                     val file = new File(path + filename)
@@ -73,17 +73,17 @@ object DataStorage {
                 }
                 else {
                   println("errors" + caisse + "received a bad request")
-                  Future.successful(List.empty[Row])
+                  throw new Exception("Unhandled Bad Request code")
                 }
               case _ =>
                 println("errors" + caisse + "received an unmanaged code")
-                Future.successful(List.empty[Row])
+                throw new Exception("Unhandled answer code")
 
             }
         }
       }
       else {
-        Future.successful(List.empty[Row])
+        throw new Exception("Excessive number of try for timeout bad request")
       }
     }
 
