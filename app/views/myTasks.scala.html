@@ -1,0 +1,97 @@
+@(rows: List[SuspectRow])(implicit lang:Lang)
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+@import models.SuspectRow._
+
+
+@main(Messages("home.header"))("t") {
+<div class="page-header" style="margin-left:1em;">
+    <h1>@Messages("home.title")</h1>
+</div>
+
+<script type="text/javascript" class="init">
+            $(document).ready(function() {
+	        oTable=$('#tasks').DataTable(
+	        {
+                 "order": [[ 1, "desc" ]],
+                 "columnDefs": [
+                                {
+                                 "targets": [ 0 ],
+                                 "visible": false,
+                                 "searchable": false
+                                 },
+                                 {
+                                 "targets": [ 9 ],
+                                 "visible": false,
+                                 "searchable": false
+                                 },
+                                 {
+                                 "targets": [ 10 ],
+                                 "visible": false,
+                                 "searchable": false
+                                 },
+                                 {
+                                 "targets": [ 11 ],
+                                 "visible": false,
+                                 "searchable": false
+                                 }
+                                ]
+            }
+	        );
+
+
+            } );
+</script>
+
+
+
+
+<div class="margin">
+    <table id="tasks" class="display" cellspacing="0" width="99%">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>@Messages("field.dates")</th>
+            <th>@Messages("field.caisse")</th>
+            <th>@Messages("field.groupe")</th>
+            <th>@Messages("field.agence")</th>
+            <th>@Messages("field.pdv")</th>
+            <th>@Messages("field.metric")</th>
+            <th>@Messages("field.value")</th>
+            <th>@Messages("field.status")</th>
+            <th>@Messages("field.nature")</th>
+            <th>@Messages("field.detectionDate")</th>
+            <th>@Messages("field.comment")</th>
+            <th>@Messages("field.admin")</th>
+            <th>@Messages("field.reasonsForDetection")</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+        @rows.map { suspectRow =>
+        <tr class="gradeA" onclick="window.location.href='/row/@suspectRow.id';">
+            <td>@suspectRow.id</td>
+            <td>@suspectRow.date</td>
+            <td>@suspectRow.caisse</td>
+            <td>@suspectRow.groupe</td>
+            <td>@suspectRow.agence</td>
+            <td>@suspectRow.pdv</td>
+            <td>@suspectRow.metricName</td>
+            <td>@Math.ceil(suspectRow.value)</td>
+            <td>@suspectRow.status</td>
+            <td>@Messages(suspectRow.nature.toString)</td>
+            <td>@suspectRow.firstDate</td>
+            <td>@suspectRow.comment</td>
+            <td>@suspectRow.admin</td>
+            <td>@suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</td>
+        </tr>
+        }
+
+
+        </tbody>
+    </table>
+</div>
+}

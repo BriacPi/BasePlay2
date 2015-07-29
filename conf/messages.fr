@@ -70,6 +70,7 @@ user.firstName = Prénom
 user.company = Entreprise
 user.add = Ajout utilisateur
 user.email = Adresse Mail
+user.tasks = Mes Tâches
 
 input.delete= Supprimer
 

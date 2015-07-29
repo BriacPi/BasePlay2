@@ -138,6 +138,12 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthContr
     }
   }
 
+  def currentUserTasks = AuthenticatedAction(){  implicit request =>
+    val userTasks = SuspectRow.findByAdmin(request.user.email)
+    Ok(views.html.myTasks(userTasks))
+
+  }
+
   //  def findById(date : String,caisse : String, groupe : String, agence :String,pdv :String, metric :String): Action[AnyContent] = Action{
   //    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,metric,"To be specified","","Not treated","","To be specified","Unknown")
   //
