@@ -1,7 +1,6 @@
 package library
 
 import java.util.Calendar
-import java.util.concurrent.TimeoutException
 
 import library.AbnormalityDetection._
 import library.CaissesToNames._
@@ -9,13 +8,12 @@ import models.{Configuration, Row}
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.{WS, WSRequest, WSResponse}
-import repositories.{StateRepository, MetricRepository}
+import repositories.MetricRepository
 
 import scala.concurrent.Future
-import scala.util.{Success, Failure}
 
 object Engine {
-  def sendRequestToApi():Unit = {
+  def sendRequestToApi(): Unit = {
 
     // List of BPCE caisses to look for
     val caisseList = List("14445", "13825", "11425", "18025", "13485", "14265", "18315")
@@ -42,7 +40,7 @@ object Engine {
     val mapCaissesToNames: Future[Map[String, String]] = getMapCaissesToNames(CaissesToNames.makeRequest())
 
     mapCaissesToNames.flatMap { mapCtN =>
-      mapMetricsToNames.map {mapMtN=>
+      mapMetricsToNames.map { mapMtN =>
         filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN, mapMtN)
       }
     }
@@ -76,7 +74,7 @@ object Engine {
   def sendRequestToApi(caisse: String, config: Configuration, month: String): Future[List[Row]] = DataStorage.sendRequestToApiWithStorage(caisse, config, month, 0)
 
 
-  def makeRequest(caisse: String, configuration: Configuration, month: String, numberOfTry: Int): Future[WSResponse] = {
+  def makeRequest(caisse: String, configuration: Configuration, month: String): Future[WSResponse] = {
     val metric: String = configuration.metric
     val dimensions: String = configuration.dimensions.reduce((x: String, y: String) => x + "," + y)
     val url: String = createUrl(caisse, dimensions, metric, month)
@@ -87,11 +85,7 @@ object Engine {
     val complexRequest: WSRequest =
       request.withHeaders("Accept" -> "application/json")
         .withRequestTimeout(30000)
-    complexRequest.get().recoverWith {
-      case e: TimeoutException =>
-        println("Timeout for caisse " + caisse + " on try number " + numberOfTry)
-        makeRequest(caisse, configuration, month, numberOfTry + 1)
-    }
+    complexRequest.get()
   }
 
   def createUrl(caisse: String, dimensions: String, metric: String, month: String): String =

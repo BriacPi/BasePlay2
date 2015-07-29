@@ -48,26 +48,37 @@ object DataStorage {
 
     }
     else {
-      if (numberOfTry < 100) {
-        val answer = makeRequest(caisse, config, month, 0)
+      if (numberOfTry < 5) {
+        val answer = makeRequest(caisse, config, month)
         answer.flatMap {
           response =>
             response.status match {
               case 204 => Future.successful(List.empty[Row])
-              case _ =>
+              case 200 =>
                 val json: JsValue = Json.parse(response.body)
                 val result = json.validate[RawData]
                 result.fold(
                   errors => {
-                    println("errors" + caisse + " try number " + numberOfTry)
-                    sendRequestToApiWithStorage(caisse, config, month, numberOfTry + 1)
+                    println("errors" + caisse + "on Json parsing")
+                    Future.successful(List.empty[Row])
                   }, rawData => {
                     val filename = configToFilename(caisse, config, month)
                     val file = new File(path + filename)
                     FileUtils.write(file, Json.stringify(json))
                     Future.successful(rawData.toRows(caisse))
-                  }
-                )
+                  })
+              case 400 =>
+                if (response.body.toString.contains("exceeded 25.seconds to unspecified while waiting for a response for an individual request, excluding retries")) {
+                  sendRequestToApiWithStorage(caisse, config, month, numberOfTry + 1)
+                }
+                else {
+                  println("errors" + caisse + "received a bad request")
+                  Future.successful(List.empty[Row])
+                }
+              case _ =>
+                println("errors" + caisse + "received an unmanaged code")
+                Future.successful(List.empty[Row])
+
             }
         }
       }
