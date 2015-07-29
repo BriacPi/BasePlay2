@@ -13,7 +13,9 @@
 
 </div>
 <div>
-    <input type="submit" value=@Messages("menu.refresh") onclick="href='/data';" style="margin-left:1em;">
+    <form action="@routes.Application.data()" method="get">
+        <input type="submit" value=@Messages("menu.refresh") onclick="href='/detected';">
+    </form>
 </div>
 
 <div class="row">
@@ -114,11 +116,6 @@
 </div>
 </div>
 
-</div>
 
-<form action="@routes.Application.data()" method="get">
-    <input type="submit" value=@Messages("menu.refresh") onclick="href='/detected';">
-</form>
-</div>
 
 }
