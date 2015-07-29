@@ -47,7 +47,6 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthContr
 
 
   def data() = AuthenticatedAction() {
-    StateRepository.changeState("state.majinprogress",java.time.LocalDateTime.now())
     refreshActor ! Refresh()
     Redirect(routes.Application.detectedOnly())
   }

@@ -13,7 +13,7 @@ import repositories.MetricRepository
 import scala.concurrent.Future
 
 object Engine {
-  def sendRequestToApi(): Unit = {
+  def sendRequestToApi(): Future[Unit] = {
 
     // List of BPCE caisses to look for
     val caisseList = List("14445", "13825", "11425", "18025", "13485", "14265", "18315")
@@ -40,23 +40,21 @@ object Engine {
     val mapCaissesToNames: Future[Map[String, String]] = getMapCaissesToNames(CaissesToNames.makeRequest())
 
     mapCaissesToNames.flatMap { mapCtN =>
-      mapMetricsToNames.map { mapMtN =>
+      mapMetricsToNames.flatMap { mapMtN =>
         filterAbnormalitiesForAllConfigurations(caisseList, configurations, listOfMonths, mapCtN, mapMtN)
       }
-    }
-
-
+    }.map{unit => unit}
   }
 
   def filterAbnormalitiesForAllConfigurations(caisseList: List[String], configurationList: List[Configuration], monthList: List[String]
-                                              , mapCaissesToNames: Map[String, String], mapMetricsToNames: Map[String, String]): Unit = {
-    val iterator = configurationList.foldLeft(Future.successful(List.empty[String]))((acc: Future[List[String]], config: Configuration) =>
-      acc.flatMap((listOfAbnormalities: List[String]) => getDataForAllCaisses(caisseList, config, monthList).map((rows: List[Row]) => {
-        filterAllAbnormalities(rows, mapCaissesToNames, config.metric, mapMetricsToNames)
-        Nil
+                                              , mapCaissesToNames: Map[String, String], mapMetricsToNames: Map[String, String]): Future[List[Unit]] = {
+    configurationList.foldLeft(Future.successful(List.empty[Unit]))((acc: Future[List[Unit]], config: Configuration) =>
+      acc.flatMap((action: List[Unit]) => getDataForAllCaisses(caisseList, config, monthList).map((rows: List[Row]) => {
+         filterAllAbnormalities(rows, mapCaissesToNames, config.metric, mapMetricsToNames)::action
       }
       )
-      ))
+      )
+    )
   }
 
   def getDataForAllCaisses(caisseList: List[String], config: Configuration, monthList: List[String]): Future[List[Row]] = {
