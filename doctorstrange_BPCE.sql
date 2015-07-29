@@ -16,6 +16,22 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `metrics`
+--
+
+DROP TABLE IF EXISTS `metrics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `metrics` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `metric` varchar(20) DEFAULT NULL,
+  `metric_name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_unique_metric` (`metric`)
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `reasons_for_detection`
 --
 
@@ -27,7 +43,21 @@ CREATE TABLE `reasons_for_detection` (
   `id` bigint(20) DEFAULT NULL,
   `reason` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`techid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4294 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7553 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `state`
+--
+
+DROP TABLE IF EXISTS `state`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `state` (
+  `message` varchar(100) NOT NULL DEFAULT '',
+  `date` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`message`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -53,7 +83,7 @@ CREATE TABLE `suspect_rows` (
   `value` double DEFAULT NULL,
   `metric_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9579 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12720 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,8 +100,9 @@ CREATE TABLE `users` (
   `last_name` varchar(40) DEFAULT NULL,
   `encrypted_password` varchar(100) DEFAULT NULL,
   `company` varchar(40) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_unique_email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -83,4 +114,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-27 14:27:49
+-- Dump completed on 2015-07-29 18:00:32
