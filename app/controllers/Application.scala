@@ -8,6 +8,7 @@ import library.Engine._
 import library.MetricsToNames
 import library.actors.{StateUpdateActor, RefreshActor}
 import library.actors.RefreshActor.Refresh
+import models.authentication.User
 import models.{EditionValues, SuspectRow}
 import play.api.data.Form
 import play.api.data.Forms._
@@ -53,15 +54,17 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthContr
 
 
   def solved(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    Ok(views.html.solved(SuspectRow.filterByStatus(models.Status.Solved)))
+
+   Ok(views.html.solved(SuspectRow.filterByStatus(models.Status.Solved),request.user))
+
   }
 
   def beingProcessed(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    Ok(views.html.beingProcessed(SuspectRow.filterByStatus(models.Status.BeingProcessed)))
+    Ok(views.html.beingProcessed(SuspectRow.filterByStatus(models.Status.BeingProcessed),request.user))
   }
 
   def detectedOnly(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly),request.user))
   }
 
   def redirect() = AuthenticatedAction() {
@@ -78,16 +81,16 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthContr
   def find(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val optionOfSuspectRow = SuspectRow.findByKey(date, caisse, groupe, agence, pdv, metric)
     optionOfSuspectRow match {
-      case Some(e) => Ok(views.html.suspectRow(e))
-      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+      case Some(e) => Ok(views.html.suspectRow(e,request.user))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly),request.user))
     }
   }
 
   def findWithId(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val optionOfSuspectRow = SuspectRow.findById(id)
     optionOfSuspectRow match {
-      case Some(e) => Ok(views.html.suspectRow(e))
-      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+      case Some(e) => Ok(views.html.suspectRow(e,request.user))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly),request.user))
     }
   }
 
@@ -96,15 +99,15 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthContr
     optionOfSuspectRow match {
       case Some(e) =>
         val filledForm = editionForm.fill(EditionValues(e.admin, e.comment, e.nature.toString, e.status.toString))
-        Ok(views.html.edit(e, filledForm))
-      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
+        Ok(views.html.edit(e, filledForm,request.user))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly),request.user))
     }
   }
 
 
   def saveEdition(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     editionForm.bindFromRequest.fold(
-      errors => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly))),
+      errors => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly),request.user)),
       l => {
         SuspectRow.edit(id, l.admin, l.comment, models.Nature.withName(l.nature), models.Status.withName(l.status))
         Redirect(routes.Application.findWithId(id))
@@ -118,7 +121,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthContr
       val usedMetricsWithID: List[CodeMetric] = MetricRepository.list()
       val usedMetrics = usedMetricsWithID.map(new CodeMetricWithoutId(_)).toSet
       val unusedMetrics = allMetrics.diff(usedMetrics)
-      Ok(views.html.metrics(usedMetrics.toList, unusedMetrics.toList))
+      Ok(views.html.metrics(usedMetrics.toList, unusedMetrics.toList,request.user))
 
     }
   }
@@ -139,7 +142,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthContr
 
   def currentUserTasks = AuthenticatedAction(){  implicit request =>
     val userTasks = SuspectRow.findByAdmin(request.user.email)
-    Ok(views.html.myTasks(userTasks))
+    Ok(views.html.myTasks(userTasks,request.user))
 
   }
 

@@ -1,4 +1,5 @@
-@(suspectRow:SuspectRow,editionValues:Form[EditionValues])(implicit lang:Lang)
+@import models.authentication.User
+@(suspectRow:SuspectRow,editionValues:Form[EditionValues],currentUser :User)(implicit lang:Lang)
 
 
 @import helper._
@@ -7,7 +8,7 @@
 @import models.SuspectRow._
 
 
-@main(Messages("home.header"))("") {
+@main(Messages("home.header"))("")(currentUser) {
 <div class="page-header" style="margin-left:1em;">
     <h1>@Messages("home.title")</h1>
 </div>

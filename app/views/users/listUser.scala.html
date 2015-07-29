@@ -1,5 +1,5 @@
 @import models.authentication.User
-@(users: List[User])(implicit lang:Lang)
+@(users: List[User],currentUser :User)(implicit lang:Lang)
 
 
 @import helper._
@@ -8,7 +8,7 @@
 
 
 
-@main(Messages("home.header"))("u"){
+@main(Messages("home.header"))("u")(currentUser){
 <div class="page-header" style="margin-left:1em;">
     <h1>@Messages("home.title")</h1>
 </div>
