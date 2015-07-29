@@ -5,7 +5,7 @@ import anorm._
 import models.authentication.User
 import play.api.Play.current
 import play.api.db.DB
-import models.authentication.TemporaryUser
+import models.authentication.{TemporaryUser,EditUser}
 
 
 import scala.language.postfixOps
@@ -35,6 +35,19 @@ trait UserRepository {
           'encrypted_password -> user.password,
           'company -> user.company
         ).executeInsert()
+    }
+  }
+
+  def editUser(user: User): Unit = {
+    DB.withConnection { implicit c =>
+      SQL("update  users set first_name ={first_name},last_name={last_name},encrypted_password={encrypted_password},"+
+      "company={company} where email ={email}").on(
+          'email -> user.email,
+          'first_name -> user.firstName,
+          'last_name -> user.lastName,
+          'encrypted_password -> user.password,
+          'company -> user.company
+        ).executeUpdate()
     }
   }
 

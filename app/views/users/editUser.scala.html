@@ -1,0 +1,85 @@
+@import models.authentication.EditUser
+@import models.authentication.User
+@(userForm:Form[EditUser],currentUser :User)(implicit lang:Lang)
+
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+
+
+@main(Messages("home.header"))("")(currentUser) {
+@helper.form(action = routes.UserController.saveEdition(), args = 'class -> "userForm"){
+<div class="page-header" style="margin-left:1em;">
+    <h1>@Messages("home.title")</h1>
+</div>
+
+
+
+<div class="col-md-6">
+    @if(userForm.hasGlobalErrors) {
+    <div class="user__global-error-message vertical-center">
+        @for(err <- userForm.globalErrors.flatMap(_.messages)) {
+        <div class="error vertical-center errorRed">@Messages(err)</div>
+        }
+     </div>
+    }
+    <table class="table table-striped" >
+        <thead>
+        <tr>
+            <th>@Messages("menu.profil")</th>
+            <th>@Messages("sr.values")</th>
+            <th>@Messages("sr.edition")</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>@Messages("user.email")</th>
+            <td>@currentUser.email</td>
+            <td>    .</td>
+
+        </tr>
+        <tr>
+            <th>@Messages("user.lastName")</th>
+            <td>@currentUser.lastName</td>
+            <th>@helper.inputText(userForm("lastName"), '_label -> Messages("user.lastName"))</th>
+
+        </tr>
+        <tr>
+            <th>@Messages("user.firstName")</th>
+            <td>@currentUser.firstName</td>
+            <th>@helper.inputText(userForm("firstName"), '_label -> Messages("user.firstName"))</th>
+
+        </tr>
+        <tr>
+            <th>@Messages("user.oldPassword")</th>
+            <td></td>
+            <th>@helper.inputText(userForm("oldPassword"), 'type -> "password",'_label -> Messages("authentication.password"))</th>
+
+        </tr>
+        <tr>
+            <th>@Messages("user.newPassword")</th>
+            <td></td>
+            <th>@helper.inputText(userForm("newPassword"), 'type -> "password",'_label -> Messages("authentication.password"))</th>
+
+        </tr>
+
+        <tr>
+            <th>@Messages("user.company")</th>
+            <td>@currentUser.company</td>
+            <th>@helper.inputText(userForm("company"), '_label -> Messages("user.company"))</th>
+
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+<div>
+    <input type="submit" value="Save">}
+</div>
+
+
+}
