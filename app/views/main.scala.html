@@ -47,7 +47,7 @@
         </div>
         <!-- Non-collapsing right-side icons -->
         <ul class="nav navbar-nav navbar-right">
-            <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
+            <li> <a id="state"> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
 
         </ul>
         <!-- the collapsing menu -->
@@ -71,7 +71,9 @@
                     </ul>
                 </li>
 
+
                 <li><a href="/logout">@Messages("menu.logout") @("("+currentUser.firstName+")")</a></li>
+
 
 
             </ul>
