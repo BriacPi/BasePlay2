@@ -72,4 +72,9 @@ user.add = Ajout utilisateur
 user.email = Adresse Mail
 
 input.delete= Supprimer
-input.required = Requis
+
+
+state.majinprogress= Analyse en cours depuis le
+state.majdone = Dernière analyse faite le
+state.majfailed = Analyse échouée le
+

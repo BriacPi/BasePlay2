@@ -1,0 +1,80 @@
+/* icon */ .custom-navbar .fa {font-size:25px}
+
+@media (max-width:767px) {
+    .custom-navbar-default {
+     background-color: #f8f8f8;
+     border-color: #e7e7e7;
+    }
+    .custom-navbar .navbar-right {
+        float: right;
+        padding-right: 15px;
+    }
+    .custom-navbar .nav.navbar-nav.navbar-right li {
+        float: right;
+    }
+    .custom-navbar .nav.navbar-nav.navbar-right li > a {
+        padding:8px 5px;
+    }
+    .custom-navbar .navbar-toggle {
+        float: left
+    }
+    .custom-navbar .navbar-header {
+        float: left;
+        width: auto!important;
+    }
+    .custom-navbar .navbar-collapse {
+        clear: both;
+        float: none;
+    }
+    .custom-navbar-default .navbar-brand {
+      color: #777;
+    }
+    .custom-navbar-default .navbar-brand:hover,
+    .custom-navbar-default .navbar-brand:focus {
+      color: #5e5e5e;
+      background-color: transparent;
+    }
+    .custom-navbar-default .navbar-text {
+      color: #777;
+    }
+    .custom-navbar-default .navbar-nav > li > a {
+      color: #777;
+    }
+    .custom-navbar-default .navbar-nav > li > a:hover,
+    .custom-navbar-default .navbar-nav > li > a:focus {
+      color: #333;
+      background-color: transparent;
+    }
+    .custom-navbar-default .navbar-nav > .active > a,
+    .custom-navbar-default .navbar-nav > .active > a:hover,
+    .custom-navbar-default .navbar-nav > .active > a:focus {
+      color: #555;
+      background-color: #e7e7e7;
+    }
+    .custom-navbar-default .navbar-nav > .disabled > a,
+    .custom-navbar-default .navbar-nav > .disabled > a:hover,
+    .custom-navbar-default .navbar-nav > .disabled > a:focus {
+      color: #ccc;
+      background-color: transparent;
+    }
+    .custom-navbar-default .navbar-toggle {
+      border-color: #ddd;
+    }
+    .custom-navbar-default .navbar-toggle:hover,
+    .custom-navbar-default .navbar-toggle:focus {
+      background-color: #ddd;
+    }
+    .custom-navbar-default .navbar-toggle .icon-bar {
+      background-color: #888;
+    }
+    .custom-navbar-default .navbar-collapse,
+    .custom-navbar-default .navbar-form {
+      border-color: #e7e7e7;
+    }
+    .custom-navbar-default .navbar-nav > .open > a,
+    .custom-navbar-default .navbar-nav > .open > a:hover,
+    .custom-navbar-default .navbar-nav > .open > a:focus {
+      color: #555;
+      background-color: #e7e7e7;
+    }
+}
