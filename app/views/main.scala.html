@@ -31,7 +31,7 @@
 
 </head>
 <body>
-@if(selected =="d" ){
+
 <nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -53,12 +53,10 @@
         <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
             <ul class="nav navbar-nav">
 
-                <li class="active"><a href="/detected">@Messages("menu.data")</a></li>
-                <li><a href="/owntasks">@Messages("user.tasks")</a></li>
-                <li ><a href="/configuration">@Messages("menu.configuration")</a></li>
-
-
-                <li class="dropdown">
+                @if(selected =="d" ){<li class="active">} else {<li>}<a href="/detected">@Messages("menu.data")</a></li>
+                @if(selected =="t" ){<li class="active">}else {<li>} <a href="/owntasks">@Messages("user.tasks")</a></li>
+                @if(selected =="c" ){<li class="active">}else {<li>} <a href="/configuration">@Messages("menu.configuration")</a></li>
+                @if(selected =="u" ){<li class="dropdown active">} else {<li class="dropdown">}
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
@@ -77,194 +75,7 @@
         <!--/.nav-collapse -->
     </div>
 </nav>
-}
-@if(selected =="c" ){
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" >@Messages("home.header")</a>
-        </div>
-        <!-- Non-collapsing right-side icons -->
-        <ul class="nav navbar-nav navbar-right">
-            <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
 
-        </ul>
-        <!-- the collapsing menu -->
-        <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
-            <ul class="nav navbar-nav">
-
-                <li ><a href="/detected">@Messages("menu.data")</a></li>
-
-                <li><a href="/owntasks">@Messages("user.tasks")</a></li>
-                <li class="active" ><a href="/configuration">@Messages("menu.configuration")</a></li>
-
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
-                        <li><a onclick="href='/users';">@Messages("menu.list")</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="/logout">@Messages("menu.logout")</a></li>
-
-
-            </ul>
-
-
-        </div>
-
-        <!--/.nav-collapse -->
-    </div>
-</nav>
-}
-@if(selected =="u" ){
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" >@Messages("home.header")</a>
-        </div>
-        <!-- Non-collapsing right-side icons -->
-        <ul class="nav navbar-nav navbar-right">
-            <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
-
-        </ul>
-        <!-- the collapsing menu -->
-        <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
-            <ul class="nav navbar-nav">
-
-                <li ><a href="/detected">@Messages("menu.data")</a></li>
-                <li><a href="/owntasks">@Messages("user.tasks")</a></li>
-                <li ><a href="/configuration">@Messages("menu.configuration")</a></li>
-
-                <li class="dropdown active">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
-                        <li><a onclick="href='/users';">@Messages("menu.list")</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="/logout">@Messages("menu.logout")</a></li>
-
-
-            </ul>
-
-
-        </div>
-
-        <!--/.nav-collapse -->
-    </div>
-</nav>
-}
-@if(selected =="t" ){
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" >@Messages("home.header")</a>
-        </div>
-            <!-- Non-collapsing right-side icons -->
-            <ul class="nav navbar-nav navbar-right">
-                <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
-
-            </ul>
-            <!-- the collapsing menu -->
-            <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
-                <ul class="nav navbar-nav">
-
-                    <li ><a href="/detected">@Messages("menu.data")</a></li>
-                    <li class="active"><a href="/owntasks">@Messages("user.tasks")</a></li>
-                    <li ><a href="/configuration">@Messages("menu.configuration")</a></li>
-
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
-                            <li><a onclick="href='/users';">@Messages("menu.list")</a></li>
-                        </ul>
-                    </li>
-
-                    <li><a href="/logout">@Messages("menu.logout")</a></li>
-
-
-                </ul>
-
-
-            </div>
-
-            <!--/.nav-collapse -->
-        </div>
-</nav>
-}
-@if(selected==""){
-<nav class="navbar navbar-inverse navbar-static-top custom-navbar" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" >@Messages("home.header")</a>
-        </div>
-        <!-- Non-collapsing right-side icons -->
-        <ul class="nav navbar-nav navbar-right">
-            <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
-
-        </ul>
-        <!-- the collapsing menu -->
-        <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
-            <ul class="nav navbar-nav">
-
-                <li class="active"><a href="/detected">@Messages("menu.data")</a></li>
-                <li><a href="/owntasks">@Messages("user.tasks")</a></li>
-                <li ><a href="/configuration">@Messages("menu.configuration")</a></li>
-
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
-                        <li><a onclick="href='/users';">@Messages("menu.list")</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="/logout">@Messages("menu.logout")</a></li>
-
-
-            </ul>
-
-
-        </div>
-
-        <!--/.nav-collapse -->
-    </div>
-</nav>
-}
 <img src="@routes.Assets.versioned("images/logo.svg")" style="position:absolute;top:60px;right:150px;"/>
 
 @content
