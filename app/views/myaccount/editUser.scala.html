@@ -9,10 +9,10 @@
 
 
 
-@main(Messages("home.header"))("")(currentUser) {
+@main(Messages("home.header"))("t")(currentUser) {
 @helper.form(action = routes.UserController.saveEdition(), args = 'class -> "userForm"){
 <div class="page-header" style="margin-left:1em;">
-    <h1>@Messages("home.title")</h1>
+    <h1>@Messages("user.edition")</h1>
 </div>
 
 
@@ -28,7 +28,7 @@
     <table class="table table-striped" >
         <thead>
         <tr>
-            <th>@Messages("menu.profil")</th>
+            <th>@Messages("menu.profile")</th>
             <th>@Messages("sr.values")</th>
             <th>@Messages("sr.edition")</th>
 

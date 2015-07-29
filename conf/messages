@@ -50,7 +50,7 @@ menu.contact = Contact
 menu.data = Data
 menu.configuration = Configuration
 menu.logout = Logout
-menu.profil = Profil
+menu.profile = User Profile
 menu.users = Users
 menu.add = add
 menu.list = Users list
@@ -70,9 +70,11 @@ user.add = Add user
 user.email= E-mail
 user.tasks = My Tasks
 user.account = My Account
-user.profil = My Profil
+user.profile = My Profile
 user.oldPassword =  Please enter your old password
 user.newPassword =  Please enter your new password
+user.list = User List
+user.edition = Update my profile
 
 input.delete= Delete
 

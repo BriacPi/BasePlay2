@@ -42,18 +42,18 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
       "password" -> nonEmptyText
     )(LoginValues.apply)(LoginValues.unapply)
   )
-  def profil(id: Long) = AuthenticatedAction() { implicit request =>
+  def profile(id: Long) = AuthenticatedAction() { implicit request =>
     val user = repositories.authentication.UserRepository.findById(id)
     user match {
-      case Some(u) => Ok(views.html.users.profil(u))
+      case Some(u) => Ok(views.html.users.profile(u))
       case None => SessionManager.destroy(Ok(views.html.authentication.authentication(form)))
     }
 
   }
-  def myProfil(id: Long) = AuthenticatedAction() { implicit request =>
+  def myProfile(id: Long) = AuthenticatedAction() { implicit request =>
     val user = repositories.authentication.UserRepository.findById(id)
     user match {
-      case Some(u) => Ok(views.html.users.currentUser(u))
+      case Some(u) => Ok(views.html.myaccount.currentUser(u))
       case None => SessionManager.destroy(Ok(views.html.authentication.authentication(form)))
     }
 
@@ -96,7 +96,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
   }
 
   def editUser() = AuthenticatedAction(){ implicit request =>
-    Ok(views.html.users.editUser(editUserForm,request.user))
+    Ok(views.html.myaccount.editUser(editUserForm,request.user))
   }
 
   def saveEdition() = AuthenticatedAction(){ implicit request =>
@@ -104,7 +104,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
       error => {
 
         // Request payload is invalid.envisageable
-        BadRequest(views.html.users.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+        BadRequest(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
       },
       success => {
 
@@ -116,16 +116,16 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
             if (PasswordAuthentication.authenticate( success.oldPassword,user.password)) {
               val newUser = User(user.id,user.email,success.firstName,success.lastName,PasswordAuthentication.passwordHash(success.newPassword),success.company)
               repositories.authentication.UserRepository.editUser(newUser)
-              Ok(views.html.users.currentUser(newUser))
+              Ok(views.html.myaccount.currentUser(newUser))
 
             }
             else {
             println("Unquthorized")
-              Unauthorized(views.html.users.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+              Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
         }
           case None =>
             println("NO USER")
-            Unauthorized(views.html.users.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+            Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
         }
       }
     )
