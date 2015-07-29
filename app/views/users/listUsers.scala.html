@@ -10,7 +10,7 @@
 
 @main(Messages("home.header"))("u")(currentUser){
 <div class="page-header" style="margin-left:1em;">
-    <h1>@Messages("home.title")</h1>
+    <h1>@Messages("user.list")</h1>
 </div>
 
 
@@ -51,7 +51,7 @@
     <tbody>
 
     @users.map { currentUser =>
-    <tr class="gradeA" onclick="window.location.href='/profil/@currentUser.id';">
+    <tr class="gradeA" onclick="window.location.href='/profile/@currentUser.id';">
         <td>@currentUser.id</td>
         <td>@currentUser.email</td>
         <td>@currentUser.lastName</td>

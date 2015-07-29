@@ -52,7 +52,7 @@ menu.contact = Contact
 menu.data = Données
 menu.configuration = Configuration
 menu.logout = Déconnexion
-menu.profil = Profile
+menu.profile = Profil Utilisateur
 menu.users = Utilisateurs
 menu.add = Ajouter un utilisateur
 menu.list = Liste des utilisateurs
@@ -72,9 +72,11 @@ user.add = Ajout utilisateur
 user.email = Adresse Mail
 user.tasks = Mes Tâches
 user.account = Mon Compte
-user.profil = Mon Profil
+user.profile = Mon Profil
 user.oldPassword =  Veuillez entrer votre ancien mot de passe
 user.newPassword =  Veuillez entrer votre nouveau mot de passe
+user.list = Liste des utilisateurs
+user.edition = Editer mon profil
 
 input.delete= Supprimer
 

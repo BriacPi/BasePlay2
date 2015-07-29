@@ -59,8 +59,8 @@
                 @if(selected =="t" ){<li class="active">}else {<li>}
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("user.account") <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                 <li><a href="/owntasks">@Messages("user.tasks")</a></li>
-                <li><a onclick="href='/myprofil/@currentUser.id';">@Messages("user.profil")</a></li>
+                    <li><a onclick="href='/owntasks';">@Messages("user.tasks")</a></li>
+                <li><a onclick="href='/myprofile/@currentUser.id';">@Messages("user.profile")</a></li>
             </ul>
                 @if(selected =="c" ){<li class="active">}else {<li>} <a href="/configuration">@Messages("menu.configuration")</a></li>
                 @if(selected =="u" ){<li class="dropdown active">} else {<li class="dropdown">}

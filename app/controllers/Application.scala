@@ -142,7 +142,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthContr
 
   def currentUserTasks = AuthenticatedAction(){  implicit request =>
     val userTasks = SuspectRow.findByAdmin(request.user.email)
-    Ok(views.html.myTasks(userTasks,request.user))
+    Ok(views.html.myaccount.mytasks(userTasks,request.user))
 
   }
 

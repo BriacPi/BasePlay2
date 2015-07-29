@@ -33,6 +33,6 @@ POST /login                                                                     
 POST /edituser                                                                       controllers.UserController.saveEdition()
 POST /adduser                                                                        controllers.UserController.addUser()
 GET /deleteuser/:email                                                               controllers.UserController.deleteUser(email:String)
-GET /profil/:id                                                                      controllers.UserController.profil(id :Long)
-GET /myprofil/:id                                                                    controllers.UserController.myProfil(id :Long)
+GET /profile/:id                                                                      controllers.UserController.profile(id :Long)
+GET /myprofile/:id                                                                    controllers.UserController.myProfile(id :Long)
 GET /users                                                                           controllers.UserController.allUsers
