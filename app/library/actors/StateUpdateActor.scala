@@ -1,7 +1,7 @@
 package library.actors
 
 import akka.actor.{Actor, Props}
-import repositories.StateRepository
+import repositories.{State, StateRepository}
 
 
 object StateUpdateActor {
@@ -12,11 +12,9 @@ object StateUpdateActor {
 
 class StateUpdateActor extends Actor {
 
-  import StateUpdateActor._
-
   def receive = {
-    case "success" => StateRepository.changeState("state.majdone",java.time.LocalDateTime.now())
-    case "maj" => StateRepository.changeState("state.majinprogress",java.time.LocalDateTime.now())
-    case "failure" => StateRepository.changeState("state.majfailed",java.time.LocalDateTime.now())
+    case "success" => StateRepository.changeState(State("state.majdone", java.time.LocalDateTime.now()))
+    case "maj" => StateRepository.changeState(State("state.majinprogress", java.time.LocalDateTime.now()))
+    case "failure" => StateRepository.changeState(State("state.majfailed", java.time.LocalDateTime.now()))
   }
 }

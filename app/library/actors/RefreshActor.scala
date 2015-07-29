@@ -23,7 +23,7 @@ class RefreshActor extends Actor {
 
   def receive = {
     case Refresh() =>
-      if (StateRepository.getMessage == "state.majinprogress") {}
+      if (StateRepository.state.message == "state.majinprogress") {}
       else {
         stateUpdateActor ! "maj"
         Engine.sendRequestToApi().onComplete {

@@ -46,7 +46,7 @@
         </div>
         <!-- Non-collapsing right-side icons -->
         <ul class="nav navbar-nav navbar-right">
-            <li> <a> @(Messages(StateRepository.getMessage)+ " "+StateRepository.getDate+".") </a> </li>
+            <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
 
         </ul>
         <!-- the collapsing menu -->
@@ -93,7 +93,7 @@
         </div>
         <!-- Non-collapsing right-side icons -->
         <ul class="nav navbar-nav navbar-right">
-            <li> <a> @(Messages(StateRepository.getMessage)+ " "+StateRepository.getDate+".") </a> </li>
+            <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
 
         </ul>
         <!-- the collapsing menu -->
@@ -141,7 +141,7 @@
         </div>
         <!-- Non-collapsing right-side icons -->
         <ul class="nav navbar-nav navbar-right">
-            <li> <a> @(Messages(StateRepository.getMessage)+ " "+StateRepository.getDate+".") </a> </li>
+            <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
 
         </ul>
         <!-- the collapsing menu -->
@@ -187,13 +187,20 @@
         </div>
         <ul class="nav navbar-nav navbar-right">
             <li> <a> @(Messages(StateRepository.getMessage)+ " "+StateRepository.getDate+".") </a> </li>
+            
+        <!-- Non-collapsing right-side icons -->
+        <ul class="nav navbar-nav navbar-right">
+            <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
 
         </ul>
-        <div class="navbar-collapse navbar-left" id="navbar-collapse-1">
+        <!-- the collapsing menu -->
+
+        <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
+
             <ul class="nav navbar-nav">
 
                 <li ><a href="/detected">@Messages("menu.data")</a></li>
-                <li class ="active"><a href="/owntasks">@Messages("user.tasks")</a></li>
+                <li><a class="active" href="/owntasks">@Messages("user.tasks")</a></li>
                 <li ><a href="/configuration">@Messages("menu.configuration")</a></li>
 
                 <li class="dropdown">
@@ -205,7 +212,11 @@
                 </li>
 
                 <li><a href="/logout">@Messages("menu.logout")</a></li>
+
+
             </ul>
+
+
         </div><!--/.nav-collapse -->
     </div>
 </nav>
@@ -225,7 +236,7 @@
         </div>
         <!-- Non-collapsing right-side icons -->
         <ul class="nav navbar-nav navbar-right">
-            <li> <a> @(Messages(StateRepository.getMessage)+ " "+StateRepository.getDate+".") </a> </li>
+            <li> <a> @(Messages(StateRepository.state.message)+ " "+StateRepository.state.niceDate+".") </a> </li>
 
         </ul>
         <!-- the collapsing menu -->
