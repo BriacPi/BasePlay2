@@ -18,8 +18,7 @@ GET  /                                                                          
 
 # Authentication
 GET /authentication                                                                  controllers.AuthenticationController.welcome()
-GET /profil/:id                                                                      controllers.UserController.profil(id :Long)
-GET /users                                                                           controllers.UserController.allUsers
+
 GET /logout                                                                          controllers.AuthenticationController.logout()
 
 
@@ -29,6 +28,11 @@ GET /configuration/add/:code                                                    
 GET /configuration/remove/:code                                                      controllers.Application.removeMetric(code:String)
 
 GET /newuser                                                                         controllers.UserController.newUser()
+GET /useredition                                                                    controllers.UserController.editUser()
 POST /login                                                                          controllers.AuthenticationController.login()
+POST /edituser                                                                       controllers.UserController.saveEdition()
 POST /adduser                                                                        controllers.UserController.addUser()
 GET /deleteuser/:email                                                               controllers.UserController.deleteUser(email:String)
+GET /profil/:id                                                                      controllers.UserController.profil(id :Long)
+GET /myprofil/:id                                                                    controllers.UserController.myProfil(id :Long)
+GET /users                                                                           controllers.UserController.allUsers

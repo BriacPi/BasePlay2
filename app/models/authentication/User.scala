@@ -10,10 +10,9 @@ import anorm._
 
 import scala.language.postfixOps
 
-case class User(id: Long, email: String, firstName: String, lastName: String, password: String, company:String) {
-
-}
+case class User(id: Long, email: String, firstName: String, lastName: String, password: String, company:String)
 case class TemporaryUser(email: String, firstName: String, lastName: String, password: String, company:String)
+case class EditUser(firstName: String, lastName: String, oldPassword: String,newPassword : String,company:String)
 
 object User {
   

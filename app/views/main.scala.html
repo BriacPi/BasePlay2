@@ -32,6 +32,7 @@
 </head>
 <body>
 
+
 <nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -53,6 +54,7 @@
         <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
             <ul class="nav navbar-nav">
 
+
                 @if(selected =="d" ){<li class="active">} else {<li>}<a href="/detected">@Messages("menu.data")</a></li>
                 @if(selected =="t" ){<li class="active">}else {<li>} <a href="/owntasks">@Messages("user.tasks")</a></li>
                 @if(selected =="c" ){<li class="active">}else {<li>} <a href="/configuration">@Messages("menu.configuration")</a></li>
@@ -64,7 +66,7 @@
                     </ul>
                 </li>
 
-                <li><a href="/logout">@Messages("menu.logout")</a></li>
+                <li><a href="/logout">@Messages("menu.logout") @("("+currentUser.firstName+")")</a></li>
 
 
             </ul>

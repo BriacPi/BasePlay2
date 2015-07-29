@@ -69,6 +69,10 @@ user.company = Company
 user.add = Add user
 user.email= E-mail
 user.tasks = My Tasks
+user.account = My Account
+user.profil = My Profil
+user.oldPassword =  Please enter your old password
+user.newPassword =  Please enter your new password
 
 input.delete= Delete
 
