@@ -61,7 +61,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
   def allUsers = AuthenticatedAction() { implicit request =>
     val userList = repositories.authentication.UserRepository.list().toList
-    Ok(views.html.users.listUser(userList,request.user))
+    Ok(views.html.users.listUsers(userList,request.user))
   }
   def addUser = AuthenticatedAction() { implicit request =>
     addUserForm.bindFromRequest.fold(
@@ -88,7 +88,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
   def deleteUser(email:String) = AuthenticatedAction() { implicit request =>
     UserRepository.delete(email)
     val userList = repositories.authentication.UserRepository.list().toList
-    Ok(views.html.users.listUser(userList,request.user))
+    Ok(views.html.users.listUsers(userList,request.user))
   }
 
   def newUser = AuthenticatedAction() { implicit request =>
@@ -112,7 +112,6 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
         UserRepository.findByEmail(request.user.email) match {
           case Some(user) =>
-            println( success.oldPassword,user.password)
             if (PasswordAuthentication.authenticate( success.oldPassword,user.password)) {
               val newUser = User(user.id,user.email,success.firstName,success.lastName,PasswordAuthentication.passwordHash(success.newPassword),success.company)
               repositories.authentication.UserRepository.editUser(newUser)
@@ -120,11 +119,9 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
             }
             else {
-            println("Unquthorized")
               Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
         }
           case None =>
-            println("NO USER")
             Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
         }
       }

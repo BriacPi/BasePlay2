@@ -18,11 +18,7 @@ object MetricsToNames {
     val complexRequest: WSRequest =
       request.withHeaders("Accept" -> "application/json")
         .withRequestTimeout(30000)
-    complexRequest.get().recoverWith {
-      case e: TimeoutException =>
-        println("Error in getting Metrics to Names JSON")
-        makeMetricRequest()
-    }
+    complexRequest.get()
   }
 
   def getMapMetricsToNames(answer: Future[WSResponse]): Future[Map[String, String]] = {

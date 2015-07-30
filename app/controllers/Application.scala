@@ -23,8 +23,6 @@ import scala.util.{Success, Failure}
 class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthController {
   //ACTOR
  val refreshActor = system.actorOf(RefreshActor.props, "refresh-actor")
-
-
   import scala.concurrent.duration._
 
   val cancellable = system.scheduler.schedule(
