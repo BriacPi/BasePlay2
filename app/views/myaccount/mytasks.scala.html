@@ -13,37 +13,25 @@
 </div>
 
 <script type="text/javascript" class="init">
-            $(document).ready(function() {
-	        oTable=$('#tasks').DataTable(
-	        {
-                 "order": [[ 1, "desc" ]],
-                 "columnDefs": [
+$(document).ready(function() {
+    $('#tasks').dataTable( {
+        "ajax": '../data/mytasks',
+        "order": [[ 1, "desc" ]],
+        "columnDefs": [
                                 {
                                  "targets": [ 0 ],
                                  "visible": false,
                                  "searchable": false
-                                 },
-                                 {
-                                 "targets": [ 9 ],
-                                 "visible": false,
-                                 "searchable": false
-                                 },
-                                 {
-                                 "targets": [ 10 ],
-                                 "visible": false,
-                                 "searchable": false
-                                 },
-                                 {
-                                 "targets": [ 11 ],
-                                 "visible": false,
-                                 "searchable": false
                                  }
-                                ]
-            }
-	        );
-
-
-            } );
+                                ],
+        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+            $(nRow).click (function()  {
+                 nRow.setAttribute("id",aData[0])
+                 document.location.href = "/row/" + aData[0];
+            })
+        },
+    });
+});
 </script>
 
 
