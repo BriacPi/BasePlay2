@@ -18,9 +18,10 @@ GET  /                                                                          
 
 # Authentication
 GET /authentication                                                                  controllers.AuthenticationController.welcome()
-
 GET /logout                                                                          controllers.AuthenticationController.logout()
 
+# Current state
+GET /analysis_state                                                                   controllers.Application.currentState()
 
 # Configuration
 GET /configuration                                                                   controllers.Application.allUsedMetrics()
@@ -28,11 +29,11 @@ GET /configuration/add/:code                                                    
 GET /configuration/remove/:code                                                      controllers.Application.removeMetric(code:String)
 
 GET /newuser                                                                         controllers.UserController.newUser()
-GET /useredition                                                                    controllers.UserController.editUser()
+GET /useredition                                                                     controllers.UserController.editUser()
 POST /login                                                                          controllers.AuthenticationController.login()
 POST /edituser                                                                       controllers.UserController.saveEdition()
 POST /adduser                                                                        controllers.UserController.addUser()
 GET /deleteuser/:email                                                               controllers.UserController.deleteUser(email:String)
-GET /profile/:id                                                                      controllers.UserController.profile(id :Long)
-GET /myprofile/:id                                                                    controllers.UserController.myProfile(id :Long)
+GET /profile/:id                                                                     controllers.UserController.profile(id :Long)
+GET /myprofile/:id                                                                   controllers.UserController.myProfile(id :Long)
 GET /users                                                                           controllers.UserController.allUsers
