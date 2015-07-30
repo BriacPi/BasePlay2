@@ -24,11 +24,12 @@ import scala.util.{Success, Failure}
 
 class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: MessagesApi) extends AuthController with I18nSupport {
   //ACTOR
- val refreshActor = system.actorOf(RefreshActor.props, "refresh-actor")
+  val refreshActor = system.actorOf(RefreshActor.props, "refresh-actor")
+
   import scala.concurrent.duration._
 
   val cancellable = system.scheduler.schedule(
-   0.microseconds, 4.hours, refreshActor, Refresh())
+    0.microseconds, 4.hours, refreshActor, Refresh())
 
   //Userform
   val userForm: Form[String] = Form("new value" -> of[String])
@@ -55,16 +56,16 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def solved(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
 
-   Ok(views.html.solved(SuspectRow.filterByStatus(models.Status.Solved),request.user))
+    Ok(views.html.solved(SuspectRow.filterByStatus(models.Status.Solved), request.user))
 
   }
 
   def beingProcessed(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    Ok(views.html.beingProcessed(SuspectRow.filterByStatus(models.Status.BeingProcessed),request.user))
+    Ok(views.html.beingProcessed(SuspectRow.filterByStatus(models.Status.BeingProcessed), request.user))
   }
 
   def detectedOnly(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly),request.user))
+    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly), request.user))
   }
 
   def redirect() = AuthenticatedAction() {
@@ -81,16 +82,16 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   def find(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val optionOfSuspectRow = SuspectRow.findByKey(date, caisse, groupe, agence, pdv, metric)
     optionOfSuspectRow match {
-      case Some(e) => Ok(views.html.suspectRow(e,request.user))
-      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly),request.user))
+      case Some(e) => Ok(views.html.suspectRow(e, request.user))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly), request.user))
     }
   }
 
   def findWithId(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val optionOfSuspectRow = SuspectRow.findById(id)
     optionOfSuspectRow match {
-      case Some(e) => Ok(views.html.suspectRow(e,request.user))
-      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly),request.user))
+      case Some(e) => Ok(views.html.suspectRow(e, request.user))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly), request.user))
     }
   }
 
@@ -99,15 +100,15 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     optionOfSuspectRow match {
       case Some(e) =>
         val filledForm = editionForm.fill(EditionValues(e.admin, e.comment, e.nature.toString, e.status.toString))
-        Ok(views.html.edit(e, filledForm,request.user))
-      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly),request.user))
+        Ok(views.html.edit(e, filledForm, request.user))
+      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly), request.user))
     }
   }
 
 
   def saveEdition(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     editionForm.bindFromRequest.fold(
-      errors => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly),request.user)),
+      errors => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly), request.user)),
       l => {
         SuspectRow.edit(id, l.admin, l.comment, models.Nature.withName(l.nature), models.Status.withName(l.status))
         Redirect(routes.Application.findWithId(id))
@@ -121,7 +122,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       val usedMetricsWithID: List[CodeMetric] = MetricRepository.list()
       val usedMetrics = usedMetricsWithID.map(new CodeMetricWithoutId(_)).toSet
       val unusedMetrics = allMetrics.diff(usedMetrics)
-      Ok(views.html.metrics(usedMetrics.toList, unusedMetrics.toList,request.user))
+      Ok(views.html.metrics(usedMetrics.toList, unusedMetrics.toList, request.user))
 
     }
   }
@@ -140,22 +141,27 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     }
   }
 
-  def currentUserTasks = AuthenticatedAction(){  implicit request =>
+  def currentUserTasks = AuthenticatedAction() { implicit request =>
     val userTasks = SuspectRow.findByAdmin(request.user.email)
-    Ok(views.html.myaccount.mytasks(userTasks,request.user))
+    Ok(views.html.myaccount.mytasks(userTasks, request.user))
 
   }
 
 
   implicit val stateMessageWrites = new Writes[StateMessage] {
     def writes(state: StateMessage) = Json.obj(
-      "niceMessage" -> state.niceMessage)
+      "niceMessage" -> state.niceMessage,
+      "color" -> state.color
+    )
   }
 
-  def currentState = AuthenticatedAction(){ implicit request =>
-      val state = StateRepository.state
-      val stateMessage=StateMessage(Messages(state.message)+ " "+state.niceDate+".")
-      Ok(Json.toJson(stateMessage))
+  def currentState = AuthenticatedAction() { implicit request =>
+    val state = StateRepository.state
+    val stateMessage = if (state.message=="state.majfailed") {
+      StateMessage(Messages(state.message) + " " + state.niceDate + ".","red")
+    }
+    else {StateMessage(Messages(state.message) + " " + state.niceDate + ".","")}
+    Ok(Json.toJson(stateMessage))
   }
 
 

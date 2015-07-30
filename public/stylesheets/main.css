@@ -30,3 +30,10 @@ color :red;
      margin-bottom: 2.5em;
 }
 
+a {
+      font-family: 'Open Sans Condensed';
+  }
+
+  .errorRed {
+  color :red;
+  }

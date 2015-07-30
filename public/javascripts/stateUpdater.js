@@ -1,10 +1,14 @@
 $(function(){
-    setInterval(function(){
-        $.getJSON("/analysis_state").then(function(data){
-            if(false) {$( '#state' ).html( "<a >"+ data.niceMessage + "</a>");
-            }
-            else {$( '#state' ).html( "<a class=errorRed>"+ data.niceMessage + "</a>");
-            }
-                                                        })
-                             }, 10000);
+    var setState =function(){
+                  $.getJSON("/analysis_state").then(function(data){
+                      if(data.color.indexOf("red")>-1) {
+                          $( '#state' ).html( "<FONT COLOR=\"red\" >" + data.niceMessage + "</FONT>");
+                      }
+                      else {
+                          $( '#state' ).html( data.niceMessage );
+                      }
+                  })
+              }
+    setState()
+    setInterval(setState, 10000);
 })
