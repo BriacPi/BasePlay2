@@ -27,6 +27,8 @@ trait MetricRepository {
   }
 
   def create(metric: CodeMetricWithoutId): Unit = {
+    if (exist(metric)) {}
+    else {
     DB.withConnection { implicit c =>
       SQL("insert into metrics (metric,metric_name) values " +
         "({metric},{metric_name})").on(
@@ -34,6 +36,7 @@ trait MetricRepository {
           'metric_name -> metric.metricName
         ).executeInsert()
     }
+  }
   }
 
   def delete(code:String): Unit = {
@@ -45,6 +48,23 @@ trait MetricRepository {
     }
   }
 
+  def exist(metric: CodeMetricWithoutId):Boolean ={
+    val metricOption = {
+      DB.withConnection { implicit current =>
+        SQL(
+          """
+          SELECT * FROM metrics
+          where metric = {metric}
+          """
+        ).on(
+            'metric -> metric.code
+          ).as(recordMapper.singleOpt)
+      }
+    }
+    metricOption match{
+      case None =>false
+      case Some(m)=>true}
+  }
 
   def list(): List[CodeMetric] = {
     DB.withConnection { implicit current =>
