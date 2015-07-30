@@ -19,10 +19,13 @@
 </ul>
 
 <script type="text/javascript" class="init">
-            $(document).ready(function() {
-	        oTable=$('#DetectedOnly').DataTable(
-	        {    "order": [[ 1, "desc" ]],
-                 "columnDefs": [
+
+$(document).ready(function() {
+    $('#DetectedOnly').dataTable( {
+        "ajax": '../data/detected',
+        "order": [[ 1, "desc" ]],
+        "columnDefs": [
+
                                 {
                                  "targets": [ 0 ],
                                  "visible": false,
@@ -48,12 +51,19 @@
                                  "visible": false,
                                  "searchable": false
                                  }
-                                ]
-            }
-	        );
+
+                                ],
+        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+            $(nRow).click (function()  {
+                 nRow.setAttribute("id",aData[0])
+                 document.location.href = "/row/" + aData[0];
+            })
+        },
+    });
+});
 
 
-            } );
+
 
 </script>
 
@@ -82,23 +92,7 @@
     </thead>
     <tbody>
 
-    @rows.map { suspectRow =>
-    <tr class="gradeA" onclick="window.location.href='/row/@suspectRow.id';">
-        <td>@suspectRow.id</td>
-        <td>@suspectRow.date</td>
-        <td>@suspectRow.caisse</td>
-        <td>@suspectRow.groupe</td>
-        <td>@suspectRow.agence</td>
-        <td>@suspectRow.pdv</td>
-        <td>@suspectRow.metricName</td>
-        <td>@Math.ceil(suspectRow.value)</td>
-        <td>@Messages(suspectRow.nature.toString)</td>
-        <td>@suspectRow.firstDate</td>
-        <td>@suspectRow.comment</td>
-        <td>@suspectRow.admin</td>
-        <td>@suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</td>
-    </tr>
-    }
+
 
 
     </tbody>

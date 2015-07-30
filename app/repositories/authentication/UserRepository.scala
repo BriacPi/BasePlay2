@@ -50,6 +50,7 @@ trait UserRepository {
         ).executeUpdate()
     }
   }
+<<<<<<< HEAD
   def editPassword(user: User): Unit = {
     DB.withConnection { implicit c =>
       SQL("update  users set encrypted_password={encrypted_password}where email ={email}").on(
@@ -58,6 +59,8 @@ trait UserRepository {
         ).executeUpdate()
     }
   }
+=======
+>>>>>>> develop
 
   def delete(email:String): Unit = {
     DB.withConnection { implicit c =>

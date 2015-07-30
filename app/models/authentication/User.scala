@@ -12,8 +12,12 @@ import scala.language.postfixOps
 
 case class User(id: Long, email: String, firstName: String, lastName: String, password: String, company:String)
 case class TemporaryUser(email: String, firstName: String, lastName: String, password: String, company:String)
+<<<<<<< HEAD
 case class EditUser(firstName: String, lastName: String, password: String,company:String)
 case class EditPassword(oldPassword :String, newPassword : String)
+=======
+case class EditUser(firstName: String, lastName: String, oldPassword: String,newPassword : String,company:String)
+>>>>>>> develop
 
 object User {
   

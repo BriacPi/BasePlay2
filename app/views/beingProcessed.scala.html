@@ -18,11 +18,13 @@
 </ul>
 
 <script type="text/javascript" class="init">
-            $(document).ready(function() {
-	        oTable=$('#BeingProcessed').DataTable(
-	        {
-                 "order": [[ 1, "desc" ]],
-                 "columnDefs": [
+
+$(document).ready(function() {
+    $('#BeingProcessed').dataTable( {
+        "ajax": '../data/processed',
+        "order": [[ 1, "desc" ]],
+        "columnDefs": [
+
                                 {
                                  "targets": [ 0 ],
                                  "visible": false,
@@ -48,12 +50,17 @@
                                  "visible": false,
                                  "searchable": false
                                  }
-                                ]
-            }
-	        );
 
+                                ],
+        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+            $(nRow).click (function()  {
+                 nRow.setAttribute("id",aData[0])
+                 document.location.href = "/row/" + aData[0];
+            })
+        },
+    });
+});
 
-            } );
 </script>
 
 

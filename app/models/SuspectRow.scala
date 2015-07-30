@@ -6,12 +6,18 @@ import library.utils.dateOrdering._
 import models.Nature._
 import play.api.Play.current
 import play.api.db.DB
+
+import play.api.i18n.Messages
 import repositories.MetricRepository
 
-
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import scala.concurrent.Future
 import scala.language.postfixOps
 import scala.util.Try
+
+
+case class SuspectRowsForJSON(data:List[List[String]])
 
 
 case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, agence: String, pdv: String,
@@ -50,6 +56,7 @@ case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, group
   def withMetricName(myMap:Map[String,String]): SuspectRow ={
     this.copy( metric= myMap(this.metric))
   }
+
 }
 
 // Data Base

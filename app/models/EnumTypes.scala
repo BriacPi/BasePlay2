@@ -88,4 +88,6 @@ case object Nature extends Enum[Nature] {
 
   val values: Seq[Nature] = findValues
 
+
 }
+

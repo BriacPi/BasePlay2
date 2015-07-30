@@ -9,6 +9,7 @@ GET  /row/:id                                                                   
 GET  /edition/:id                                                                    controllers.Application.edit(id:Long)
 POST /update/:id                                                                     controllers.Application.saveEdition(id:Long)
 GET  /detected                                                                       controllers.Application.detectedOnly()
+GET  /data/:parameter                                                                  controllers.Application.sendData(parameter:String)
 GET  /processed                                                                      controllers.Application.beingProcessed()
 GET  /solved                                                                         controllers.Application.solved()
 GET  /assets/*file                                                                   controllers.Assets.versioned(path="/public", file: Asset)
@@ -30,10 +31,12 @@ GET /configuration/remove/:code                                                 
 
 GET /newuser                                                                         controllers.UserController.newUser()
 GET /useredition                                                                     controllers.UserController.editUser()
+
 GET /passwordedition                                                                 controllers.UserController.editPassword()
 POST /login                                                                          controllers.AuthenticationController.login()
 POST /edituser                                                                       controllers.UserController.saveEditionUser()
 POST /editpassword                                                                   controllers.UserController.saveEditionPassword()
+
 POST /adduser                                                                        controllers.UserController.addUser()
 GET /deleteuser/:email                                                               controllers.UserController.deleteUser(email:String)
 GET /profile/:id                                                                     controllers.UserController.profile(id :Long)

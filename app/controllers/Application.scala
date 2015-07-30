@@ -9,7 +9,9 @@ import library.MetricsToNames
 import library.actors.{StateUpdateActor, RefreshActor}
 import library.actors.RefreshActor.Refresh
 import models.authentication.User
-import models.{EditionValues, SuspectRow}
+
+import models._
+
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.format.Formats._
@@ -67,6 +69,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   def detectedOnly(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly), request.user))
   }
+
 
   def redirect() = AuthenticatedAction() {
     Redirect(routes.Application.detectedOnly())
@@ -148,6 +151,43 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   }
 
 
+  def sendData(parameter: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
+    val suspectRows = parameter match {
+      case "detected" => SuspectRow.filterByStatus(models.Status.DetectedOnly)
+      case "solved" => SuspectRow.filterByStatus(models.Status.Solved)
+      case "processed" => SuspectRow.filterByStatus(models.Status.BeingProcessed)
+      case "mytasks" => SuspectRow.findByAdmin(request.user.email)
+      case _ => List.empty[SuspectRow]
+    }
+    val data = SuspectRowsForJSON(suspectRows.map(suspectRow => {
+      val reasonsForDetection = suspectRow.reasonsForDetection.map(msg => Messages(msg.toString) + '\n').mkString
+      List(suspectRow.id.toString,
+        suspectRow.date.toString,
+        suspectRow.caisse,
+        suspectRow.groupe,
+        suspectRow.agence,
+        suspectRow.pdv,
+        suspectRow.metricName,
+        suspectRow.value.toString,
+        Messages(suspectRow.status.toString),
+        Messages(suspectRow.nature.toString),
+        suspectRow.firstDate.toString,
+        suspectRow.admin,
+        suspectRow.comment,
+        reasonsForDetection)
+    }))
+
+    Ok(Json.toJson(data))
+  }
+
+
+  implicit val dataWrites = new Writes[SuspectRowsForJSON] {
+    def writes(dataForJSON: SuspectRowsForJSON) = Json.obj(
+      "data" -> dataForJSON.data
+    )
+  }
+
+
   implicit val stateMessageWrites = new Writes[StateMessage] {
     def writes(state: StateMessage) = Json.obj(
       "niceMessage" -> state.niceMessage,
@@ -157,10 +197,14 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def currentState = AuthenticatedAction() { implicit request =>
     val state = StateRepository.state
-    val stateMessage = if (state.message=="state.majfailed") {
-      StateMessage(Messages(state.message) + " " + state.niceDate + ".","red")
+
+    val stateMessage = if (state.message == "state.majfailed") {
+      StateMessage(Messages(state.message) + " " + state.niceDate + ".", "red")
     }
-    else {StateMessage(Messages(state.message) + " " + state.niceDate + ".","")}
+    else {
+      StateMessage(Messages(state.message) + " " + state.niceDate + ".", "")
+    }
+
     Ok(Json.toJson(stateMessage))
   }
 

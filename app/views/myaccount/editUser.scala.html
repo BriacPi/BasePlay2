@@ -10,7 +10,9 @@
 
 
 @main(Messages("home.header"))("t")(currentUser) {
+
 @helper.form(action = routes.UserController.saveEditionUser(), args = 'class -> "userForm"){
+
 <div class="page-header" style="margin-left:1em;">
     <h1>@Messages("user.edition")</h1>
 </div>
@@ -38,18 +40,23 @@
         <tr>
             <th>@Messages("user.email")</th>
             <td>@currentUser.email</td>
+
             <td>    </td>
+
 
         </tr>
         <tr>
             <th>@Messages("user.lastName")</th>
             <td>@currentUser.lastName</td>
+
             <th>@helper.inputText(userForm("lastName"), 'placeholder ->currentUser.lastName,'_label -> Messages("user.lastName"))</th>
+
 
         </tr>
         <tr>
             <th>@Messages("user.firstName")</th>
             <td>@currentUser.firstName</td>
+
             <th>@helper.inputText(userForm("firstName"),'placeholder ->currentUser.firstName, '_label -> Messages("user.firstName"))</th>
 
         </tr>
@@ -65,6 +72,7 @@
             <td></td>
             <th>@helper.inputText(userForm("oldPassword"),'placeholder ->currentUser.firstName, 'type -> "password",'_label -> Messages("authentication.password"))</th>
 
+
         </tr>
         </tbody>
     </table>
@@ -72,7 +80,9 @@
 
 </div>
 <div>
+
     <input type="submit" value=@Messages("edit.save")>}
+
 </div>
 
 
