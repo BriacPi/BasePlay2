@@ -2,6 +2,7 @@ package library.actors
 
 import akka.actor.{Actor, Props}
 import library.Engine
+import library.utils.dateTimeNow
 import repositories.StateRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -23,7 +24,7 @@ class RefreshActor extends Actor {
 
   def receive = {
     case Refresh() =>
-      if (StateRepository.state.message == "state.majinprogress") {}
+      if (StateRepository.state.message == "state.majinprogress" && StateRepository.state.date.plusHours(8).isAfter(dateTimeNow.now()) ) {}
       else {
         stateUpdateActor ! "maj"
         Engine.sendRequestToApi().onComplete {
