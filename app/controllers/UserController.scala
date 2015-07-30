@@ -109,11 +109,12 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
   }
 
   def saveEditionUser() = AuthenticatedAction(){ implicit request =>
+    val cuser =models.authentication.EditUser(request.user.firstName,request.user.lastName,request.user.password,request.user.company)
     editUserForm.bindFromRequest.fold(
       error => {
 
         // Request payload is invalid.envisageable
-        BadRequest(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+        BadRequest(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
       },
       success => {
 
@@ -128,10 +129,11 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
             }
             else {
-              Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+
+              Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
         }
           case None =>
-            Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+            Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
         }
       }
     )
@@ -142,7 +144,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
       error => {
 
         // Request payload is invalid.envisageable
-        BadRequest(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+        BadRequest(views.html.myaccount.editPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
       },
       success => {
 
@@ -157,10 +159,10 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
             }
             else {
-              Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+              Unauthorized(views.html.myaccount.editPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
             }
           case None =>
-            Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+            Unauthorized(views.html.myaccount.editPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
         }
       }
     )

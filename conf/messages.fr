@@ -41,7 +41,7 @@ TooFarFromMeanByDimensions=Trop différente des autres de mêmes dimensions
 
 error.notAuthorizedForThisUser = Action non authorisée pour cet utilisateur.
 error.userNotFound= Utilisateur ou Mot de passe invalide.
-error.invalidPassword= Utilisateur ou Mot de passe invalide.
+error.invalidPassword= Mot de passe invalide.
 error.invalidUserOrPassword= Utilisateur ou Mot de passe invalide.
 error.usedEmail = E-mail déjà utilisé
 error.required = Requis
