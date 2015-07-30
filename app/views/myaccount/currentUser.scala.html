@@ -50,7 +50,11 @@
 </div>
 <div>
     @form(routes.UserController.editUser()) {
-    <input type="submit" value="Edit">}
+    <input type="submit" value=@Messages("edit.profile")>}
+</div>
+<div>
+    @form(routes.UserController.editPassword()) {
+    <input type="submit" value=@Messages("edit.password")>}
 </div>
 
 }

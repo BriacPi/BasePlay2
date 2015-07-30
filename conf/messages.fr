@@ -75,6 +75,7 @@ user.account = Mon Compte
 user.profile = Mon Profil
 user.oldPassword =  Veuillez entrer votre ancien mot de passe
 user.newPassword =  Veuillez entrer votre nouveau mot de passe
+user.password =  Veuillez entrer votre mot de passe
 user.list = Liste des utilisateurs
 user.edition = Editer mon profil
 
@@ -85,4 +86,9 @@ state.initialisation= Application initialisée le
 state.majinprogress= Analyse en cours depuis le
 state.majdone = Dernière analyse faite le
 state.majfailed = Analyse échouée le
+
+edit.password = Editer:mot-de-passe
+edit.profile = Editer:profil
+edit.save = Sauvgarder
+edit.edit = Editer
 

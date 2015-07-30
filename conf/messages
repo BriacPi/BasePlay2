@@ -73,6 +73,7 @@ user.account = My Account
 user.profile = My Profile
 user.oldPassword =  Please enter your old password
 user.newPassword =  Please enter your new password
+user.password =  Please enter your password
 user.list = User List
 user.edition = Update my profile
 
@@ -84,3 +85,7 @@ state.majfailed= Update failed since
 state.majinprogress= Update in Progress since
 state.majdone = Update completed since
 
+edit.password = Edit password
+edit.profile = Edit profile
+edit.save = Save
+edit.edit = Edit
