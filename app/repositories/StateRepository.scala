@@ -9,6 +9,8 @@ import play.api.db.DB
 import play.api.Play.current
 import library.utils.dateTimeNow
 
+case class StateMessage(niceMessage:String)
+
 case class State(message: String, date: java.time.LocalDateTime) {
   def niceDate:String = date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"))
 }

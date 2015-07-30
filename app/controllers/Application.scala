@@ -13,14 +13,16 @@ import models.{EditionValues, SuspectRow}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.format.Formats._
+import play.api.i18n.{MessagesApi, Messages, I18nSupport}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.{Writes, Json}
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import repositories.{CodeMetric, CodeMetricWithoutId, MetricRepository, StateRepository}
+import repositories._
 import scala.concurrent.Future
 import scala.util.{Success, Failure}
 
-class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthController {
+class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: MessagesApi) extends AuthController with I18nSupport {
   //ACTOR
  val refreshActor = system.actorOf(RefreshActor.props, "refresh-actor")
   import scala.concurrent.duration._
@@ -143,6 +145,19 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem) extends AuthContr
     Ok(views.html.myaccount.mytasks(userTasks,request.user))
 
   }
+
+
+  implicit val stateMessageWrites = new Writes[StateMessage] {
+    def writes(state: StateMessage) = Json.obj(
+      "niceMessage" -> state.niceMessage)
+  }
+
+  def currentState = AuthenticatedAction(){ implicit request =>
+      val state = StateRepository.state
+      val stateMessage=StateMessage(Messages(state.message)+ " "+state.niceDate+".")
+      Ok(Json.toJson(stateMessage))
+  }
+
 
   //  def findById(date : String,caisse : String, groupe : String, agence :String,pdv :String, metric :String): Action[AnyContent] = Action{
   //    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,metric,"To be specified","","Not treated","","To be specified","Unknown")
