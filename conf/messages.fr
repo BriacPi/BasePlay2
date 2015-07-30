@@ -89,6 +89,6 @@ state.majfailed = Analyse échouée le
 
 edit.password = Editer:mot-de-passe
 edit.profile = Editer:profil
-edit.save = Sauvgarder
+edit.save = Sauvegarder
 edit.edit = Editer
 
