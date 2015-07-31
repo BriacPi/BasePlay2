@@ -1,5 +1,5 @@
 @import models.authentication.User
-@(rows: List[SuspectRow],currentUser :User)(implicit lang:Lang)
+@(currentUser :User)(implicit lang:Lang)
 
 @import helper._
 @import play.api.Play.current
@@ -70,24 +70,7 @@ $(document).ready(function() {
         </thead>
         <tbody>
 
-        @rows.map { suspectRow =>
-        <tr class="gradeA" onclick="window.location.href='/row/@suspectRow.id';">
-            <td>@suspectRow.id</td>
-            <td>@suspectRow.date</td>
-            <td>@suspectRow.caisse</td>
-            <td>@suspectRow.groupe</td>
-            <td>@suspectRow.agence</td>
-            <td>@suspectRow.pdv</td>
-            <td>@suspectRow.metricName</td>
-            <td>@Math.ceil(suspectRow.value)</td>
-            <td>@suspectRow.status</td>
-            <td>@Messages(suspectRow.nature.toString)</td>
-            <td>@suspectRow.firstDate</td>
-            <td>@suspectRow.comment</td>
-            <td>@suspectRow.admin</td>
-            <td>@suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</td>
-        </tr>
-        }
+
 
 
         </tbody>
