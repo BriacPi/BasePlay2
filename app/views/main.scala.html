@@ -52,7 +52,7 @@
 <body>
 
 
-<nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-test" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -88,12 +88,14 @@
             <ul class="nav navbar-nav">
 
 
+
                 @if(selected =="d" ){<li class="active white">} else {<li>}<a href="/detected">@Messages("menu.data")</a></li>
                 @if(selected =="t" ){<li class="active">}else {<li>}<a onclick="href='/owntasks';">@Messages("user.tasks")</a></li>
 
 
                 @if(selected =="u" ){<li class="dropdown active">} else {<li class="dropdown">}
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="glyphicon glyphicon-menu-down"></span></a>
+
                 <ul class="dropdown-menu">
                     <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
                     <li><a onclick="href='/users';">@Messages("menu.list")</a></li>

@@ -205,6 +205,7 @@ background-color:yellow;
     -ms-transform: translate3d(-100%, 0, 0);
     transform: translate3d(-100%, 0, 0)
   }
+
   100% {
     opacity: 1;
     -webkit-transform: none;
@@ -371,4 +372,5 @@ background-color:yellow;
 .centered {
 width :1280px;
 margin:0 auto;
+
 }
