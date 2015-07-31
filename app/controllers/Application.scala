@@ -150,6 +150,31 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   }
 
+  def sendUsedMetrics: Action[AnyContent] = AuthenticatedAction().async { implicit request =>
+    mapMetricsToNames.map { mapMtN =>
+      val allMetrics = mapMtN.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2)).toSet
+      val usedMetricsWithID: List[CodeMetric] = MetricRepository.list()
+      val usedMetrics = usedMetricsWithID.map(new CodeMetricWithoutId(_))
+      val usedMetricsForJSON = usedMetrics.map(metric =>
+        List(metric.code, metric.metricName)
+      )
+      Ok(Json.toJson(MetricsForJSON(usedMetricsForJSON)))
+    }
+  }
+
+  def sendUnusedMetrics: Action[AnyContent] = AuthenticatedAction().async { implicit request =>
+    mapMetricsToNames.map { mapMtN =>
+      val allMetrics = mapMtN.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2)).toSet
+      val usedMetricsWithID: List[CodeMetric] = MetricRepository.list()
+      val usedMetrics = usedMetricsWithID.map(new CodeMetricWithoutId(_)).toSet
+      val unusedMetrics = allMetrics.diff(usedMetrics).toList
+      val unusedMetricsForJSON = unusedMetrics.map(metric =>
+        List(metric.code, metric.metricName)
+      )
+      Ok(Json.toJson(MetricsForJSON(unusedMetricsForJSON)))
+    }
+  }
+
 
   def sendData(parameter: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val suspectRows = parameter match {
@@ -181,12 +206,18 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   }
 
 
+  implicit val metricsWrites = new Writes[MetricsForJSON] {
+    def writes(metricsForJSON: MetricsForJSON) = Json.obj(
+      "data" -> metricsForJSON.data
+    )
+  }
+
+
   implicit val dataWrites = new Writes[SuspectRowsForJSON] {
     def writes(dataForJSON: SuspectRowsForJSON) = Json.obj(
       "data" -> dataForJSON.data
     )
   }
-
 
   implicit val stateMessageWrites = new Writes[StateMessage] {
     def writes(state: StateMessage) = Json.obj(

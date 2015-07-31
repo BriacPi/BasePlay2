@@ -26,6 +26,8 @@ GET /analysis_state                                                             
 
 # Configuration
 GET /configuration                                                                   controllers.Application.allUsedMetrics()
+GET /configuration/used                                                              controllers.Application.sendUsedMetrics()
+GET /configuration/unused                                                            controllers.Application.sendUnusedMetrics()
 GET /configuration/add/:code                                                         controllers.Application.addMetric(code:String)
 GET /configuration/remove/:code                                                      controllers.Application.removeMetric(code:String)
 

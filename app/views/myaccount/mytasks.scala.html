@@ -25,6 +25,12 @@ $(document).ready(function() {
                                  "visible": false,
                                  "searchable": false
 
+                                 },
+                                 {
+                                 "render": function ( data, type, row ) {
+                                    return Math.ceil(data,-1);
+                                    },
+                                 "targets": [7]
                                  }
                                 ],
         "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
