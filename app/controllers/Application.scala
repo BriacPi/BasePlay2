@@ -173,6 +173,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     def writes(suspectRow: SuspectRow) = Json.obj(
       "date" -> suspectRow.date,
       "caisse" -> suspectRow.caisse,
+      "groupe" -> suspectRow.groupe,
       "agence" -> suspectRow.agence,
       "pdv" -> suspectRow.pdv,
       "metricName" -> suspectRow.metricName,

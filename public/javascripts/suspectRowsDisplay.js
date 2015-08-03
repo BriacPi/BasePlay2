@@ -9,7 +9,13 @@ $(document).ready(function () {
 
         if (!rows) return;
         var items = rows.map(function(row){
-            return $('<div class="tile '+row.caisse+'" data-status="' + row.status + '">'+
+            return $('<div class="tile '+row.caisse
+                    +'" data-status="' + row.status
+                    +'" data-caisse="' + row.caisse
+                    +'" data-groupe="' + row.groupe
+                    +'" data-agence="' + row.agence
+                    +'" data-pdv="' + row.pdv
+                    + '">'+
                          '<h3>' + row.agence + '</h3><br>' + row.date +
                      '</div>');
         });
@@ -38,6 +44,15 @@ $(document).ready(function () {
           } });
         });
 
+        $('.filter-button-group-hierarchies select').change( function() {
+            var wantedLevel = $(this).val();
+            var nameOfFilter = $(this).data('filter');
+            $content.isotope({ filter: function(){
+               var level = $(this).data(nameOfFilter);
+               return level==wantedLevel;
+            } });
+        });
+
     };
 
     function getHierarchicalLevels(rows){
@@ -51,8 +66,22 @@ $(document).ready(function () {
             agences.push(row.agence);
             pdvs.push(row.pdv);
         });
-        return (caisses.unique,groupes.unique,agences.unique,pdvs.unique)
-    }
+        return {caisses:_.uniq(caisses).sort(),groupes:_.uniq(groupes).sort(),agences:_.uniq(agences).sort(),pdvs:_.uniq(pdvs).sort()}
+    };
+
+    function fillFilters(rows){
+        var hierarchicalLevels = getHierarchicalLevels(rows);
+        var fillFilter = function(selectId,listOfHierarchies){
+            $('#'+selectId+'-filter').html(listOfHierarchies.map(function(hierarchy){
+                        return '<option value="'+hierarchy+'"> '+hierarchy+'</option>';
+            }).join(""));
+        };
+        fillFilter("caisses",hierarchicalLevels.caisses);
+        fillFilter("groupes",hierarchicalLevels.groupes);
+        fillFilter("agences",hierarchicalLevels.agences);
+        fillFilter("pdvs",hierarchicalLevels.pdvs);
+
+    };
 
     function grabRows() {
         $.ajax({
@@ -63,6 +92,7 @@ $(document).ready(function () {
              // initialize the isotope plugin - will run only once
 
          showFilters(data);
+         fillFilters(data);
          showRows(data);
 
 
