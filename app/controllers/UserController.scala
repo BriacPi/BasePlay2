@@ -53,7 +53,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
   def myProfile(id: Long) = AuthenticatedAction() { implicit request =>
     val user = repositories.authentication.UserRepository.findById(id)
     user match {
-      case Some(u) => Ok(views.html.myaccount.currentUser(u))
+      case Some(u) => Ok(views.html.users.designProfile(u))
       case None => SessionManager.destroy(Ok(views.html.authentication.authentication(form)))
     }
 

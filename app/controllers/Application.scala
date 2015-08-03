@@ -48,7 +48,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   val mapMetricsToNames: Future[Map[String, String]] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
 
 
-  def data() = AuthenticatedAction() {
+  def data(): Action[AnyContent] = AuthenticatedAction() {
     refreshActor ! Refresh()
     Redirect(routes.Application.detectedOnly())
   }
@@ -147,7 +147,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   }
 
   def sendData(parameter: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    val suspectRows = parameter match {
+    val suspectRows: List[SuspectRow] = parameter match {
       case "detected" => SuspectRow.filterByStatus(models.Status.DetectedOnly)
       case "solved" => SuspectRow.filterByStatus(models.Status.Solved)
       case "processed" => SuspectRow.filterByStatus(models.Status.BeingProcessed)
@@ -171,6 +171,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   implicit val suspectRowsWrites = new Writes[SuspectRow] {
     def writes(suspectRow: SuspectRow) = Json.obj(
+      "id"  -> suspectRow.id,
       "date" -> suspectRow.date,
       "caisse" -> suspectRow.caisse,
       "groupe" -> suspectRow.groupe,

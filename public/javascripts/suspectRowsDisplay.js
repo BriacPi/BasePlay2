@@ -10,15 +10,7 @@ $(document).ready(function () {
         if (!rows) return;
         var items = rows.map(function(row){
 
-            return $('<div class="tile '+row.caisse
-                    +'" data-status="' + row.status
-                    +'" data-caisse="' + row.caisse
-                    +'" data-groupe="' + row.groupe
-                    +'" data-agence="' + row.agence
-                    +'" data-pdv="' + row.pdv
-                    + '">'+
-                         '<h3>' + row.agence + '</h3><br>' + row.date +
-                     '</div>');
+            return $('<div class="tile"><a href="/row/'+row.id+'">'+row.caisse + row.agence + row.pdv+'</a></div>');
 
         });
 
