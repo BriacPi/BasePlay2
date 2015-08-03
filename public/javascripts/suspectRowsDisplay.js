@@ -36,30 +36,48 @@ $(document).ready(function () {
           }
         };
 
+        var filter = function(){
+            var filterValueStatus = $('.filter-button-group-status button.selected').data('filter');
+            var filterValuesHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).val() })
+
+            var namesOfFilterForHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).data('filter') })
+            $content.isotope({ filter: function(){
+                            var self = this;
+                            var status = $(self).data('status');
+                            var hierarchies = namesOfFilterForHierarchy.map(function(index, name){
+                                return $(self).data(name);
+                            });
+                            var zipFilterValue = _.zip(hierarchies,filterValuesHierarchy).map(function(tuple){
+                                return tuple[1]=="" || tuple[0]==tuple[1];
+                            });
+
+                            return (filterValueStatus == null || filterValueStatus==status) && ( zipFilterValue.reduce(function(acc,equalityOfHierachy){
+                                return acc && equalityOfHierachy;
+                            }));
+                      } });
+        }
+
         $('.filter-button-group-status button').click( function() {
-          var filterValue = $(this).data('filter');
-          $content.isotope({ filter: function(){
-                var status = $(this).data('status');
-                return filterValue==status;
-          } });
+            if ($(this).hasClass('selected')){
+                  $(this).removeClass('selected');
+            } else {
+                  $('.filter-button-group-status button').removeClass('selected');
+                  $(this).addClass('selected');
+            }
+            filter();
         });
 
         $('.filter-button-group-hierarchies select').change( function() {
-            var wantedLevel = $(this).val();
-            var nameOfFilter = $(this).data('filter');
-            $content.isotope({ filter: function(){
-               var level = $(this).data(nameOfFilter);
-               return level==wantedLevel;
-            } });
+           filter();
         });
 
     };
 
     function getHierarchicalLevels(rows){
-        var caisses =[],
-            groupes=[],
-            agences = [],
-            pdvs=[];
+        var caisses =[""],
+            groupes=[""],
+            agences = [""],
+            pdvs=[""];
         rows.forEach(function(row){
             caisses.push(row.caisse);
             groupes.push(row.groupe);
