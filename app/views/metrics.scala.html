@@ -1,6 +1,6 @@
 @import models.authentication.User
 @import repositories.CodeMetricWithoutId
-@(metricsUsed:List[CodeMetricWithoutId],metricsUnused:List[CodeMetricWithoutId],currentUser :User)(implicit lang:Lang)
+@(currentUser :User)(implicit lang:Lang)
 
 @import helper._
 @import play.api.Play.current
@@ -49,21 +49,10 @@
                 <th>@Messages("metric.metric")</th>
                 <th>@Messages("metric.name")</th>
 
-
             </tr>
             </thead>
 
 
-            @metricsUnused.map { metric =>
-            <tr class="gradeA" onclick="window.location.href='/configuration/add/@metric.code';">
-                <td>0</td>
-                <td>@metric.code</td>
-                <td>@metric.metricName</td>
-            </tr>
-            }
-
-
-            </tr>
         </table>
         <div class ="margin"></div>
 
@@ -101,16 +90,6 @@
 
         </tr>
         </thead>
-
-
-        @metricsUsed.map { metric =>
-            <tr class="gradeA" onclick="window.location.href='/configuration/remove/@metric.code';">
-            <td>0</td>
-            <td>@metric.code</td>
-            <td>@metric.metricName</td>
-        </tr>
-        }
-
 
         </tbody>
     </table>

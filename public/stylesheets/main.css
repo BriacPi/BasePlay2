@@ -79,6 +79,7 @@ a {
     color: white;
     background-color: #253240;
   }
+
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
@@ -155,4 +156,7 @@ a {
 .more-arrow:hover:after {
   border-top-color: #e8e8e8;
 }
+
+
+
 

@@ -1,5 +1,5 @@
 @import models.authentication.User
-@(rows: List[SuspectRow],currentUser :User)(implicit lang:Lang)
+@(currentUser :User)(implicit lang:Lang)
 
 @import helper._
 @import play.api.Play.current
@@ -18,79 +18,9 @@
     <li role="presentation" ><a href="/solved">@Messages("home.header.solved")</a></li>
 </ul>
 
-<script type="text/javascript" class="init">
-$(document).ready(function() {
-    $('#DetectedOnly').dataTable( {
-        "ajax": '../data/detected',
-        "order": [[ 1, "desc" ]],
-        "columnDefs": [
-                                {
-                                 "targets": [ 0 ],
-                                 "visible": false,
-                                 "searchable": false
-                                 },
-                                 {
-                                 "targets": [ 9 ],
-                                 "visible": false,
-                                 "searchable": false
-                                 },
-                                 {
-                                 "targets": [ 10 ],
-                                 "visible": false,
-                                 "searchable": false
-                                 },
-                                 {
-                                 "targets": [ 11 ],
-                                 "visible": false,
-                                 "searchable": false
-                                 },
-                                 {
-                                 "targets": [ 12 ],
-                                 "visible": false,
-                                 "searchable": false
-                                 }
-                                ],
-        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-            $(nRow).click (function()  {
-                 nRow.setAttribute("id",aData[0])
-                 document.location.href = "/row/" + aData[0];
-            })
-        },
-    });
-});
+<div id="content"></div>
+<script src="@routes.Assets.versioned("javascripts/suspectRowsDisplay.js")" type="text/javascript"></script>
 
 
 
-</script>
-
-
-
-
-<div class="margin">
-<table id="DetectedOnly" class="display" cellspacing="0" width="99%">
-    <thead>
-    <tr>
-        <th>id</th>
-        <th>@Messages("field.dates")</th>
-        <th>@Messages("field.caisse")</th>
-        <th>@Messages("field.groupe")</th>
-        <th>@Messages("field.agence")</th>
-        <th>@Messages("field.pdv")</th>
-        <th>@Messages("field.metric")</th>
-        <th>@Messages("field.value")</th>
-        <th>@Messages("field.nature")</th>
-        <th>@Messages("field.detectionDate")</th>
-        <th>@Messages("field.comment")</th>
-        <th>@Messages("field.admin")</th>
-        <th>@Messages("field.reasonsForDetection")</th>
-
-    </tr>
-    </thead>
-    <tbody>
-
-
-
-    </tbody>
-</table>
-</div>
 }

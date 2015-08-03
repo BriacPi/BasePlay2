@@ -9,7 +9,7 @@ import library.MetricsToNames
 import library.actors.{StateUpdateActor, RefreshActor}
 import library.actors.RefreshActor.Refresh
 import models.authentication.User
-import models._
+import models.{SuspectRow, EditionValues, Nature, Status}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.format.Formats._
@@ -55,15 +55,15 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
 
   def solved(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    Ok(views.html.solved(SuspectRow.filterByStatus(models.Status.Solved), request.user))
+    Ok(views.html.solved( request.user))
   }
 
   def beingProcessed(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    Ok(views.html.beingProcessed(SuspectRow.filterByStatus(models.Status.BeingProcessed), request.user))
+    Ok(views.html.beingProcessed(request.user))
   }
 
   def detectedOnly(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly), request.user))
+    Ok(views.html.detectedOnly( request.user))
   }
 
 
@@ -82,7 +82,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     val optionOfSuspectRow = SuspectRow.findByKey(date, caisse, groupe, agence, pdv, metric)
     optionOfSuspectRow match {
       case Some(e) => Ok(views.html.suspectRow(e, request.user))
-      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly), request.user))
+      case None => Ok(views.html.detectedOnly( request.user))
     }
   }
 
@@ -90,7 +90,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     val optionOfSuspectRow = SuspectRow.findById(id)
     optionOfSuspectRow match {
       case Some(e) => Ok(views.html.suspectRow(e, request.user))
-      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly), request.user))
+      case None => Ok(views.html.detectedOnly( request.user))
     }
   }
 
@@ -100,14 +100,14 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       case Some(e) =>
         val filledForm = editionForm.fill(EditionValues(e.admin, e.comment, e.nature.toString, e.status.toString))
         Ok(views.html.edit(e, filledForm, request.user))
-      case None => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly), request.user))
+      case None => Ok(views.html.detectedOnly( request.user))
     }
   }
 
 
   def saveEdition(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     editionForm.bindFromRequest.fold(
-      errors => Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly), request.user)),
+      errors => Ok(views.html.detectedOnly( request.user)),
       l => {
         SuspectRow.edit(id, l.admin, l.comment, models.Nature.withName(l.nature), models.Status.withName(l.status))
         Redirect(routes.Application.findWithId(id))
@@ -121,7 +121,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       val usedMetricsWithID: List[CodeMetric] = MetricRepository.list()
       val usedMetrics = usedMetricsWithID.map(new CodeMetricWithoutId(_)).toSet
       val unusedMetrics = allMetrics.diff(usedMetrics)
-      Ok(views.html.metrics(usedMetrics.toList, unusedMetrics.toList, request.user))
+      Ok(views.html.metrics( request.user))
 
     }
   }
@@ -142,7 +142,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def currentUserTasks = AuthenticatedAction() { implicit request =>
     val userTasks = SuspectRow.findByAdmin(request.user.email)
-    Ok(views.html.myaccount.mytasks(userTasks, request.user))
+    Ok(views.html.myaccount.mytasks( request.user))
 
   }
 
@@ -154,33 +154,38 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       case "mytasks" => SuspectRow.findByAdmin(request.user.email)
       case _ => List.empty[SuspectRow]
     }
-    val data = SuspectRowsForJSON(suspectRows.map(suspectRow => {
-      val reasonsForDetection = suspectRow.reasonsForDetection.map(msg => Messages(msg.toString) + '\n').mkString
-      List(suspectRow.id.toString,
-        suspectRow.date.toString,
-        suspectRow.caisse,
-        suspectRow.groupe,
-        suspectRow.agence,
-        suspectRow.pdv,
-        suspectRow.metricName,
-        suspectRow.value.toString,
-        Messages(suspectRow.status.toString),
-        Messages(suspectRow.nature.toString),
-        suspectRow.firstDate.toString,
-        suspectRow.admin,
-        suspectRow.comment,
-        reasonsForDetection)
-    }))
 
-    Ok(Json.toJson(data))
+    Ok(Json.toJson(suspectRows))
   }
 
-
-  implicit val dataWrites = new Writes[SuspectRowsForJSON] {
-    def writes(dataForJSON: SuspectRowsForJSON) = Json.obj(
-      "data" -> dataForJSON.data
+  implicit val statusWrites = new Writes[models.Status] {
+    def writes(status: models.Status) = Json.toJson(
+      Messages(status.toString)
     )
   }
+  implicit val natureWrites = new Writes[models.Nature] {
+    def writes(nature: Nature) = Json.toJson(
+      Messages(nature.toString)
+    )
+  }
+
+  implicit val suspectRowsWrites = new Writes[SuspectRow] {
+    def writes(suspectRow: SuspectRow) = Json.obj(
+      "date" -> suspectRow.date,
+      "caisse" -> suspectRow.caisse,
+      "agence" -> suspectRow.agence,
+      "pdv" -> suspectRow.pdv,
+      "metricName" -> suspectRow.metricName,
+      "value" -> Math.ceil(suspectRow.value),
+      "status" -> Json.toJson(suspectRow.status),
+      "nature" -> Json.toJson(suspectRow.nature),
+      "firstDate" -> suspectRow.firstDate,
+      "admin" -> suspectRow.admin,
+      "comment" -> suspectRow.comment,
+      "reasonsForDetection" -> suspectRow.reasonsForDetection.map(_.toString).mkString
+    )
+  }
+
 
   implicit val stateMessageWrites = new Writes[StateMessage] {
     def writes(state: StateMessage) = Json.obj(
