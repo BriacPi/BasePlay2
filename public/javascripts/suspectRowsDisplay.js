@@ -9,8 +9,7 @@ $(document).ready(function () {
 
         if (!rows) return;
         var items = rows.map(function(row){
-            return $('<div class="tile '+row.caisse+'" data-agence="' + row.agence + '">'+
-                         '<p class="status">'+row.status+'</p>'+
+            return $('<div class="tile '+row.caisse+'" data-status="' + row.status + '">'+
                          '<h3>' + row.agence + '</h3><br>' + row.date +
                      '</div>');
         });
@@ -24,33 +23,19 @@ $(document).ready(function () {
     };
 
     function showFilters(rows){
-        $content.append('<div class="button-group filter-button-group">'+
-                          '<button data-filter="*">Tous les etats</button>'+
-                          '<button data-filter=".detectedOnly">Non affecte</button>'+
-                          '<button data-filter=".solved">Resolu</button>'+
-                          '<button data-filter=".beingProcessed">En cours</button>'+
-                        '</div>');
+
         var filterFns = {
-          // show if number is greater than 50
-          detectedOnly: function() {
-            var state = $(this).find('.status').text();
-            return name.match( detectedOnly );
-          },
-          solved: function() {
-            var state = $(this).find('.status').text();
-            return name.match( solved );
-          },
-          beingProcessed: function() {
-            var state = $(this).find('.status').text();
-            return name.match( beingProcessed );
+          status: function(wantedStatus,currentStatus) {
+             return currentStatus== wantedStatus
           }
         };
 
-        $('.filter-button-group').on( 'click', 'button', function() {
-          var filterValue = $(this).attr('data-filter');
-          // use filter function if value matches
-          filterValue = filterFns[ filterValue ] || filterValue;
-          $content.isotope({ filter: filterValue });
+        $('.filter-button-group-status button').click( function() {
+          var filterValue = $(this).data('filter');
+          $content.isotope({ filter: function(){
+                var status = $(this).data('status');
+                return filterValue==status;
+          } });
         });
 
     };

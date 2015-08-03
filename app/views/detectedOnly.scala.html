@@ -18,7 +18,17 @@
     <li role="presentation" ><a href="/solved">@Messages("home.header.solved")</a></li>
 </ul>
 
+<div class="button-group filter-button-group-status">
+    <button data-filter="*">Tous les etats</button>
+    <button data-filter="DetectedOnly">Non affecte</button>
+    <button data-filter="Solved">Resolu</button>
+    <button data-filter="BeingProcessed">En cours</button>
+</div>
+
+
 <div id="content"></div>
+
+
 <script src="@routes.Assets.versioned("javascripts/suspectRowsDisplay.js")" type="text/javascript"></script>
 
 

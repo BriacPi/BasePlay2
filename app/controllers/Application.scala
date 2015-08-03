@@ -160,12 +160,12 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   implicit val statusWrites = new Writes[models.Status] {
     def writes(status: models.Status) = Json.toJson(
-      Messages(status.toString)
+      status.toString
     )
   }
   implicit val natureWrites = new Writes[models.Nature] {
     def writes(nature: Nature) = Json.toJson(
-      Messages(nature.toString)
+      nature.toString
     )
   }
 
