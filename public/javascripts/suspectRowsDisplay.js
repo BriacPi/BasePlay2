@@ -10,7 +10,19 @@ $(document).ready(function () {
         if (!rows) return;
         var items = rows.map(function(row){
 
-            return $('<div class="tile"><a href="/row/'+row.id+'">'+row.caisse + row.agence + row.pdv+'</a></div>');
+            return $('<div class="tile '+row.caisse
+                    +'" data-status="' + row.status
+                    +'" data-caisse="' + row.caisse
+                    +'" data-groupe="' + row.groupe
+                    +'" data-agence="' + row.agence
+                    +'" data-pdv="' + row.pdv
+                    + '">'
+                    +'<br>' + row.caisse
+                    +'<br>' + row.groupe
+                    +'<br>' + row.agence
+                    +'<br>' + row.pdv
+                    +
+                     '</div>');
 
         });
 
@@ -22,7 +34,7 @@ $(document).ready(function () {
 
     };
 
-    function showFilters(rows){
+    function showFilters(rows,hierarchicalLevels){
 
         var filterFns = {
           status: function(wantedStatus,currentStatus) {
@@ -30,7 +42,7 @@ $(document).ready(function () {
           }
         };
 
-        var filter = function(){
+        function filter(){
             var filterValueStatus = $('.filter-button-group-status button.selected').data('filter');
             var filterValuesHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).val() })
 
@@ -51,6 +63,64 @@ $(document).ready(function () {
                       } });
         }
 
+        function fillFilters(hierarchicalLevels){
+                 var fillFilter = function(selectId,listOfHierarchies){
+                     $('#'+selectId+'-filter').html(listOfHierarchies.map(function(hierarchy){
+                                 return '<option value="'+hierarchy+'"> '+hierarchy+'</option>';
+                     }).join(""));
+                 };
+                 var filterValuesHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).val() });
+                console.log(filterValuesHierarchy[0],filterValuesHierarchy[1],filterValuesHierarchy[2],filterValuesHierarchy[3])
+                 var caissesNames=objectToNames(hierarchicalLevels);
+
+                 var indexOfCaisse = _.indexOf(caissesNames,filterValuesHierarchy[0]);
+                 if(indexOfCaisse>0){
+                     var groupesNames=objectToNames(hierarchicalLevels[indexOfCaisse].content);
+                     var indexOfGroupe = _.indexOf(groupesNames,filterValuesHierarchy[1]);
+                     if (indexOfGroupe>0){
+                         var agencesNames=objectToNames(hierarchicalLevels[indexOfCaisse].content[indexOfGroupe].content);
+                         var indexOfAgence = _.indexOf(agencesNames,filterValuesHierarchy[2]);
+                         if (indexOfAgence>0){
+                            var pdvsNames=objectToNames(hierarchicalLevels[indexOfCaisse].content[indexOfGroupe].content[indexOfAgence].content);
+                            var indexOfPdv = _.indexOf(pdvsNames,filterValuesHierarchy[3]);
+                            if (indexOfPdv>0){
+                            }else{
+                            fillFilter("pdvs",pdvsNames);
+                            }
+
+                         } else{
+                            fillFilter("agences",agencesNames);
+                            fillFilter("pdvs",[""]);
+                         }
+
+                     }
+                     else {
+                        fillFilter("groupes",groupesNames);
+                        fillFilter("agences",[""]);
+                        fillFilter("pdvs",[""]);
+                     }
+
+                 }else{
+                    fillFilter("groupes",[""]);
+                    fillFilter("agences",[""]);
+                    fillFilter("pdvs",[""]);
+                 }
+               
+        };
+        function initialFillFilters(hierarchicalLevels){
+            var fillFilter = function(selectId,listOfHierarchies){
+                                 $('#'+selectId+'-filter').html(listOfHierarchies.map(function(hierarchy){
+                                             return '<option value="'+hierarchy+'"> '+hierarchy+'</option>';
+                                 }).join(""));
+                             };
+            var caissesNames=objectToNames(hierarchicalLevels);
+            fillFilter("caisses",caissesNames);
+            fillFilter("groupes",[""]);
+            fillFilter("agences",[""]);
+            fillFilter("pdvs",[""]);
+
+        };
+
         $('.filter-button-group-status button').click( function() {
             if ($(this).hasClass('selected')){
                   $(this).removeClass('selected');
@@ -62,38 +132,74 @@ $(document).ready(function () {
         });
 
         $('.filter-button-group-hierarchies select').change( function() {
-           filter();
-        });
 
+           fillFilters(hierarchicalLevels);
+           filter();
+
+        });
+        initialFillFilters(hierarchicalLevels);
+
+    };
+
+
+    function objectToNames(listOfHierarchies){
+        return listOfHierarchies.map(function(hierarchy){
+             return hierarchy.name;
+        });
     };
 
     function getHierarchicalLevels(rows){
-        var caisses =[""],
-            groupes=[""],
-            agences = [""],
-            pdvs=[""];
-        rows.forEach(function(row){
-            caisses.push(row.caisse);
-            groupes.push(row.groupe);
-            agences.push(row.agence);
-            pdvs.push(row.pdv);
-        });
-        return {caisses:_.uniq(caisses).sort(),groupes:_.uniq(groupes).sort(),agences:_.uniq(agences).sort(),pdvs:_.uniq(pdvs).sort()}
-    };
 
-    function fillFilters(rows){
-        var hierarchicalLevels = getHierarchicalLevels(rows);
-        var fillFilter = function(selectId,listOfHierarchies){
-            $('#'+selectId+'-filter').html(listOfHierarchies.map(function(hierarchy){
-                        return '<option value="'+hierarchy+'"> '+hierarchy+'</option>';
-            }).join(""));
+        function rowToPdv(row){
+            return {name:row.pdv,content:null};
         };
-        fillFilter("caisses",hierarchicalLevels.caisses);
-        fillFilter("groupes",hierarchicalLevels.groupes);
-        fillFilter("agences",hierarchicalLevels.agences);
-        fillFilter("pdvs",hierarchicalLevels.pdvs);
+        function rowToAgence(row){
+            return {name:row.agence,content:[{name:"",content:null},rowToPdv(row)]};
+        };
+        function rowToGroupe(row){
+            return {name:row.groupe,content:[{name:"",content:null},rowToAgence(row)]};
+        };
+        function rowToCaisse(row){
+            return {name:row.caisse,content:[{name:"",content:null},rowToGroupe(row)]};
+        };
 
+
+        var caisses =[{name:"",content:null}];
+        rows.forEach(function(row){
+            var caissesNames = objectToNames(caisses);
+            var indexOfCaisse = _.indexOf(caissesNames,row.caisse);
+            if (indexOfCaisse>=0){
+                var groupes = caisses[indexOfCaisse].content;
+                var groupesNames = objectToNames(groupes);
+                            var indexOfGroupe = _.indexOf(groupesNames,row.groupe);
+                            if (indexOfGroupe>=0){
+                                var agences = caisses[indexOfCaisse].content[indexOfGroupe].content;
+                                var agencesNames = objectToNames(agences);
+                                                            var indexOfAgence = _.indexOf(agencesNames,row.agence);
+                                                            if (indexOfAgence>=0){
+                                                                     var pdvs = caisses[indexOfCaisse].content[indexOfGroupe].content[indexOfAgence].content;
+                                                                     var pdvsNames = objectToNames(pdvs);
+                                                                                                 var indexOfPdv = _.indexOf(pdvsNames,row.pdv);
+                                                                                                 if (indexOfPdv>=0){
+
+                                                                                                 } else {
+                                                                                                     caisses[indexOfCaisse].content[indexOfGroupe].content[indexOfAgence].content.push(rowToAgence(row))
+                                                                                                 }
+                                                            } else {
+                                                                caisses[indexOfCaisse].content[indexOfGroupe].content.push(rowToAgence(row))
+                                                            }
+                            } else {
+                                caisses[indexOfCaisse].content.push(rowToGroupe(row))
+                            }
+            } else {
+                caisses.push(rowToCaisse(row))
+            }
+
+        });
+        return caisses
     };
+
+
 
     function grabRows() {
         $.ajax({
@@ -102,9 +208,8 @@ $(document).ready(function () {
 
         }).then( function(data){
              // initialize the isotope plugin - will run only once
-
-         showFilters(data);
-         fillFilters(data);
+         var hierarchicalLevels = getHierarchicalLevels(data)
+         showFilters(data,hierarchicalLevels);
          showRows(data);
 
 
