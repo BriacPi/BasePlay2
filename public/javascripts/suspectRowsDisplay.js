@@ -40,6 +40,20 @@ $(document).ready(function () {
 
     };
 
+    function getHierarchicalLevels(rows){
+        var caisses =[],
+            groupes=[],
+            agences = [],
+            pdvs=[];
+        rows.forEach(function(row){
+            caisses.push(row.caisse);
+            groupes.push(row.groupe);
+            agences.push(row.agence);
+            pdvs.push(row.pdv);
+        });
+        return (caisses.unique,groupes.unique,agences.unique,pdvs.unique)
+    }
+
     function grabRows() {
         $.ajax({
             type : 'GET',
