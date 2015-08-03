@@ -9,6 +9,7 @@ $(document).ready(function () {
 
         if (!rows) return;
         var items = rows.map(function(row){
+
             return $('<div class="tile '+row.caisse
                     +'" data-status="' + row.status
                     +'" data-caisse="' + row.caisse
@@ -18,6 +19,7 @@ $(document).ready(function () {
                     + '">'+
                          '<h3>' + row.agence + '</h3><br>' + row.date +
                      '</div>');
+
         });
 
         $content.append( items );
