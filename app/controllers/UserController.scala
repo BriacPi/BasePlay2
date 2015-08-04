@@ -106,7 +106,11 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
   def editUser() = AuthenticatedAction(){ implicit request =>
 
-    Ok(views.html.myaccount.designEdit(editUserForm,request.user))
+
+
+    val user =models.authentication.EditUser(request.user.firstName,request.user.lastName,request.user.password,request.user.company)
+    Ok(views.html.myaccount.designEdit(editUserForm.fill(user),request.user))
+
 
   }
   def editPassword() = AuthenticatedAction(){ implicit request =>
@@ -121,7 +125,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
         // Request payload is invalid.envisageable
 
-        BadRequest(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
+        BadRequest(views.html.myaccount.designEdit(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
 
       },
       success => {
@@ -135,16 +139,16 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
               val newUser = User(user.id,user.email,success.firstName,success.lastName,PasswordAuthentication.passwordHash(success.password),success.company)
 
               repositories.authentication.UserRepository.editUser(newUser)
-              Ok(views.html.myaccount.currentUser(newUser))
+              Ok(views.html.myaccount.designProfile(newUser))
 
             }
             else {
 
 
-              Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
+              Unauthorized(views.html.myaccount.designEdit(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
         }
           case None =>
-            Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
+            Unauthorized(views.html.myaccount.designEdit(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
         }
       }
     )

@@ -13,7 +13,6 @@ import models.authentication.User
 
 import models._
 
-
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.format.Formats._
@@ -52,7 +51,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   val mapMetricsToNames: Future[Map[String, String]] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
 
 
-  def data(): Action[AnyContent] = AuthenticatedAction() {
+  def data() = AuthenticatedAction() {
     refreshActor ! Refresh()
     Redirect(routes.Application.detectedOnly())
   }
@@ -68,7 +67,9 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   }
 
   def detectedOnly(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
+
     Ok(views.html.detectedOnly( request.user))
+
 
   }
 
@@ -147,7 +148,6 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   }
 
   def currentUserTasks = AuthenticatedAction() { implicit request =>
-
     Ok(views.html.myaccount.mytasks( request.user))
 
   }
@@ -164,7 +164,6 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     }
   }
 
-
   def sendUnusedMetrics: Action[AnyContent] = AuthenticatedAction().async { implicit request =>
     mapMetricsToNames.map { mapMtN =>
       val allMetrics = mapMtN.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2)).toSet
@@ -180,7 +179,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
 
   def sendData(parameter: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    val suspectRows: List[SuspectRow] = parameter match {
+    val suspectRows = parameter match {
       case "detected" => SuspectRow.filterByStatus(models.Status.DetectedOnly)
       case "solved" => SuspectRow.filterByStatus(models.Status.Solved)
       case "processed" => SuspectRow.filterByStatus(models.Status.BeingProcessed)
@@ -188,13 +187,16 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       case _ => List.empty[SuspectRow]
     }
 
+
     Ok(Json.toJson(suspectRows))
+
   }
   implicit val metricsWrites = new Writes[MetricsForJSON] {
     def writes(metricsForJSON: MetricsForJSON) = Json.obj(
       "data" -> metricsForJSON.data
     )
   }
+
 
   implicit val statusWrites = new Writes[models.Status] {
     def writes(status: models.Status) = Json.toJson(
@@ -205,28 +207,9 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     def writes(nature: Nature) = Json.toJson(
       nature.toString
 
+
     )
   }
-
-  implicit val suspectRowsWrites = new Writes[SuspectRow] {
-    def writes(suspectRow: SuspectRow) = Json.obj(
-      "id"  -> suspectRow.id,
-      "date" -> suspectRow.date,
-      "caisse" -> suspectRow.caisse,
-      "groupe" -> suspectRow.groupe,
-      "agence" -> suspectRow.agence,
-      "pdv" -> suspectRow.pdv,
-      "metricName" -> suspectRow.metricName,
-      "value" -> Math.ceil(suspectRow.value),
-      "status" -> Json.toJson(suspectRow.status),
-      "nature" -> Json.toJson(suspectRow.nature),
-      "firstDate" -> suspectRow.firstDate,
-      "admin" -> suspectRow.admin,
-      "comment" -> suspectRow.comment,
-      "reasonsForDetection" -> suspectRow.reasonsForDetection.map(_.toString).mkString
-    )
-  }
-
 
   implicit val stateMessageWrites = new Writes[StateMessage] {
     def writes(state: StateMessage) = Json.obj(
