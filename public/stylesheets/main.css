@@ -167,8 +167,8 @@ height:80px;
 
 .empty-separator {
 width:100%;
-height:50px;
-background-color:yellow;
+height:1px;
+background-color:#253240;
 }
 /*base code*/
 .animated {
