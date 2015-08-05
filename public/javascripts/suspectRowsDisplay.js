@@ -43,11 +43,8 @@ $(document).ready(function () {
                               occurence: function(itemElement){
                                 return getOccurence(itemElement,rows);
                                 },
-                              isEmpty: function(itemElement){
-                                if ($(itemElement).hasClass('empty-separator')){return 1;}
-                                else {return 0;}
-                              }
-                              },
+                              isEmpty: '.empty-separator'
+                                       },
                 sortAscending: {
                     caisse: true,
                     groupe: true,
@@ -57,7 +54,7 @@ $(document).ready(function () {
                     date: false,
                     status: true,
                     occurence: false,
-                    isEmpty:false
+                    isEmpty:true
                   }
         });
 
