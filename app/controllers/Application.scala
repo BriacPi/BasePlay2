@@ -189,9 +189,9 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   }
 
 
-  implicit val statusWrites = new Writes[models.Status] {
+  implicit def statusWrites[A](implicit request :Request[A]) = new Writes[models.Status] {
     def writes(status: models.Status) = Json.toJson(
-      status.toString
+      Messages(status.toString)
     )
   }
   implicit val natureWrites = new Writes[models.Nature] {
@@ -199,7 +199,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       nature.toString
     )
   }
-  implicit val suspectRowsWrites = new Writes[SuspectRow] {
+  implicit def suspectRowsWrites[A](implicit request :Request[A]) = new Writes[SuspectRow] {
     def writes(suspectRow: SuspectRow) = Json.obj(
       "id"  -> suspectRow.id,
       "date" -> suspectRow.date,

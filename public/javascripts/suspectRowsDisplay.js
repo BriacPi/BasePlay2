@@ -18,12 +18,12 @@ $(document).ready(function () {
                     +'" data-pdv="' + row.pdv
                     +'" data-date="' + row.date
                     +'" data-metric="' + row.metricName
-                    +'" data-id="' + row.id
                     + '">'
+                    +' <a href="/row/'+row.id+'">'
                     +'<br>' + row.date
                     +'<br>' + row.metricName
                     +'<br>' + row.value
-
+                    +'</a>'
                     +
                      '</div>');
 
@@ -63,9 +63,7 @@ $(document).ready(function () {
                   }
         });
 
-        $( '.tile.not-separator' ).click(function() {
-            window.location.href = "/row/"+$(this).data('id');
-        });
+
 
     };
 
@@ -91,6 +89,7 @@ $(document).ready(function () {
 
         function  emptySeparatorsForGroupBy(valuesToGroupBy,dimensionToGroupBy){
             return valuesToGroupBy.map(function(value){
+
                 return $('<div class="tile empty-separator'
                                     +'" data-'+dimensionToGroupBy+'="'+value
                                     + '">'
