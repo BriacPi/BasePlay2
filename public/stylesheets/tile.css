@@ -1,0 +1,191 @@
+.tile {
+  background-color: #wheat;
+  display: inline-block;
+  margin-bottom: 3%;
+  margin-right: 3.1%;
+  position: relative;
+  vertical-align: top;
+  width: 30%;
+}
+.tile--height-1 {
+  height: 184px;
+}
+.tile--height-2 {
+  height: 400px;
+}
+.tile--height-2 .tile__content__data--chart {
+  height: 335px;
+}
+.tile--height-bpcebarsdonotuse {
+  height: 700px;
+}
+.tile--height-bpcebarsdonotuse .tile__content__data--chart {
+  height: 650px;
+}
+.tile--width-1 {
+  width: 30%;
+}
+.tile--width-2 {
+  width: 63%;
+}
+.tile--width-3 {
+  width: 96%;
+}
+.tile--width-bpcebarsdonotuse {
+  width: 96%;
+}
+.tile__content {
+  height: 100%;
+  padding: 15px;
+}
+.tile__content > a {
+  display: block;
+  height: 100%;
+}
+.tile__content > a:hover,
+.tile__content > a:focus {
+  color: inherit;
+  text-decoration: none;
+}
+.tile__content__title__icon {
+  cursor: pointer;
+  float: left;
+  font-size: 1.5rem;
+  margin-right: 10px;
+  vertical-align: top;
+  width: 22px;
+}
+.tile__content__title__icon__content {
+  display: inline-block;
+  width: inherit;
+}
+.tile__content__title__text {
+  display: inline-block;
+  font-size: 1.4rem;
+  line-height: 1.8rem;
+  margin: 0;
+  width: calc(100% - 32px);
+}
+.tile__content__subtitle__no-data {
+  margin-top: 30px;
+  padding-left: 27px;
+  line-height: 1.8rem;
+}
+.tile__content__subtitle__no-data--no-padding {
+  padding-left: 0px;
+}
+.tile__content__data__metrics {
+  padding-left: 32px;
+}
+.tile__content__data__metrics__value {
+  font-size: 2.8rem;
+  margin: 25px 0 10px;
+}
+.tile__content__data__metrics__comparison__icon {
+  font-size: 1rem;
+  margin-right: 7px;
+  vertical-align: top;
+  display: inline-block;
+}
+.tile__content__data__metrics__comparison__icon--positive {
+  transform: rotate(-45deg);
+}
+.tile__content__data__metrics__comparison__icon--positive #comparsion-arrow-border {
+  stroke: #27ae60;
+}
+.tile__content__data__metrics__comparison__icon--positive #comparsion-arrow-arrow {
+  fill: #27ae60;
+}
+.tile__content__data__metrics__comparison__icon--negative {
+  transform: rotate(45deg);
+}
+.tile__content__data__metrics__comparison__icon--negative #comparsion-arrow-border {
+  stroke: #253240;
+}
+.tile__content__data__metrics__comparison__icon--negative #comparsion-arrow-arrow {
+  fill: #253240;
+}
+.tile__content__data__metrics__comparison__icon--due #comparsion-arrow-border {
+  stroke: #0971e4;
+}
+.tile__content__data__metrics__comparison__icon--due #comparsion-arrow-arrow {
+  fill: #0971e4;
+}
+.tile__content__data__metrics__comparison__text {
+  display: inline-block;
+  font-size: 1.3rem;
+  margin: 0;
+  width: calc(100% - 30px);
+  line-height: 1.8rem;
+}
+.tile__content__data__info {
+  bottom: 15px;
+  position: absolute;
+  right: 15px;
+  width: calc(100% - 30px);
+}
+.tile__content__data__info__source {
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  bottom: 5px;
+  font-size: 1.3rem;
+  position: absolute;
+  text-indent: 30px;
+}
+.tile__content__data__info__source--pc_analysis {
+  background-image: url('assets/images/connector_logos/pc_analysis.png');
+}
+.tile__content__data__info__source--facebook {
+  background-image: url('assets/images/connector_logos/facebook.png');
+}
+.tile__content__data__info__source--twitter {
+  background-image: url('assets/images/connector_logos/twitter.png');
+}
+.tile__content__data__info__source--mobile_analysis {
+  background-image: url('assets/images/connector_logos/mobile_analysis.png');
+}
+.tile__content__data__info__source--youtube {
+  background-image: url('assets/images/connector_logos/youtube.png');
+}
+.tile__content__data__info__source--instagram {
+  background-image: url('assets/images/connector_logos/instagram.png');
+}
+.tile__content__data__info__source--linkedin {
+  background-image: url('assets/images/connector_logos/linkedin.png');
+}
+.tile__content__data__info__source--googleplus {
+  background-image: url('assets/images/connector_logos/googleplus.png');
+}
+.tile__content__data__info__source--pinterest {
+  background-image: url('assets/images/connector_logos/pinterest.png');
+}
+.tile__content__data__info__picture {
+  float: right;
+  margin-bottom: -5px;
+  width: 32px;
+}
+.tile__content__data__info__picture .loaded-icon {
+  width: 32px;
+}
+.tile__content__data--sentence .tile__content__data__metrics__value {
+  font-size: 2rem;
+}
+.tile__content__data--sentence .tile__content__data__metrics__value > span {
+  display: block;
+}
+.tile__content__data--text .tile__content__data__metrics__value {
+  font-size: 1.8rem;
+  line-height: 2.5rem;
+  margin-left: -15px;
+}
+.tile__content__data--chart {
+  font-size: 1.4rem;
+  height: 105px;
+  margin-top: 13px;
+  width: 100%;
+}
+.tile__content__data--chart .leaderboard.thumbnail {
+  background: none;
+  border: none;
+}
