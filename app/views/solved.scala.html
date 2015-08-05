@@ -20,6 +20,7 @@
 </ul>
 
 <script type="text/javascript" class="init">
+
 $(document).ready(function() {
     $('#Solved').dataTable( {
         "ajax": '../data/solved',
@@ -29,6 +30,12 @@ $(document).ready(function() {
                                  "targets": [ 0 ],
                                  "visible": false,
                                  "searchable": false
+                                 },
+                                 {
+                                 "render": function ( data, type, row ) {
+                                    return Math.ceil(data,-1);
+                                    },
+                                 "targets": [7]
                                  },
                                  {
                                  "targets": [ 9 ],
@@ -50,6 +57,7 @@ $(document).ready(function() {
                                  "visible": false,
                                  "searchable": false
                                  }
+
                                 ],
         "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
             $(nRow).click (function()  {
@@ -59,6 +67,7 @@ $(document).ready(function() {
         },
     });
 });
+
 
 </script>
 

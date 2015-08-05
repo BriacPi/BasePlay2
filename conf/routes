@@ -26,13 +26,19 @@ GET /analysis_state                                                             
 
 # Configuration
 GET /configuration                                                                   controllers.Application.allUsedMetrics()
+GET /configuration/used                                                              controllers.Application.sendUsedMetrics()
+GET /configuration/unused                                                            controllers.Application.sendUnusedMetrics()
 GET /configuration/add/:code                                                         controllers.Application.addMetric(code:String)
 GET /configuration/remove/:code                                                      controllers.Application.removeMetric(code:String)
 
 GET /newuser                                                                         controllers.UserController.newUser()
 GET /useredition                                                                     controllers.UserController.editUser()
+
+GET /passwordedition                                                                 controllers.UserController.editPassword()
 POST /login                                                                          controllers.AuthenticationController.login()
-POST /edituser                                                                       controllers.UserController.saveEdition()
+POST /edituser                                                                       controllers.UserController.saveEditionUser()
+POST /editpassword                                                                   controllers.UserController.saveEditionPassword()
+
 POST /adduser                                                                        controllers.UserController.addUser()
 GET /deleteuser/:email                                                               controllers.UserController.deleteUser(email:String)
 GET /profile/:id                                                                     controllers.UserController.profile(id :Long)

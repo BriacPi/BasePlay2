@@ -9,7 +9,11 @@ import library.MetricsToNames
 import library.actors.{StateUpdateActor, RefreshActor}
 import library.actors.RefreshActor.Refresh
 import models.authentication.User
-import models.{SuspectRow, EditionValues, Nature, Status}
+
+
+import models._
+
+
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.format.Formats._
@@ -55,6 +59,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
 
   def solved(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
+
     Ok(views.html.solved( request.user))
   }
 
@@ -64,6 +69,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def detectedOnly(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     Ok(views.html.detectedOnly( request.user))
+
   }
 
 
@@ -141,10 +147,37 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   }
 
   def currentUserTasks = AuthenticatedAction() { implicit request =>
-    val userTasks = SuspectRow.findByAdmin(request.user.email)
+
     Ok(views.html.myaccount.mytasks( request.user))
 
   }
+
+  def sendUsedMetrics: Action[AnyContent] = AuthenticatedAction().async { implicit request =>
+    mapMetricsToNames.map { mapMtN =>
+      val allMetrics = mapMtN.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2)).toSet
+      val usedMetricsWithID: List[CodeMetric] = MetricRepository.list()
+      val usedMetrics = usedMetricsWithID.map(new CodeMetricWithoutId(_))
+      val usedMetricsForJSON = usedMetrics.map(metric =>
+        List(metric.code, metric.metricName)
+      )
+      Ok(Json.toJson(MetricsForJSON(usedMetricsForJSON)))
+    }
+  }
+
+
+  def sendUnusedMetrics: Action[AnyContent] = AuthenticatedAction().async { implicit request =>
+    mapMetricsToNames.map { mapMtN =>
+      val allMetrics = mapMtN.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2)).toSet
+      val usedMetricsWithID: List[CodeMetric] = MetricRepository.list()
+      val usedMetrics = usedMetricsWithID.map(new CodeMetricWithoutId(_)).toSet
+      val unusedMetrics = allMetrics.diff(usedMetrics).toList
+      val unusedMetricsForJSON = unusedMetrics.map(metric =>
+        List(metric.code, metric.metricName)
+      )
+      Ok(Json.toJson(MetricsForJSON(unusedMetricsForJSON)))
+    }
+  }
+
 
   def sendData(parameter: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val suspectRows: List[SuspectRow] = parameter match {
@@ -157,6 +190,11 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
     Ok(Json.toJson(suspectRows))
   }
+  implicit val metricsWrites = new Writes[MetricsForJSON] {
+    def writes(metricsForJSON: MetricsForJSON) = Json.obj(
+      "data" -> metricsForJSON.data
+    )
+  }
 
   implicit val statusWrites = new Writes[models.Status] {
     def writes(status: models.Status) = Json.toJson(
@@ -166,6 +204,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   implicit val natureWrites = new Writes[models.Nature] {
     def writes(nature: Nature) = Json.toJson(
       nature.toString
+
     )
   }
 
@@ -198,12 +237,14 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def currentState = AuthenticatedAction() { implicit request =>
     val state = StateRepository.state
+
     val stateMessage = if (state.message == "state.majfailed") {
       StateMessage(Messages(state.message) + " " + state.niceDate + ".", "red")
     }
     else {
       StateMessage(Messages(state.message) + " " + state.niceDate + ".", "")
     }
+
     Ok(Json.toJson(stateMessage))
   }
 

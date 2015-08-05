@@ -10,7 +10,9 @@
 
 
 @main(Messages("home.header"))("t")(currentUser) {
-@helper.form(action = routes.UserController.saveEdition(), args = 'class -> "userForm"){
+
+@helper.form(action = routes.UserController.saveEditionUser(), args = 'class -> "userForm"){
+
 <div class="page-header" style="margin-left:1em;">
     <h1>@Messages("user.edition")</h1>
 </div>
@@ -38,38 +40,38 @@
         <tr>
             <th>@Messages("user.email")</th>
             <td>@currentUser.email</td>
-            <td>    .</td>
+
+            <td>    </td>
+
 
         </tr>
         <tr>
             <th>@Messages("user.lastName")</th>
             <td>@currentUser.lastName</td>
-            <th>@helper.inputText(userForm("lastName"), '_label -> Messages("user.lastName"))</th>
+
+            <th>@helper.inputText(userForm("lastName"), 'placeholder ->currentUser.lastName,'_label -> Messages("user.lastName"))</th>
+
 
         </tr>
         <tr>
             <th>@Messages("user.firstName")</th>
             <td>@currentUser.firstName</td>
-            <th>@helper.inputText(userForm("firstName"), '_label -> Messages("user.firstName"))</th>
 
-        </tr>
-        <tr>
-            <th>@Messages("user.oldPassword")</th>
-            <td></td>
-            <th>@helper.inputText(userForm("oldPassword"), 'type -> "password",'_label -> Messages("authentication.password"))</th>
-
-        </tr>
-        <tr>
-            <th>@Messages("user.newPassword")</th>
-            <td></td>
-            <th>@helper.inputText(userForm("newPassword"), 'type -> "password",'_label -> Messages("authentication.password"))</th>
+            <th>@helper.inputText(userForm("firstName"),'placeholder ->currentUser.firstName, '_label -> Messages("user.firstName"))</th>
 
         </tr>
 
         <tr>
             <th>@Messages("user.company")</th>
             <td>@currentUser.company</td>
-            <th>@helper.inputText(userForm("company"), '_label -> Messages("user.company"))</th>
+            <th>@helper.inputText(userForm("company"),'placeholder ->currentUser.company, '_label -> Messages("user.company"))</th>
+
+        </tr>
+        <tr>
+            <th>@Messages("user.password")</th>
+            <td></td>
+            <th>@helper.inputText(userForm("oldPassword"),'placeholder ->currentUser.firstName, 'type -> "password",'_label -> Messages("authentication.password"))</th>
+
 
         </tr>
         </tbody>
@@ -78,7 +80,9 @@
 
 </div>
 <div>
-    <input type="submit" value="Save">}
+
+    <input type="submit" value=@Messages("edit.save")>}
+
 </div>
 
 

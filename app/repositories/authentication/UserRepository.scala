@@ -51,6 +51,16 @@ trait UserRepository {
     }
   }
 
+  def editPassword(user: User): Unit = {
+    DB.withConnection { implicit c =>
+      SQL("update  users set encrypted_password={encrypted_password}where email ={email}").on(
+          'email -> user.email,
+          'encrypted_password -> user.password
+        ).executeUpdate()
+    }
+  }
+
+
   def delete(email:String): Unit = {
     DB.withConnection { implicit c =>
       SQL("delete from users  where email = " +

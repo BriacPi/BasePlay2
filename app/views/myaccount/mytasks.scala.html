@@ -13,15 +13,24 @@
 </div>
 
 <script type="text/javascript" class="init">
+
 $(document).ready(function() {
     $('#tasks').dataTable( {
         "ajax": '../data/mytasks',
         "order": [[ 1, "desc" ]],
         "columnDefs": [
+
                                 {
                                  "targets": [ 0 ],
                                  "visible": false,
                                  "searchable": false
+
+                                 },
+                                 {
+                                 "render": function ( data, type, row ) {
+                                    return Math.ceil(data,-1);
+                                    },
+                                 "targets": [7]
                                  }
                                 ],
         "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
@@ -32,6 +41,7 @@ $(document).ready(function() {
         },
     });
 });
+
 </script>
 
 
@@ -59,6 +69,7 @@ $(document).ready(function() {
         </tr>
         </thead>
         <tbody>
+
 
 
         </tbody>

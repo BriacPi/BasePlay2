@@ -6,7 +6,9 @@ import javax.inject.Inject
 import components.mvc.AuthController
 import components.user.{PasswordAuthentication, SessionManager}
 
-import models.authentication.{LoginValues, TemporaryUser,EditUser,User}
+
+import models.authentication.{LoginValues, TemporaryUser,EditUser,User,EditPassword}
+
 
 import play.api.data.Form
 import play.api.data.Forms._
@@ -32,10 +34,17 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
       "firstName"->nonEmptyText,
       "lastName"->nonEmptyText,
       "oldPassword" -> nonEmptyText,
-      "newPassword" -> nonEmptyText,
+
       "company" -> nonEmptyText
     )(EditUser.apply)(EditUser.unapply)
   )
+  val editPasswordForm : Form[EditPassword]= Form(
+    mapping(
+      "oldPassword" -> nonEmptyText,
+      "newPassword" -> nonEmptyText
+    )(EditPassword.apply)(EditPassword.unapply)
+  )
+
   val form: Form[LoginValues] = Form(
     mapping(
       "email" -> nonEmptyText,
@@ -96,15 +105,24 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
   }
 
   def editUser() = AuthenticatedAction(){ implicit request =>
+
     Ok(views.html.myaccount.designEdit(editUserForm,request.user))
+
+  }
+  def editPassword() = AuthenticatedAction(){ implicit request =>
+    Ok(views.html.myaccount.editPassword(editPasswordForm,request.user))
   }
 
-  def saveEdition() = AuthenticatedAction(){ implicit request =>
+  def saveEditionUser() = AuthenticatedAction(){ implicit request =>
+    val cuser =models.authentication.EditUser(request.user.firstName,request.user.lastName,request.user.password,request.user.company)
+
     editUserForm.bindFromRequest.fold(
       error => {
 
         // Request payload is invalid.envisageable
-        BadRequest(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+
+        BadRequest(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
+
       },
       success => {
 
@@ -112,17 +130,51 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
         UserRepository.findByEmail(request.user.email) match {
           case Some(user) =>
-            if (PasswordAuthentication.authenticate( success.oldPassword,user.password)) {
-              val newUser = User(user.id,user.email,success.firstName,success.lastName,PasswordAuthentication.passwordHash(success.newPassword),success.company)
+
+            if (PasswordAuthentication.authenticate( success.password,user.password)) {
+              val newUser = User(user.id,user.email,success.firstName,success.lastName,PasswordAuthentication.passwordHash(success.password),success.company)
+
               repositories.authentication.UserRepository.editUser(newUser)
               Ok(views.html.myaccount.currentUser(newUser))
 
             }
             else {
-              Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+
+
+              Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
         }
           case None =>
-            Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidUserOrPassword"),request.user))
+            Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
+        }
+      }
+    )
+
+  }
+  def saveEditionPassword() = AuthenticatedAction(){ implicit request =>
+    editPasswordForm.bindFromRequest.fold(
+      error => {
+
+        // Request payload is invalid.envisageable
+        BadRequest(views.html.myaccount.editPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
+      },
+      success => {
+
+        val filledForm = editPasswordForm.fill(success)
+
+        UserRepository.findByEmail(request.user.email) match {
+          case Some(user) =>
+            if (PasswordAuthentication.authenticate( success.oldPassword,user.password)) {
+              val newUser = User(user.id,user.email,user.firstName,user.lastName,PasswordAuthentication.passwordHash(success.newPassword),user.company)
+              repositories.authentication.UserRepository.editPassword(newUser)
+              Ok(views.html.myaccount.currentUser(newUser))
+
+            }
+            else {
+              Unauthorized(views.html.myaccount.editPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
+            }
+          case None =>
+            Unauthorized(views.html.myaccount.editPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
+
         }
       }
     )

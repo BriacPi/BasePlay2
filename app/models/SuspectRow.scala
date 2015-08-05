@@ -6,6 +6,7 @@ import library.utils.dateOrdering._
 import models.Nature._
 import play.api.Play.current
 import play.api.db.DB
+
 import play.api.i18n.Messages
 import repositories.MetricRepository
 
@@ -15,7 +16,9 @@ import scala.concurrent.Future
 import scala.language.postfixOps
 import scala.util.Try
 
+
 case class SuspectRowsForJSON(data:List[List[String]])
+
 
 case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, agence: String, pdv: String,
                       metric: String,metricName: String,value:Double, status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) {

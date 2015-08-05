@@ -14,7 +14,9 @@
 
 </div>
 <div>
-    <form action="@routes.Application.data()" method="get">
+
+    <form action="@routes.Application.data()" method="get" style="margin-left:1em;">
+
         <input type="submit" value=@Messages("menu.refresh") >
     </form>
 </div>
@@ -27,14 +29,17 @@
         <script type="text/javascript" class="init">
             $(document).ready(function() {
 	        oTable=$('#MetricsUnused').DataTable(
-	        {    "order": [[ 1, "asc" ]],
+	        {    "ajax": '../configuration/unused',
+	             "order": [[ 0, "asc" ]],
                  "columnDefs": [
-                                {
-                                 "targets": [ 0 ],
-                                 "visible": false,
-                                 "searchable": false
-                                 }
-                                ]
+
+                                ],
+                 "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+                     $(nRow).click (function()  {
+                         nRow.setAttribute("code",aData[0]);
+                         document.location.href = "/configuration/add/" + aData[0];
+                     })
+                 }
             }
 	        );
 
@@ -45,12 +50,13 @@
         <table id="MetricsUnused" class="display" cellspacing="0" width="99%" style="margin-left:0.5em;">
             <thead>
             <tr>
-                <th>id</th>
+
                 <th>@Messages("metric.metric")</th>
                 <th>@Messages("metric.name")</th>
 
             </tr>
             </thead>
+
 
 
         </table>
@@ -65,25 +71,26 @@
     <script type="text/javascript" class="init">
             $(document).ready(function() {
 	        oTable=$('#MetricsUsed').DataTable(
-	        {    "order": [[ 1, "asc" ]],
+	        {    "ajax": '../configuration/used',
+	             "order": [[ 0, "asc" ]],
                  "columnDefs": [
-                                {
-                                 "targets": [ 0 ],
-                                 "visible": false,
-                                 "searchable": false
-                                 }
-                                ]
+
+                                ],
+                 "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+                     $(nRow).click (function()  {
+                         nRow.setAttribute("code",aData[0]);
+                         document.location.href = "/configuration/remove/" + aData[0];
+                     })
+                 }
             }
 	        );
-
-
             } );
 </script>
 
     <table id="MetricsUsed" class="display" cellspacing="0" width="99%">
         <thead>
         <tr>
-            <th>id</th>
+
             <th>@Messages("metric.metric")</th>
             <th>@Messages("metric.name")</th>
 
@@ -91,7 +98,7 @@
         </tr>
         </thead>
 
-        </tbody>
+
     </table>
 </div>
 </div>

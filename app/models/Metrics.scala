@@ -23,6 +23,7 @@ object Metric {
     )(Metric.apply _)
 }
 
+case class MetricsForJSON(data:List[List[String]])
 
 object Metrics {
   implicit val metricsReader: Reads[Metrics] = Json.reads[Metrics]
