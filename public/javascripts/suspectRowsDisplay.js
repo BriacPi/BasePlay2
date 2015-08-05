@@ -145,7 +145,7 @@ $(document).ready(function () {
 
     };
 
-    function showFilters(hierarchicalLevels){
+    function showFilters(hierarchicalLevels,rows){
 
         var filterFns = {
           status: function(wantedStatus,currentStatus) {
@@ -154,22 +154,22 @@ $(document).ready(function () {
         };
 
         function filter(){
-            var filterValueMetric = $('.filter-button-group-metric select').data('filter');
+            var filterValueMetric = $('.filter-button-group-metric select').val();
             var filterValuesHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).val() })
 
-            var namesOfFilterForHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).data('filter') })
+            var namesOfFilterForHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).data('filter') });
             $content.isotope({ filter: function(){
                             var self = this;
                             var isEmptySeparator=$(self).hasClass('empty-separator');
-                            var status = $(self).data('status');
+                            var metric = $(self).data('metric');
                             var hierarchies = namesOfFilterForHierarchy.map(function(index, name){
                                 return $(self).data(name);
                             });
                             var zipFilterValue = _.zip(hierarchies,filterValuesHierarchy).map(function(tuple){
                                 return tuple[1]=="" || tuple[0]==tuple[1] ;
                             });
-
-                            return isEmptySeparator || (filterValueStatus == null|| filterValueStatus==status) && ( zipFilterValue.reduce(function(acc,equalityOfHierachy){
+               
+                            return isEmptySeparator || (filterValueMetric == ""|| filterValueMetric==metric) && ( zipFilterValue.reduce(function(acc,equalityOfHierachy){
                                 return acc && equalityOfHierachy;
                             }));
                       } });
@@ -183,9 +183,23 @@ $(document).ready(function () {
            $('#sort-by-hierarchy-button').html(capitalizeFirstLetter(newHierarchy));
 
         };
+        function fillMetricFilters(rows){
+            var metrics=[];
+            rows.forEach(function(row){
+                metrics.push(row.metricName);
+            });
+            var listOfMetrics= _.unique(metrics);
 
+            var filters=[];
+            filters.push('<option value=""> </option>')
+            listOfMetrics.forEach(function(metric){
+                filters.push('<option value="'+metric+'"> '+metric+'</option>');
+            });
 
-        function fillFilters(hierarchicalLevels){
+            $('#metric-filter').html(filters)
+        }
+
+        function fillHierarchyFilters(hierarchicalLevels){
                  var fillFilter = function(selectId,listOfHierarchies){
                      $('#'+selectId+'-filter').html(listOfHierarchies.map(function(hierarchy){
                                  return '<option value="'+hierarchy+'"> '+hierarchy+'</option>';
@@ -233,7 +247,7 @@ $(document).ready(function () {
                  }
                
         };
-        function initialFillFilters(hierarchicalLevels){
+        function initialFillHierarchyFilters(hierarchicalLevels){
             var fillFilter = function(selectId,listOfHierarchies){
                                  $('#'+selectId+'-filter').html(listOfHierarchies.map(function(hierarchy){
                                              return '<option value="'+hierarchy+'"> '+hierarchy+'</option>';
@@ -247,6 +261,9 @@ $(document).ready(function () {
 
         };
 
+       fillMetricFilters(rows);
+
+
        $('.filter-button-group-metric select').change( function() {
 
             filter();
@@ -254,13 +271,13 @@ $(document).ready(function () {
 
         $('.filter-button-group-hierarchies select').change( function() {
             console.log('1a')
-           fillFilters(hierarchicalLevels);
+           fillHierarchyFilters(hierarchicalLevels);
            console.log('1b')
            filter();
            console.log('1c')
 
         });
-        initialFillFilters(hierarchicalLevels);
+        initialFillHierarchyFilters(hierarchicalLevels);
 
     };
 
@@ -332,7 +349,7 @@ $(document).ready(function () {
         }).then( function(data){
              // initialize the isotope plugin - will run only once
          var hierarchicalLevels = getHierarchicalLevels(data)
-         showFilters(hierarchicalLevels);
+         showFilters(hierarchicalLevels,data);
          showGroupBy(data);
          showRows(data);
 
