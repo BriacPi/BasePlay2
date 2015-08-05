@@ -41,11 +41,13 @@ $(document).ready(function () {
                               date: '[data-date]',
                               status: '[data-status]',
                               occurence: function(itemElement){
-                                console.log(getOccurence(itemElement,rows))
                                 return getOccurence(itemElement,rows);
                                 },
-                              isEmpty: '.empty-separator'
-                                       },
+                              isEmpty: function(itemElement){
+                                if ($(itemElement).hasClass('empty-separator')){return 1;}
+                                else {return 0;}
+                              }
+                              },
                 sortAscending: {
                     caisse: true,
                     groupe: true,
@@ -54,7 +56,8 @@ $(document).ready(function () {
                     metric: true,
                     date: false,
                     status: true,
-                    occurence: false
+                    occurence: false,
+                    isEmpty:false
                   }
         });
 
