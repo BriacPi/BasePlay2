@@ -62,7 +62,8 @@ $(document).ready(function () {
                     isNamed:false
                   }
         });
-
+        $content.isotope({sortBy: [ 'date' ]
+                             });
 
 
     };
