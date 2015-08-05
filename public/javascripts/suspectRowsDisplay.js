@@ -154,7 +154,7 @@ $(document).ready(function () {
         };
 
         function filter(){
-            var filterValueStatus = $('.filter-button-group-status button.selected').data('filter');
+            var filterValueMetric = $('.filter-button-group-metric select').data('filter');
             var filterValuesHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).val() })
 
             var namesOfFilterForHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).data('filter') })
@@ -247,15 +247,10 @@ $(document).ready(function () {
 
         };
 
-       /* $('.filter-button-group-status button').click( function() {
-            if ($(this).hasClass('selected')){
-                  $(this).removeClass('selected');
-            } else {
-                  $('.filter-button-group-status button').removeClass('selected');
-                  $(this).addClass('selected');
-            }
+       $('.filter-button-group-metric select').change( function() {
+
             filter();
-        }); */
+        });
 
         $('.filter-button-group-hierarchies select').change( function() {
             console.log('1a')

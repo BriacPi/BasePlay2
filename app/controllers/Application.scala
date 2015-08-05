@@ -82,7 +82,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     val optionOfSuspectRow = SuspectRow.findByKey(date, caisse, groupe, agence, pdv, metric)
     optionOfSuspectRow match {
       case Some(e) => Ok(views.html.suspectRow(e, request.user))
-      case None => Ok(views.html.detectedOnly( request.user))
+      case None => Ok(views.html.data( request.user))
     }
   }
 
@@ -90,7 +90,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     val optionOfSuspectRow = SuspectRow.findById(id)
     optionOfSuspectRow match {
       case Some(e) => Ok(views.html.suspectRow(e, request.user))
-      case None => Ok(views.html.detectedOnly( request.user))
+      case None => Ok(views.html.data( request.user))
     }
   }
 
@@ -100,14 +100,14 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       case Some(e) =>
         val filledForm = editionForm.fill(EditionValues(e.admin, e.comment, e.nature.toString, e.status.toString))
         Ok(views.html.edit(e, filledForm, request.user))
-      case None => Ok(views.html.detectedOnly( request.user))
+      case None => Ok(views.html.data( request.user))
     }
   }
 
 
   def saveEdition(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     editionForm.bindFromRequest.fold(
-      errors => Ok(views.html.detectedOnly( request.user)),
+      errors => Ok(views.html.data( request.user)),
       l => {
         SuspectRow.edit(id, l.admin, l.comment, models.Nature.withName(l.nature), models.Status.withName(l.status))
         Redirect(routes.Application.findWithId(id))
