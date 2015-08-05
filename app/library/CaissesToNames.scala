@@ -17,16 +17,14 @@ object CaissesToNames {
     val complexRequest: WSRequest =
       request.withHeaders("Accept" -> "application/json")
         .withRequestTimeout(30000)
-    complexRequest.get().recoverWith {
-      case e: TimeoutException =>
-        println("Error in getting Caisses to Names JSON")
-        makeRequest()
-    }
+    complexRequest.get()
   }
 
   def getMapCaissesToNames(answer: Future[WSResponse]): Future[Map[String, String]] = {
     answer.flatMap { response =>
-      val json: JsValue = Json.parse(response.body.replaceAll("cv.labels =",""))
+      val text = response.body.replaceAll("cv.labels =","")
+      val indexOfEnd = text.indexOf("/**")
+      val json: JsValue = Json.parse(text.take(indexOfEnd))
       val result = json.validate[Labels]
       result.fold(
         errors => {

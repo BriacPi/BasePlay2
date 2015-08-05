@@ -29,6 +29,7 @@ object Engine {
     } yield year + "-" + month + "-1").toList
 
     val mapMetricsToNames: Future[Map[String, String]] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
+
     // List of metrics to analyse
     val metrics = MetricRepository.listCodes()
     // Dimensions **** TIME MUST BE THE FIRST DIMENSION FOR EACH****
