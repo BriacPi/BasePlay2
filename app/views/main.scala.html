@@ -21,6 +21,7 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 
     <link href="@routes.Assets.versioned("stylesheets/profile.css")" rel="stylesheet">
+    <link href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" rel="stylesheet">
     <link href="@routes.Assets.versioned("stylesheets/custom-navbar.css")" rel="stylesheet">
     <link href="@routes.Assets.versioned("stylesheets/animation.css")" rel="stylesheet">
     <link href="@routes.Assets.versioned("stylesheets/table.css")" rel="stylesheet">
@@ -35,7 +36,6 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
     <script src="@routes.Assets.versioned("javascripts/jquery-2.1.4.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascripts/lodash.js")" type="text/javascript"></script>
-    <script src="@routes.Assets.versioned("javascripts/arrayUtils.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascripts/isotope.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascripts/stateUpdater.js")" type="text/javascript"></script>
@@ -69,18 +69,18 @@
         <!-- Non-collapsing right-side icons -->
 
         <div class="collapse navbar-collapse navbar-right"  id="navbar-collapse-1">
-        <ul class="nav navbar-nav">
-            <li  > <a id="state">  </a> </li>
-            @if(selected =="t" ){<li class="active">}else {<li>}
-            <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class ="glyphicon glyphicon-user"></span>@("       "+currentUser.firstName+" "+currentUser.lastName) <span class="glyphicon glyphicon-menu-down"></span></a>
-            <ul class="dropdown-menu">
-                <li><a onclick="href='/myprofile/@currentUser.id';">@Messages("user.profile")</a></li>
-                <li><a href="/logout">@Messages("menu.logout") @("("+currentUser.firstName+")")</a></li>
+            <ul class="nav navbar-nav">
+                <li  > <a id="state">  </a> </li>
+                @if(selected =="t" ){<li class="active">}else {<li>}
+                <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class ="glyphicon glyphicon-user"></span>@("       "+currentUser.firstName+" "+currentUser.lastName) <span class="glyphicon glyphicon-menu-down"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a onclick="href='/myprofile/@currentUser.id';">@Messages("user.profile")</a></li>
+                    <li><a href="/logout">@Messages("menu.logout") @("("+currentUser.firstName+")")</a></li>
 
 
 
 
-        </ul>
+                </ul>
         </div>
 
         <!-- the collapsing menu -->
@@ -93,12 +93,12 @@
 
 
                 @if(selected =="u" ){<li class="dropdown active">} else {<li class="dropdown">}
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="glyphicon glyphicon-menu-down"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
-                        <li><a onclick="href='/users';">@Messages("menu.list")</a></li>
-                    </ul>
-                </li>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="glyphicon glyphicon-menu-down"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
+                    <li><a onclick="href='/users';">@Messages("menu.list")</a></li>
+                </ul>
+            </li>
                 @if(selected =="c" ){<li class="active">}else {<li>} <a href="/configuration">@Messages("menu.configuration")</a></li>
 
 

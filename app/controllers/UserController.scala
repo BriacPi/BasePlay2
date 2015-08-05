@@ -150,7 +150,9 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
 
               Unauthorized(views.html.myaccount.designEdit(editUserForm.withGlobalError("error.invalidPassword").fill(cuser.copy(password="")),request.user))
+
         }
+
           case None =>
             Unauthorized(views.html.myaccount.designEdit(editUserForm.withGlobalError("error.invalidPassword").fill(cuser.copy(password="")),request.user))
         }
