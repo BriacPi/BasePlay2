@@ -53,29 +53,22 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def data() = AuthenticatedAction() {
     refreshActor ! Refresh()
-    Redirect(routes.Application.detectedOnly())
+    Redirect(routes.Application.allData())
   }
 
 
-  def solved(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
 
-    Ok(views.html.solved( request.user))
-  }
 
-  def beingProcessed(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    Ok(views.html.beingProcessed(request.user))
-  }
+  def allData(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
 
-  def detectedOnly(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-
-    Ok(views.html.detectedOnly( request.user))
+    Ok(views.html.data( request.user))
 
 
   }
 
 
   def redirect() = AuthenticatedAction() {
-    Redirect(routes.Application.detectedOnly())
+    Redirect(routes.Application.allData())
   }
 
   //  def add(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = Action { implicit request =>
@@ -180,9 +173,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def sendData(parameter: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val suspectRows = parameter match {
-      case "detected" => SuspectRow.filterByStatus(models.Status.DetectedOnly)
-      case "solved" => SuspectRow.filterByStatus(models.Status.Solved)
-      case "processed" => SuspectRow.filterByStatus(models.Status.BeingProcessed)
+      case "all" => SuspectRow.all()
       case "mytasks" => SuspectRow.findByAdmin(request.user.email)
       case _ => List.empty[SuspectRow]
     }

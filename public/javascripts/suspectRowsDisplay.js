@@ -332,7 +332,7 @@ $(document).ready(function () {
     function grabRows() {
         $.ajax({
             type : 'GET',
-            url : '/data/detected'
+            url : '/data/all'
 
         }).then( function(data){
              // initialize the isotope plugin - will run only once
