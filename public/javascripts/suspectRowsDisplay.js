@@ -160,8 +160,12 @@ $(document).ready(function () {
                           groupBy(dimensionToGroupBy);
                           console.log('2c')
                     }
+                    if ($('#sort-by-status-button').hasClass('selected')){
+                        var dimensionToGroupBy = $('.groupby-button-group button.selected').data('groupby');
+                        groupBy(dimensionToGroupBy);
+                    }
         });
-        
+
         $('.filter-button-group-metric select').change( function() {
                     if ($('#sort-by-hierarchy-button').hasClass('selected')){
                         console.log('2a')
@@ -169,6 +173,10 @@ $(document).ready(function () {
                           console.log('2b')
                           groupBy(dimensionToGroupBy);
                           console.log('2c')
+                    }
+                    if ($('#sort-by-status-button').hasClass('selected')){
+                        var dimensionToGroupBy = $('.groupby-button-group button.selected').data('groupby');
+                        groupBy(dimensionToGroupBy);
                     }
         });
 
