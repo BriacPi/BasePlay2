@@ -14,11 +14,6 @@
 </div>
 
 
-<div class="button-group filter-button-group-status">
-    <button data-filter="DetectedOnly">@Messages("DetectedOnly")</button>
-    <button data-filter="Solved">@Messages("Solved")</button>
-    <button data-filter="BeingProcessed">@Messages("BeingProcessed")</button>
-</div>
 
 <div class="button-group filter-button-group-hierarchies">
     <select id="caisses-filter" data-filter="caisse"></select>
@@ -27,6 +22,10 @@
     <select id="pdvs-filter"  data-filter="pdv"></select>
 </div>
 
+<div class="button-group groupby-button-group">
+    <button data-groupby="status">@Messages("field.status")</button>
+    <button id="sort-by-hierarchy-button" data-groupby="caisse">Hierarchie</button>
+</div>
 
 <div id="content"></div>
 

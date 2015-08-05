@@ -10,17 +10,19 @@ $(document).ready(function () {
         if (!rows) return;
         var items = rows.map(function(row){
 
-            return $('<div class="tile '+row.caisse
+            return $('<div class="tile'
                     +'" data-status="' + row.status
                     +'" data-caisse="' + row.caisse
                     +'" data-groupe="' + row.groupe
                     +'" data-agence="' + row.agence
                     +'" data-pdv="' + row.pdv
+                    +'" data-date="' + row.date
+                    +'" data-metric="' + row.metricName
                     + '">'
-                    +'<br>' + row.caisse
-                    +'<br>' + row.groupe
-                    +'<br>' + row.agence
-                    +'<br>' + row.pdv
+                    +'<br>' + row.date
+                    +'<br>' + row.metricName
+                    +'<br>' + row.value
+
                     +
                      '</div>');
 
@@ -29,12 +31,121 @@ $(document).ready(function () {
         $content.append( items );
         $content.isotope({
                 itemSelector: '.tile',
-                layoutMode: 'fitRows'
+                layoutMode: 'fitRows',
+                getSortData: {
+                              caisse: '[data-caisse]',
+                              groupe: '[data-groupe]',
+                              agence: '[data-agence]',
+                              pdv: '[data-pdv]',
+                              metric: '[data-metric]',
+                              date: '[data-date]',
+                              status: '[data-status]',
+                              occurence: function(itemElement){
+                                console.log(getOccurence(itemElement,rows))
+                                return getOccurence(itemElement,rows);
+                                },
+                              isEmpty: '.empty-separator'
+                                       },
+                sortAscending: {
+                    caisse: true,
+                    groupe: true,
+                    agence: true,
+                    pdv: true,
+                    metric: true,
+                    date: false,
+                    status: true,
+                    occurence: false
+                  }
         });
 
     };
 
-    function showFilters(rows,hierarchicalLevels){
+    function getOccurence(item,rows){
+        var dimensionToGroupBy = $('.groupby-button-group button.selected').data('groupby');
+        var valueOfDimension = $(item).data(dimensionToGroupBy)
+        var occurence = 0
+        rows.forEach(function(row){
+            if(row[dimensionToGroupBy]==valueOfDimension){occurence ++;}
+        });
+        return occurence;
+    };
+
+
+    function showGroupBy(rows){
+        function getValuesToGroupBy(elems,dimensionToGroupBy){
+                    var valuesToGroupBy = elems.map(function(elem){
+                        return $(elem.element).data(dimensionToGroupBy);
+                    });
+                    return _.unique(valuesToGroupBy);
+        };
+
+
+        function  emptySeparatorsForGroupBy(valuesToGroupBy,dimensionToGroupBy){
+            return valuesToGroupBy.map(function(value){
+                return $('<div class="tile empty-separator'
+                                    +'" data-'+dimensionToGroupBy+'="'+value
+                                    + '">'
+                                    +'</div>');
+            });
+        };
+        function addEmptySeparators(emptySeparators){
+        emptySeparators.forEach(function(sep){
+            $content.append( sep )
+                             .isotope( 'appended', sep );
+        })
+
+        };
+
+        function removeEmptySeparators(){
+            $content.isotope( 'remove', $('.empty-separator') );
+        };
+
+
+
+
+        function groupBy(dimensionToGroupBy){
+                    removeEmptySeparators();
+                    $content.isotope('updateSortData').isotope();
+                    var elems = $content.data('isotope').filteredItems;
+                    var valuesToGroupBy = getValuesToGroupBy(elems,dimensionToGroupBy);
+                    var emptySeparators = emptySeparatorsForGroupBy(valuesToGroupBy,dimensionToGroupBy);
+                     addEmptySeparators(emptySeparators);
+                     $content.isotope({
+                       sortBy: [ 'occurence',dimensionToGroupBy, 'isEmpty','date' ]
+                     });
+        };
+
+        $('.groupby-button-group button').click( function() {
+                    if ($(this).hasClass('selected')){
+                          $(this).removeClass('selected');
+                          removeEmptySeparators();
+                          $content.isotope('layout');
+                    } else {
+                          $('.groupby-button-group button').removeClass('selected');
+                          $(this).addClass('selected');
+                          var dimensionToGroupBy = $('.groupby-button-group button.selected').data('groupby');
+                          groupBy(dimensionToGroupBy);
+                    }
+
+
+        });
+
+        $('.filter-button-group-hierarchies select').change( function() {
+                    if ($('#sort-by-hierarchy-button').hasClass('selected')){
+                        console.log('2a')
+                          var dimensionToGroupBy = $('.groupby-button-group button.selected').data('groupby');
+                          console.log('2b')
+                          groupBy(dimensionToGroupBy);
+                          console.log('2c')
+                    }
+
+
+
+        });
+
+    };
+
+    function showFilters(hierarchicalLevels){
 
         var filterFns = {
           status: function(wantedStatus,currentStatus) {
@@ -49,19 +160,30 @@ $(document).ready(function () {
             var namesOfFilterForHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).data('filter') })
             $content.isotope({ filter: function(){
                             var self = this;
+                            var isEmptySeparator=$(self).hasClass('empty-separator');
                             var status = $(self).data('status');
                             var hierarchies = namesOfFilterForHierarchy.map(function(index, name){
                                 return $(self).data(name);
                             });
                             var zipFilterValue = _.zip(hierarchies,filterValuesHierarchy).map(function(tuple){
-                                return tuple[1]=="" || tuple[0]==tuple[1];
+                                return tuple[1]=="" || tuple[0]==tuple[1] ;
                             });
 
-                            return (filterValueStatus == null || filterValueStatus==status) && ( zipFilterValue.reduce(function(acc,equalityOfHierachy){
+                            return isEmptySeparator || (filterValueStatus == null|| filterValueStatus==status) && ( zipFilterValue.reduce(function(acc,equalityOfHierachy){
                                 return acc && equalityOfHierachy;
                             }));
                       } });
         }
+
+        function changeGroupByHierarchyButton(newHierarchy){
+            function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+             };
+           $('#sort-by-hierarchy-button').data('groupby',newHierarchy);
+           $('#sort-by-hierarchy-button').html(capitalizeFirstLetter(newHierarchy));
+
+        };
+
 
         function fillFilters(hierarchicalLevels){
                  var fillFilter = function(selectId,listOfHierarchies){
@@ -70,7 +192,7 @@ $(document).ready(function () {
                      }).join(""));
                  };
                  var filterValuesHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).val() });
-                console.log(filterValuesHierarchy[0],filterValuesHierarchy[1],filterValuesHierarchy[2],filterValuesHierarchy[3])
+
                  var caissesNames=objectToNames(hierarchicalLevels);
 
                  var indexOfCaisse = _.indexOf(caissesNames,filterValuesHierarchy[0]);
@@ -85,22 +207,26 @@ $(document).ready(function () {
                             var indexOfPdv = _.indexOf(pdvsNames,filterValuesHierarchy[3]);
                             if (indexOfPdv>0){
                             }else{
+                            changeGroupByHierarchyButton("pdv");
                             fillFilter("pdvs",pdvsNames);
                             }
 
                          } else{
+                            changeGroupByHierarchyButton("agence");
                             fillFilter("agences",agencesNames);
                             fillFilter("pdvs",[""]);
                          }
 
                      }
                      else {
+                        changeGroupByHierarchyButton("groupe");
                         fillFilter("groupes",groupesNames);
                         fillFilter("agences",[""]);
                         fillFilter("pdvs",[""]);
                      }
 
                  }else{
+                    changeGroupByHierarchyButton("caisse");
                     fillFilter("groupes",[""]);
                     fillFilter("agences",[""]);
                     fillFilter("pdvs",[""]);
@@ -121,7 +247,7 @@ $(document).ready(function () {
 
         };
 
-        $('.filter-button-group-status button').click( function() {
+       /* $('.filter-button-group-status button').click( function() {
             if ($(this).hasClass('selected')){
                   $(this).removeClass('selected');
             } else {
@@ -129,12 +255,14 @@ $(document).ready(function () {
                   $(this).addClass('selected');
             }
             filter();
-        });
+        }); */
 
         $('.filter-button-group-hierarchies select').change( function() {
-
+            console.log('1a')
            fillFilters(hierarchicalLevels);
+           console.log('1b')
            filter();
+           console.log('1c')
 
         });
         initialFillFilters(hierarchicalLevels);
@@ -209,7 +337,8 @@ $(document).ready(function () {
         }).then( function(data){
              // initialize the isotope plugin - will run only once
          var hierarchicalLevels = getHierarchicalLevels(data)
-         showFilters(data,hierarchicalLevels);
+         showFilters(hierarchicalLevels);
+         showGroupBy(data);
          showRows(data);
 
 
