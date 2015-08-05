@@ -1,7 +1,9 @@
 $(document).ready(function () {
 
     var $content = $('#content');
-
+    var params = document.body.getElementsByTagName('script');
+    query = params[0].classList;
+    var whereToGetData = query[0];
     grabRows();
 
 
@@ -386,7 +388,7 @@ $(document).ready(function () {
     function grabRows() {
         $.ajax({
             type : 'GET',
-            url : '/data/all'
+            url : '/data/'+whereToGetData
 
         }).then( function(data){
              // initialize the isotope plugin - will run only once
