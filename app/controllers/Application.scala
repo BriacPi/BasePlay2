@@ -206,8 +206,24 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   implicit val natureWrites = new Writes[models.Nature] {
     def writes(nature: Nature) = Json.toJson(
       nature.toString
-
-
+    )
+  }
+  implicit val suspectRowsWrites = new Writes[SuspectRow] {
+    def writes(suspectRow: SuspectRow) = Json.obj(
+      "id"  -> suspectRow.id,
+      "date" -> suspectRow.date,
+      "caisse" -> suspectRow.caisse,
+      "groupe" -> suspectRow.groupe,
+      "agence" -> suspectRow.agence,
+      "pdv" -> suspectRow.pdv,
+      "metricName" -> suspectRow.metricName,
+      "value" -> Math.ceil(suspectRow.value),
+      "status" -> Json.toJson(suspectRow.status),
+      "nature" -> Json.toJson(suspectRow.nature),
+      "firstDate" -> suspectRow.firstDate,
+      "admin" -> suspectRow.admin,
+      "comment" -> suspectRow.comment,
+      "reasonsForDetection" -> suspectRow.reasonsForDetection.map(_.toString).mkString
     )
   }
 
