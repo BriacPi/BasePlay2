@@ -226,7 +226,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       "reasonsForDetection" -> suspectRow.reasonsForDetection.map(_.toString).mkString
     )
   }
-  
+
 
   implicit val stateMessageWrites = new Writes[StateMessage] {
     def writes(state: StateMessage) = Json.obj(
