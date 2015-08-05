@@ -368,9 +368,13 @@ background-color:yellow;
     word-spacing : normal;
     z-index : auto;
 }
+.navbar-test {
+  background-color: #253240;
+  border-color: #253240;
+  color : white;
 
-.centered {
-width :1280px;
-margin:0 auto;
+}
+.white {
+color :#FFFFFF;
 
 }
