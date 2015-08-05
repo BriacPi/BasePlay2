@@ -21,13 +21,26 @@ $(document).ready(function () {
                     +'" data-date="' + row.date
                     +'" data-metric="' + row.metricName
                     + '">'
-                    +' <a href="/row/'+row.id+'">'
-                    +'<br>' + row.date
-                    +'<br>' + row.metricName
-                    +'<br>' + row.value
-                    +'</a>'
-                    +
-                     '</div>');
+
+                    +'<div class="tile__content">'
+                    +   '<a href="">'
+                    +       '<div class="tile__content__title">'
+                    +           '<span class="tile__content__title__icon"> </span>'
+                    +           '<h5 class="tile__content__title__text">'+row.date+'</h5> '
+                    +        '</div>'
+                    +        '<div class="tile__content__data tile__content__data--numeric">'
+                    +           '<div class="tile__content__data__metrics">'
+                    +               '<div class="tile__content__data__metrics__value">'+row.metricName+'</div>'
+                    +               '<div class="tile__content__data__metrics__comparison">'
+                    +                   '<div class="tile__content__data__metrics__comparison__icon">'+row.value+'</div>'
+                    +               '</div>'
+                    +            '</div>'
+                    +        '</div>'
+                    +   '</a>'
+                    +'</div>'
+                    +'</div>'
+                     );
+
 
         });
 
