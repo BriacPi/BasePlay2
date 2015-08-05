@@ -65,7 +65,7 @@ case object ReasonForDetection extends Enum[ReasonForDetection] {
 
 sealed trait Status extends EnumEntry
 
-case object Status extends enumeratum.Enum[Status] {
+case object Status extends Enum[Status] {
 
   case object Solved extends Status
 

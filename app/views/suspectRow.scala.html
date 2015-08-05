@@ -8,7 +8,7 @@
 
 
 @main(Messages("home.header"))("")(currentUser) {
-<div class="page-header" style="margin-left:1em;">
+<!--<div class="page-header" style="margin-left:1em;">
     <h1>@Messages("home.title")</h1>
 </div>
 <ul class="nav nav-tabs" role="tablist">
@@ -45,7 +45,7 @@
 
         </tr>
         <tr>
-            <th>@Messages("field.agence")</th>
+            <th></th>
             <td>@suspectRow.agence</td>
 
         </tr>
@@ -56,7 +56,7 @@
         </tr>
         <tr>
             <th>@Messages("field.metric")</th>
-            <td>@suspectRow.metricName</td>
+            <td>@suspectRow.metricName</td>@Messages("field.agence")
 
         </tr>
         <tr>
@@ -106,7 +106,66 @@
 
     <input type="submit" value=@Messages("edit.edit")>}
 
-</div>
+</div>-->
+<section id="pricing-table" style="margin: auto;margin-left: 20%;">
+    <div class="container">
+        <div class="row">
+            <div class="pricing">
 
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <div class="pricing-table">
+                        <div class="pricing-header"  style =" background-color:#253240">
+                            <p class="pricing-title">Caractéristiques de la rupture</p>
+
+
+                        </div>
+
+                        <div class="pricing-list">
+                            <ul>
+                                <li><i class="fa fa-envelope"></i><span>@Messages("field.dates")</span> @suspectRow.date</li>
+                                <li><i class="fa fa-signal"></i><span>@Messages("field.caisse")</span> @suspectRow.caisse</li>
+                                <li><i class="fa fa-user"></i><span>@Messages("field.groupe")</span> @suspectRow.groupe</li>
+                                <li><i class="fa fa-smile-o"></i><span>@Messages("field.agence")</span> @suspectRow.agence</li>
+                                <li><i class="fa fa-envelope"></i><span>@Messages("field.pdv")</span> @suspectRow.pdv</li>
+                                <li><i class="fa fa-signal"></i><span>@Messages("field.metric")</span> @suspectRow.metric</li>
+                                <li><i class="fa fa-user"></i><span>@Messages("field.value")</span> @suspectRow.value</li>
+                                <li><i class="fa fa-smile-o"></i><span>@Messages("field.detectionDate")</span> @Messages(suspectRow.status.toString)</li>
+
+
+
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <div class="pricing-table">
+                        <div class="pricing-header"  style =" background-color:#253240">
+                            <p class="pricing-title">Gérer la rupture</p>
+
+                            <p style="color: white">@suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</p>
+                            <a href="/edition/@suspectRow.id" class="btn btn-custom" style="color: white;background-color: #253240;border-color: white;">@Messages("edit.edit")</a>
+
+                        </div>
+
+                        <div class="pricing-list">
+                            <ul>
+
+
+                                <li><i class="fa fa-user"></i><span>@Messages("field.nature")</span> @suspectRow.nature</li>
+                                <li><i class="fa fa-envelope"></i><span>@Messages("field.status")</span> @suspectRow.status</li>
+                                <li><i class="fa fa-signal"></i><span>@Messages("field.comment")</span> @suspectRow.comment</li>
+                                <li><i class="fa fa-user"></i><span>@Messages("field.admin")</span> @suspectRow.admin</li>
+
+
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 }

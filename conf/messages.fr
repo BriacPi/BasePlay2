@@ -75,8 +75,8 @@ user.email = Adresse Mail
 user.tasks = Mes Tâches
 user.account = Mon Compte
 user.profile = Mon Profil
-user.oldPassword =  Veuillez entrer votre ancien mot de passe
-user.newPassword =  Veuillez entrer votre nouveau mot de passe
+user.oldPassword =Ancien mot de passe
+user.newPassword =Nouveau mot de passe
 
 user.password =  Veuillez entrer votre mot de passe
 

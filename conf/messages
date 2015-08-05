@@ -71,8 +71,8 @@ user.email= E-mail
 user.tasks = My Tasks
 user.account = My Account
 user.profile = My Profile
-user.oldPassword =  Please enter your old password
-user.newPassword =  Please enter your new password
+user.oldPassword =Old password
+user.newPassword =New password
 
 user.password =  Please enter your password
 

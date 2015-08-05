@@ -1,0 +1,53 @@
+@import models.authentication.EditUser
+@import models.authentication.User
+@(userForm:Form[EditUser],currentUser :User)(implicit lang:Lang)
+
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+
+@main(Messages("home.header"))("t")(currentUser) {
+@helper.form(action = routes.UserController.saveEditionUser(), args = 'class -> "userForm"){
+<div class="card"><!-- Face 2 -->
+
+    <div class="card-face face-1"><!-- Menu trigger -->
+        <div class="card-face__avatar"><!-- Bullet notification -->
+            <img src="@routes.Assets.versioned("images/"+currentUser.company+".jpg")" width="110" height="110" draggable="false"/>
+        </div>
+        <!-- Name -->
+        <h2 class="card-face__name">@currentUser.firstName @currentUser.lastName</h2>
+        @if(userForm.hasGlobalErrors) {
+        <div class="user__global-error-message vertical-center">
+            @for(err <- userForm.globalErrors.flatMap(_.messages)) {
+            <div class="error vertical-center errorRed">@Messages(err)</div>
+            }
+        </div>
+        }
+
+        <div class="card-face__title">@helper.inputText(userForm("lastName"), 'placeholder
+            ->currentUser.lastName,'_label -> Messages("user.lastName"))
+        </div>
+
+        <div class="card-face__title">@helper.inputText(userForm("firstName"),'placeholder ->currentUser.firstName,
+            '_label -> Messages("user.firstName"))
+        </div>
+
+        <div class="card-face__title">@helper.inputText(userForm("company"), '_label -> Messages("user.company"))</div>
+
+        <div class="card-face__title">@helper.inputText(userForm("oldPassword"),'placeholder ->currentUser.firstName,
+            'type -> "password",'_label -> Messages("authentication.password"))
+        </div>
+        <div class="card-face-footer">
+
+            <button class="reset-this">
+                <i class="fa fa-check fa-3x card-face__social"></i>
+            </button>
+
+        </div>
+    </div>
+</div>
+
+}
+}

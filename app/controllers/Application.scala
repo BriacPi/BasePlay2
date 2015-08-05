@@ -10,6 +10,7 @@ import library.actors.{StateUpdateActor, RefreshActor}
 import library.actors.RefreshActor.Refresh
 import models.authentication.User
 
+
 import models._
 
 import play.api.data.Form
@@ -58,16 +59,18 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def solved(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
 
-    Ok(views.html.solved(request.user))
-
+    Ok(views.html.solved( request.user))
   }
 
   def beingProcessed(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    Ok(views.html.beingProcessed( request.user))
+    Ok(views.html.beingProcessed(request.user))
   }
 
   def detectedOnly(): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    Ok(views.html.detectedOnly(request.user))
+
+    Ok(views.html.detectedOnly( request.user))
+
+
   }
 
 
@@ -183,28 +186,11 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       case "mytasks" => SuspectRow.findByAdmin(request.user.email)
       case _ => List.empty[SuspectRow]
     }
-    val data = SuspectRowsForJSON(suspectRows.map(suspectRow => {
-      val reasonsForDetection = suspectRow.reasonsForDetection.map(msg => Messages(msg.toString) + '\n').mkString
-      List(suspectRow.id.toString,
-        suspectRow.date.toString,
-        suspectRow.caisse,
-        suspectRow.groupe,
-        suspectRow.agence,
-        suspectRow.pdv,
-        suspectRow.metricName,
-        suspectRow.value.toString,
-        Messages(suspectRow.status.toString),
-        Messages(suspectRow.nature.toString),
-        suspectRow.firstDate.toString,
-        suspectRow.admin,
-        suspectRow.comment,
-        reasonsForDetection)
-    }))
 
-    Ok(Json.toJson(data))
+
+    Ok(Json.toJson(suspectRows))
+
   }
-
-
   implicit val metricsWrites = new Writes[MetricsForJSON] {
     def writes(metricsForJSON: MetricsForJSON) = Json.obj(
       "data" -> metricsForJSON.data
@@ -212,11 +198,35 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   }
 
 
-  implicit val dataWrites = new Writes[SuspectRowsForJSON] {
-    def writes(dataForJSON: SuspectRowsForJSON) = Json.obj(
-      "data" -> dataForJSON.data
+  implicit val statusWrites = new Writes[models.Status] {
+    def writes(status: models.Status) = Json.toJson(
+      status.toString
     )
   }
+  implicit val natureWrites = new Writes[models.Nature] {
+    def writes(nature: Nature) = Json.toJson(
+      nature.toString
+    )
+  }
+  implicit val suspectRowsWrites = new Writes[SuspectRow] {
+    def writes(suspectRow: SuspectRow) = Json.obj(
+      "id"  -> suspectRow.id,
+      "date" -> suspectRow.date,
+      "caisse" -> suspectRow.caisse,
+      "groupe" -> suspectRow.groupe,
+      "agence" -> suspectRow.agence,
+      "pdv" -> suspectRow.pdv,
+      "metricName" -> suspectRow.metricName,
+      "value" -> Math.ceil(suspectRow.value),
+      "status" -> Json.toJson(suspectRow.status),
+      "nature" -> Json.toJson(suspectRow.nature),
+      "firstDate" -> suspectRow.firstDate,
+      "admin" -> suspectRow.admin,
+      "comment" -> suspectRow.comment,
+      "reasonsForDetection" -> suspectRow.reasonsForDetection.map(_.toString).mkString
+    )
+  }
+  
 
   implicit val stateMessageWrites = new Writes[StateMessage] {
     def writes(state: StateMessage) = Json.obj(

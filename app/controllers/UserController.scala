@@ -61,8 +61,12 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
   }
   def myProfile(id: Long) = AuthenticatedAction() { implicit request =>
     val user = repositories.authentication.UserRepository.findById(id)
+
     user match {
-      case Some(u) => Ok(views.html.myaccount.currentUser(u))
+      case Some(u) => {
+        val tasks = models.SuspectRow.findByAdmin(u.email).length
+        Ok(views.html.myaccount.designProfile(u,tasks))
+      }
       case None => SessionManager.destroy(Ok(views.html.authentication.authentication(form)))
     }
 
@@ -106,11 +110,15 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
   def editUser() = AuthenticatedAction(){ implicit request =>
 
+
+
     val user =models.authentication.EditUser(request.user.firstName,request.user.lastName,request.user.password,request.user.company)
-    Ok(views.html.myaccount.editUser(editUserForm.fill(user),request.user))
+    Ok(views.html.myaccount.designEdit(editUserForm.fill(user.copy(password="")),request.user))
+
+
   }
   def editPassword() = AuthenticatedAction(){ implicit request =>
-    Ok(views.html.myaccount.editPassword(editPasswordForm,request.user))
+    Ok(views.html.myaccount.designEditPassword(editPasswordForm,request.user))
   }
 
   def saveEditionUser() = AuthenticatedAction(){ implicit request =>
@@ -121,30 +129,32 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
 
         // Request payload is invalid.envisageable
 
-        BadRequest(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
+        BadRequest(views.html.myaccount.designEdit(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
 
       },
       success => {
 
-        val filledForm = editUserForm.fill(success)
+        val filledForm = editUserForm.fill(success.copy(password=""))
 
         UserRepository.findByEmail(request.user.email) match {
           case Some(user) =>
 
             if (PasswordAuthentication.authenticate( success.password,user.password)) {
               val newUser = User(user.id,user.email,success.firstName,success.lastName,PasswordAuthentication.passwordHash(success.password),success.company)
-
+              val tasks = models.SuspectRow.findByAdmin(newUser.email).length
               repositories.authentication.UserRepository.editUser(newUser)
-              Ok(views.html.myaccount.currentUser(newUser))
+              Ok(views.html.myaccount.designProfile(newUser,tasks))
 
             }
             else {
 
 
-              Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
+              Unauthorized(views.html.myaccount.designEdit(editUserForm.withGlobalError("error.invalidPassword").fill(cuser.copy(password="")),request.user))
+
         }
+
           case None =>
-            Unauthorized(views.html.myaccount.editUser(editUserForm.withGlobalError("error.invalidPassword").fill(cuser),request.user))
+            Unauthorized(views.html.myaccount.designEdit(editUserForm.withGlobalError("error.invalidPassword").fill(cuser.copy(password="")),request.user))
         }
       }
     )
@@ -155,7 +165,7 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
       error => {
 
         // Request payload is invalid.envisageable
-        BadRequest(views.html.myaccount.editPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
+        BadRequest(views.html.myaccount.designEditPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
       },
       success => {
 
@@ -165,15 +175,16 @@ class UserController @Inject()(ws: WSClient) extends AuthController {
           case Some(user) =>
             if (PasswordAuthentication.authenticate( success.oldPassword,user.password)) {
               val newUser = User(user.id,user.email,user.firstName,user.lastName,PasswordAuthentication.passwordHash(success.newPassword),user.company)
+              val tasks = models.SuspectRow.findByAdmin(newUser.email).length
               repositories.authentication.UserRepository.editPassword(newUser)
-              Ok(views.html.myaccount.currentUser(newUser))
+              Ok(views.html.myaccount.designProfile(newUser,tasks))
 
             }
             else {
-              Unauthorized(views.html.myaccount.editPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
+              Unauthorized(views.html.myaccount.designEditPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
             }
           case None =>
-            Unauthorized(views.html.myaccount.editPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
+            Unauthorized(views.html.myaccount.designEditPassword(editPasswordForm.withGlobalError("error.invalidPassword"),request.user))
 
         }
       }
