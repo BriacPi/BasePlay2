@@ -14,10 +14,7 @@
 
     <div class="card-face face-1"><!-- Menu trigger -->
         <div class="card-face__avatar"><!-- Bullet notification -->
-            <span class="card-face__bullet">
-                2
-            </span><!-- User avatar -->
-            <img src="@routes.Assets.versioned("images/bpcelogo.jpg")" width="110" height="110" draggable="false"/>
+            <img src="@routes.Assets.versioned("images/"+currentUser.company+".jpg")" width="110" height="110" draggable="false"/>
         </div>
         <!-- Name -->
         <h2 class="card-face__name">@currentUser.firstName @currentUser.lastName</h2>
@@ -44,8 +41,7 @@
         </div>
         <div class="card-face-footer">
 
-            <button>
-
+            <button class="reset-this">
                 <i class="fa fa-check fa-3x card-face__social"></i>
             </button>
 

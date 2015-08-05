@@ -9,7 +9,7 @@
 
 
 @main(Messages("home.header"))("")(currentUser) {
-<div class="page-header" style="margin-left:1em;">
+<!--<div class="page-header" style="margin-left:1em;">
     <h1>@Messages("home.title")</h1>
 </div>
 <ul class="nav nav-tabs" role="tablist">
@@ -131,6 +131,102 @@
 
     <input type="submit" value=@Messages("edit.save")>}
 
-</div>
+</div>-->
+
+@helper.form(action = routes.Application.saveEdition(suspectRow.id)) {
+<section id="pricing-table" style="margin: auto;margin-left: 20%;">
+    <div class="container">
+        <div class="row">
+            <div class="pricing">
+
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <div class="pricing-table">
+                        <div class="pricing-header"  style =" background-color:#253240">
+                            <p class="pricing-title">Caractéristiques de la rupture</p>
+
+
+                        </div>
+
+                        <div class="pricing-list">
+                            <ul>
+                                <li><i class="fa fa-calendar-times-o"></i><span>@Messages("field.dates")</span> @suspectRow.date
+                                </li>
+                                <li><i class="fa fa-signal"></i><span>@Messages("field.caisse")</span>
+                                    @suspectRow.caisse
+                                </li>
+                                <li><i class="fa fa-user"></i><span>@Messages("field.groupe")</span> @suspectRow.groupe
+                                </li>
+                                <li><i class="fa fa-smile-o"></i><span>@Messages("field.agence")</span>
+                                    @suspectRow.agence
+                                </li>
+                                <li><i class="fa fa-envelope"></i><span>@Messages("field.pdv")</span> @suspectRow.pdv
+                                </li>
+                                <li><i class="fa fa-signal"></i><span>@Messages("field.metric")</span>
+                                    @suspectRow.metric
+                                </li>
+                                <li><i class="fa fa-user"></i><span>@Messages("field.value")</span> @suspectRow.value
+                                </li>
+                                <li><i class="fa fa-calendar-times-o"></i><span>@Messages("field.detectionDate")</span>
+                                    @Messages(suspectRow.status.toString)
+                                </li>
+
+
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <div class="pricing-table">
+                        <div class="pricing-header" style =" background-color:#253240">
+                            <p class="pricing-title">Gérer la rupture</p>
+
+                            <p style="color: white">
+                                @suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</p>
+
+                            <input type="submit" class="btn btn-custom" value="Sauvegarder" style=" color: white;background-color: #253240;border-color: white;">
+
+                        </div>
+
+                        <div class="pricing-list">
+                            <ul>
+
+
+                                <li><i class="fa fa-user"></i>
+                                    @inputRadioGroup(
+                                    editionValues("nature"),
+                                    options =
+                                    Seq("NotSpecified"->Messages("NotSpecified"),"Abnormality"->Messages("Abnormality"),
+                                    "NotAbnormality"-> Messages("NotAbnormality")),
+                                    '_label -> Messages("field.nature"),'required -> Messages("input.required"))
+                                </li>
+                                <li><i class="fa fa-envelope"></i>
+                                    @inputRadioGroup(
+                                    editionValues("status"),
+                                    options =
+                                    Seq("Solved"->Messages("Solved"),"BeingProcessed"->Messages("BeingProcessed"),
+                                    "DetectedOnly"-> Messages("DetectedOnly")),
+                                    '_label -> Messages("field.status"),'required -> Messages("input.required"))
+                                </li>
+                                <li><i class="fa fa-pencil"></i> @inputText(editionValues("comment"), '_label ->
+                                    Messages("field.comment"))
+                                </li>
+                                <li><i class="fa fa-user"></i>@inputText(editionValues("admin"), '_label ->
+                                    Messages("field.admin"))
+                                </li>
+
+
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+}
 
 }

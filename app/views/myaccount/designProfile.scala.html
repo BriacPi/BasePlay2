@@ -1,5 +1,5 @@
 @import models.authentication.User
-@(currentUser: User)(implicit lang:Lang)
+@(currentUser: User, tasks :Int)(implicit lang:Lang)
 
 
 @import helper._
@@ -16,20 +16,20 @@
     <div class="card-face face-1"><!-- Menu trigger -->
         <div class="card-face__avatar"><!-- Bullet notification -->
             <span class="card-face__bullet">
-                2
+                @tasks
             </span><!-- User avatar -->
-            <img src="@routes.Assets.versioned("images/bpcelogo.jpg")" width="110" height="110" draggable="false"/>
+            <img src="@routes.Assets.versioned("images/"+currentUser.company+".jpg")" width="110" height="110" draggable="false"/>
         </div><!-- Name -->
         <h2 class="card-face__name">@currentUser.firstName @currentUser.lastName</h2><!-- Title -->
         <span class="card-face__title">@currentUser.company</span><!-- Cart Footer -->
         <div class="card-face-footer">
-            <a href="/useredition">
+            <a href="/useredition" class="bluecd">
                 <i class="fa fa-pencil-square-o fa-3x card-face__social" onclick="href='/useredition';">
 
                 </i>
             </a>
 
-            <a href=""><i class="fa fa-lock fa-3x card-face__social"></i></a>
+            <a href="/passwordedition" class="bluecd"><i class="fa fa-lock fa-3x card-face__social "></i></a>
 
         </div>
     </div>
