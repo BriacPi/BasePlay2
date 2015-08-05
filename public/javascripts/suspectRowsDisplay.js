@@ -43,7 +43,10 @@ $(document).ready(function () {
                               occurence: function(itemElement){
                                 return getOccurence(itemElement,rows);
                                 },
-                              isEmpty: '.empty-separator'
+                              isEmpty: '.empty-separator',
+                              isNamed: function(elem){
+                                if($(elem).hasClass('named-separator')){return 1;} else {return 0;}
+                              }
                                        },
                 sortAscending: {
                     caisse: true,
@@ -54,7 +57,8 @@ $(document).ready(function () {
                     date: false,
                     status: true,
                     occurence: false,
-                    isEmpty:true
+                    isEmpty:true,
+                    isNamed:false
                   }
         });
 
@@ -88,16 +92,33 @@ $(document).ready(function () {
                                     +'</div>');
             });
         };
-        function addEmptySeparators(emptySeparators){
-        emptySeparators.forEach(function(sep){
-            $content.append( sep )
-                             .isotope( 'appended', sep );
-        })
+
+        function  namedSeparatorsForGroupBy(valuesToGroupBy,dimensionToGroupBy){
+            return valuesToGroupBy.map(function(value){
+                return $('<div class="tile named-separator'
+                                    +'" data-'+dimensionToGroupBy+'="'+value
+                                    + '">'
+                                    +'<h2>'+value+'</h2>'
+                                    +'</div>');
+            });
+        };
+
+
+        function addSeparators(emptySeparators,namedSeparators){
+            emptySeparators.forEach(function(sep){
+                $content.append( sep )
+                                 .isotope( 'appended', sep );
+            })
+            namedSeparators.forEach(function(sep){
+                $content.append( sep )
+                                 .isotope( 'appended', sep );
+            })
 
         };
 
         function removeEmptySeparators(){
             $content.isotope( 'remove', $('.empty-separator') );
+            $content.isotope( 'remove', $('.named-separator') );
         };
 
 
@@ -109,9 +130,10 @@ $(document).ready(function () {
                     var elems = $content.data('isotope').filteredItems;
                     var valuesToGroupBy = getValuesToGroupBy(elems,dimensionToGroupBy);
                     var emptySeparators = emptySeparatorsForGroupBy(valuesToGroupBy,dimensionToGroupBy);
-                     addEmptySeparators(emptySeparators);
+                    var namedSeparators = namedSeparatorsForGroupBy(valuesToGroupBy,dimensionToGroupBy);
+                     addSeparators(emptySeparators,namedSeparators);
                      $content.isotope({
-                       sortBy: [ 'occurence',dimensionToGroupBy, 'isEmpty','date' ]
+                       sortBy: [ 'occurence',dimensionToGroupBy, 'isEmpty','isNamed','date' ]
                      });
         };
 
@@ -138,9 +160,16 @@ $(document).ready(function () {
                           groupBy(dimensionToGroupBy);
                           console.log('2c')
                     }
-
-
-
+        });
+        
+        $('.filter-button-group-metric select').change( function() {
+                    if ($('#sort-by-hierarchy-button').hasClass('selected')){
+                        console.log('2a')
+                          var dimensionToGroupBy = $('.groupby-button-group button.selected').data('groupby');
+                          console.log('2b')
+                          groupBy(dimensionToGroupBy);
+                          console.log('2c')
+                    }
         });
 
     };
@@ -160,7 +189,7 @@ $(document).ready(function () {
             var namesOfFilterForHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).data('filter') });
             $content.isotope({ filter: function(){
                             var self = this;
-                            var isEmptySeparator=$(self).hasClass('empty-separator');
+                            var isSeparator= ($(self).hasClass('empty-separator') || $(self).hasClass('named-separator') )
                             var metric = $(self).data('metric');
                             var hierarchies = namesOfFilterForHierarchy.map(function(index, name){
                                 return $(self).data(name);
@@ -168,8 +197,8 @@ $(document).ready(function () {
                             var zipFilterValue = _.zip(hierarchies,filterValuesHierarchy).map(function(tuple){
                                 return tuple[1]=="" || tuple[0]==tuple[1] ;
                             });
-               
-                            return isEmptySeparator || (filterValueMetric == ""|| filterValueMetric==metric) && ( zipFilterValue.reduce(function(acc,equalityOfHierachy){
+
+                            return isSeparator || (filterValueMetric == ""|| filterValueMetric==metric) && ( zipFilterValue.reduce(function(acc,equalityOfHierachy){
                                 return acc && equalityOfHierachy;
                             }));
                       } });
