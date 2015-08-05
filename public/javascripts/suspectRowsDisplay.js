@@ -10,7 +10,7 @@ $(document).ready(function () {
         if (!rows) return;
         var items = rows.map(function(row){
 
-            return $('<div class="tile'
+            return $('<div class="tile not-separator'
                     +'" data-status="' + row.status
                     +'" data-caisse="' + row.caisse
                     +'" data-groupe="' + row.groupe
@@ -18,6 +18,7 @@ $(document).ready(function () {
                     +'" data-pdv="' + row.pdv
                     +'" data-date="' + row.date
                     +'" data-metric="' + row.metricName
+                    +'" data-id="' + row.id
                     + '">'
                     +'<br>' + row.date
                     +'<br>' + row.metricName
@@ -60,6 +61,10 @@ $(document).ready(function () {
                     isEmpty:true,
                     isNamed:false
                   }
+        });
+
+        $( '.tile.not-separator' ).click(function() {
+            window.location.href = "/row/"+$(this).data('id');
         });
 
     };
