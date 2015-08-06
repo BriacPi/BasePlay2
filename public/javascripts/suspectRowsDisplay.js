@@ -25,8 +25,8 @@ $(document).ready(function () {
                     +'<div class="tile__content">'
                     +   ' <a class="black" style="background-color :white; padding :20px" href="/row/'+row.id+'">'
                     +       '<div class="tile__content__title">'
-                    +           '<span class="tile__content__title__icon"><i class="fa fa-calendar-check-o"></i></span>'
-                    +           '<h5 class="tile__content__title__text" style="color :#339999" >'+row.date+'</h5> '
+                    +           '<span class="tile__content__title__icon"><i class="fa fa-calendar"></i></span>'
+                    +           '<h5 class="tile__content__title__text" style="color :#00C5A2" >'+row.date+'</h5> '
                     +        '</div>'
                     +        '<div class="tile__content__data tile__content__data--numeric">'
                     +           '<div class="tile__content__data__metrics">'
@@ -199,7 +199,7 @@ $(document).ready(function () {
                         groupBy(dimensionToGroupBy);
                     }
         });
-
+        $('.selectpicker').selectpicker('refresh');
     };
 
     function showFilters(hierarchicalLevels,rows){
@@ -238,6 +238,7 @@ $(document).ready(function () {
              };
            $('#sort-by-hierarchy-button').data('groupby',newHierarchy);
            $('#sort-by-hierarchy-button').html(capitalizeFirstLetter(newHierarchy));
+           $('.selectpicker').selectpicker('refresh');
 
         };
         function fillMetricFilters(rows){
@@ -254,6 +255,7 @@ $(document).ready(function () {
             });
 
             $('#metric-filter').html(filters)
+            $('.selectpicker').selectpicker('refresh');
         }
 
         function fillHierarchyFilters(hierarchicalLevels){
@@ -302,7 +304,7 @@ $(document).ready(function () {
                     fillFilter("agences",[""]);
                     fillFilter("pdvs",[""]);
                  }
-               
+               $('.selectpicker').selectpicker('refresh');
         };
         function initialFillHierarchyFilters(hierarchicalLevels){
             var fillFilter = function(selectId,listOfHierarchies){
@@ -315,7 +317,7 @@ $(document).ready(function () {
             fillFilter("groupes",[""]);
             fillFilter("agences",[""]);
             fillFilter("pdvs",[""]);
-
+            $('.selectpicker').selectpicker('refresh');
         };
 
        fillMetricFilters(rows);

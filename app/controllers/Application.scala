@@ -89,7 +89,9 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   def findWithId(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val optionOfSuspectRow = SuspectRow.findById(id)
     optionOfSuspectRow match {
-      case Some(e) => Ok(views.html.suspectRow(e, request.user))
+      case Some(e) =>
+        val filledForm = editionForm.fill(EditionValues(e.admin, e.comment, e.nature.toString, e.status.toString))
+        Ok(views.html.edit(e, filledForm, request.user))
       case None => Ok(views.html.data( request.user))
     }
   }

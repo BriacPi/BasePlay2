@@ -22,27 +22,31 @@
 
     <link href="@routes.Assets.versioned("stylesheets/profile.css")" rel="stylesheet">
     <link href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" rel="stylesheet">
+    <link href="@routes.Assets.versioned("stylesheets/bootstrap-select.css")" rel="stylesheet">
     <link href="@routes.Assets.versioned("stylesheets/custom-navbar.css")" rel="stylesheet">
     <link href="@routes.Assets.versioned("stylesheets/animation.css")" rel="stylesheet">
     <link href="@routes.Assets.versioned("stylesheets/table.css")" rel="stylesheet">
     <link href="@routes.Assets.versioned("stylesheets/tile.css")" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-
-
-
-
-
-
     <link href="@routes.Assets.versioned("stylesheets/custom-navbar.css")" rel="stylesheet">
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
     <script src="@routes.Assets.versioned("javascripts/jquery-2.1.4.min.js")" type="text/javascript"></script>
+
     <script src="@routes.Assets.versioned("javascripts/lodash.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascripts/isotope.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascripts/stateUpdater.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascripts/animation.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascripts/designProfile.js")" type="text/javascript"></script>
-
+<script src="@routes.Assets.versioned("javascripts/bootstrap-select.js")" type="text/javascript"></script>
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
 
     <script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
@@ -74,9 +78,9 @@
                 <li  > <a id="state">  </a> </li>
                 @if(selected =="t" ){<li class="active">}else {<li>}
                 <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class ="glyphicon glyphicon-user"></span>@("       "+currentUser.firstName+" "+currentUser.lastName) <span class="glyphicon glyphicon-menu-down"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a onclick="href='/myprofile/@currentUser.id';">@Messages("user.profile")</a></li>
-                    <li><a href="/logout">@Messages("menu.logout") @("("+currentUser.firstName+")")</a></li>
+                <ul class="dropdown-menu" style="background-color: #253240; color :white;">
+                    <li><a style="background-color: #253240; color :white;" onclick="href='/myprofile/@currentUser.id';">@Messages("user.profile")</a></li>
+                    <li><a style="background-color: #253240; color :white;"  href="/logout">@Messages("menu.logout") @("("+currentUser.firstName+")")</a></li>
 
 
 
@@ -93,9 +97,9 @@
                 @if(selected =="t" ){<li class="active">}else {<li>}<a onclick="href='/owntasks';">@Messages("user.tasks")</a></li>
                 @if(selected =="u" ){<li class="dropdown active">} else {<li class="dropdown">}
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="glyphicon glyphicon-menu-down"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a onclick="href='/newuser';">@Messages("menu.add")</a></li>
-                    <li><a onclick="href='/users';">@Messages("menu.list")</a></li>
+                <ul class="dropdown-menu"  style="background-color: #253240; color :white;">
+                    <li><a  style="background-color: #253240; color :white;" onclick="href='/newuser';">@Messages("menu.add")</a></li>
+                    <li><a  style="background-color: #253240; color :white;" onclick="href='/users';">@Messages("menu.list")</a></li>
                 </ul>
             </li>
                 @if(selected =="c" ){<li class="active">}else {<li>} <a href="/configuration">@Messages("menu.configuration")</a></li>

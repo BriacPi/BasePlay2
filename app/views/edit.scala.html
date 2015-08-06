@@ -141,33 +141,32 @@
 
                 <div class="col-md-4 col-sm-12 col-xs-12">
                     <div class="pricing-table">
-                        <div class="pricing-header"  style =" background-color:#253240">
-                            <p class="pricing-title">Caractéristiques de la rupture</p>
 
-
-                        </div>
 
                         <div class="pricing-list">
                             <ul>
-                                <li><i class="fa fa-calendar-times-o"></i><span>@Messages("field.dates")</span> @suspectRow.date
+                                <li><i class="fa fa-calendar-times-o"></i>@Messages("field.dates")<span> @suspectRow.date</span>
                                 </li>
-                                <li><i class="fa fa-signal"></i><span>@Messages("field.caisse")</span>
-                                    @suspectRow.caisse
+                                <li><i class="fa fa-university"></i>@Messages("field.caisse")
+                                    <span> @suspectRow.caisse</span>
                                 </li>
-                                <li><i class="fa fa-user"></i><span>@Messages("field.groupe")</span> @suspectRow.groupe
+                                <li><i class="fa fa-university"></i>@Messages("field.groupe") <span> @suspectRow.groupe</span>
                                 </li>
-                                <li><i class="fa fa-smile-o"></i><span>@Messages("field.agence")</span>
-                                    @suspectRow.agence
+                                <li><i class="fa fa-university"></i>@Messages("field.agence")
+                                   <span> @suspectRow.agence</span>
                                 </li>
-                                <li><i class="fa fa-envelope"></i><span>@Messages("field.pdv")</span> @suspectRow.pdv
+                                <li><i class="fa fa-university"></i>@Messages("field.pdv") <span> @suspectRow.pdv</span>
                                 </li>
-                                <li><i class="fa fa-signal"></i><span>@Messages("field.metric")</span>
-                                    @suspectRow.metric
+                                <li><i class="fa fa-tag"></i>@Messages("field.metric")
+                                    <span> @suspectRow.metric</span>
                                 </li>
-                                <li><i class="fa fa-user"></i><span>@Messages("field.value")</span> @suspectRow.value
+                                <li><i class="fa fa-signal"></i>@Messages("field.value") <span> @Math.ceil(suspectRow.value)</span>
                                 </li>
-                                <li><i class="fa fa-calendar-times-o"></i><span>@Messages("field.detectionDate")</span>
-                                    @Messages(suspectRow.status.toString)
+                                <li><i class="fa fa-calendar-times-o"></i>@Messages("field.detectionDate")
+                                    <span> @Messages(suspectRow.firstDate.toString)</span>
+                                </li>
+                                <li><i class="fa fa-times"></i>@Messages("field.reasonsForDetection")
+                                    <span> @suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</span>
                                 </li>
 
 
@@ -178,21 +177,13 @@
                 </div>
                 <div class="col-md-4 col-sm-12 col-xs-12">
                     <div class="pricing-table">
-                        <div class="pricing-header" style =" background-color:#253240">
-                            <p class="pricing-title">Gérer la rupture</p>
-
-                            <p style="color: white">
-                                @suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</p>
-
-                            <input type="submit" class="btn btn-custom" value="Sauvegarder" style=" color: white;background-color: #253240;border-color: white;">
-
-                        </div>
+                        
 
                         <div class="pricing-list">
                             <ul>
 
 
-                                <li><i class="fa fa-user"></i>
+                                <li><i class="fa fa-question"></i>
                                     @inputRadioGroup(
                                     editionValues("nature"),
                                     options =
@@ -200,7 +191,7 @@
                                     "NotAbnormality"-> Messages("NotAbnormality")),
                                     '_label -> Messages("field.nature"),'required -> Messages("input.required"))
                                 </li>
-                                <li><i class="fa fa-envelope"></i>
+                                <li><i class="fa fa-wrench"></i>
                                     @inputRadioGroup(
                                     editionValues("status"),
                                     options =
@@ -208,13 +199,13 @@
                                     "DetectedOnly"-> Messages("DetectedOnly")),
                                     '_label -> Messages("field.status"),'required -> Messages("input.required"))
                                 </li>
-                                <li><i class="fa fa-pencil"></i> @inputText(editionValues("comment"), '_label ->
-                                    Messages("field.comment"))
+                                <li><i class="fa fa-pencil"></i><span> @inputText(editionValues("comment"), '_label ->
+                                    Messages("field.comment"))</span>
                                 </li>
-                                <li><i class="fa fa-user"></i>@inputText(editionValues("admin"), '_label ->
-                                    Messages("field.admin"))
+                                <li><i class="fa fa-user"></i><span>@inputText(editionValues("admin"), '_label ->
+                                    Messages("field.admin"))</span>
                                 </li>
-
+                                <li><input type="submit" class="btn btn-custom" value="Sauvegarder" style=" color: white;background-color: #253240;border-color: white;"></li>
 
                             </ul>
                         </div>
