@@ -246,7 +246,7 @@ $(document).ready(function () {
             rows.forEach(function(row){
                 metrics.push(row.metricName);
             });
-            var listOfMetrics= _.unique(metrics);
+            var listOfMetrics= _.unique(metrics).sort();
 
             var filters=[];
             filters.push('<option value=""> </option>')
@@ -266,17 +266,17 @@ $(document).ready(function () {
                  };
                  var filterValuesHierarchy = $('.filter-button-group-hierarchies select').map(function(){ return $(this).val() });
 
-                 var caissesNames=objectToNames(hierarchicalLevels);
+                 var caissesNames=objectToNames(hierarchicalLevels).sort();
 
                  var indexOfCaisse = _.indexOf(caissesNames,filterValuesHierarchy[0]);
                  if(indexOfCaisse>0){
-                     var groupesNames=objectToNames(hierarchicalLevels[indexOfCaisse].content);
+                     var groupesNames=objectToNames(hierarchicalLevels[indexOfCaisse].content).sort();
                      var indexOfGroupe = _.indexOf(groupesNames,filterValuesHierarchy[1]);
                      if (indexOfGroupe>0){
-                         var agencesNames=objectToNames(hierarchicalLevels[indexOfCaisse].content[indexOfGroupe].content);
+                         var agencesNames=objectToNames(hierarchicalLevels[indexOfCaisse].content[indexOfGroupe].content).sort();
                          var indexOfAgence = _.indexOf(agencesNames,filterValuesHierarchy[2]);
                          if (indexOfAgence>0){
-                            var pdvsNames=objectToNames(hierarchicalLevels[indexOfCaisse].content[indexOfGroupe].content[indexOfAgence].content);
+                            var pdvsNames=objectToNames(hierarchicalLevels[indexOfCaisse].content[indexOfGroupe].content[indexOfAgence].content).sort();
                             var indexOfPdv = _.indexOf(pdvsNames,filterValuesHierarchy[3]);
                             if (indexOfPdv>0){
                             }else{
@@ -312,7 +312,7 @@ $(document).ready(function () {
                                              return '<option value="'+hierarchy+'"> '+hierarchy+'</option>';
                                  }).join(""));
                              };
-            var caissesNames=objectToNames(hierarchicalLevels);
+            var caissesNames=objectToNames(hierarchicalLevels).sort();
             fillFilter("caisses",caissesNames);
             fillFilter("groupes",[""]);
             fillFilter("agences",[""]);
