@@ -5,7 +5,7 @@
   margin-right: 3.1%;
   position: relative;
   vertical-align: top;
-  width: 30%;
+  width:10%;
 }
 .tile--height-1 {
   height: 184px;
@@ -169,7 +169,7 @@
   width: 32px;
 }
 .tile__content__data--sentence .tile__content__data__metrics__value {
-  font-size: 2rem;
+  font-size: 3rem;
 }
 .tile__content__data--sentence .tile__content__data__metrics__value > span {
   display: block;

@@ -12,7 +12,7 @@ $(document).ready(function () {
         if (!rows) return;
         var items = rows.map(function(row){
 
-            return $('<div class="tile not-separator'
+            return $('<div class="tile not-separator tile--width-1 tile--height-1'
                     +'" data-status="' + row.status
                     +'" data-caisse="' + row.caisse
                     +'" data-groupe="' + row.groupe
@@ -23,16 +23,16 @@ $(document).ready(function () {
                     + '">'
 
                     +'<div class="tile__content">'
-                    +   '<a href="">'
+                    +   ' <a class="black" style="background-color :white; padding :20px" href="/row/'+row.id+'">'
                     +       '<div class="tile__content__title">'
-                    +           '<span class="tile__content__title__icon"> </span>'
-                    +           '<h5 class="tile__content__title__text">'+row.date+'</h5> '
+                    +           '<span class="tile__content__title__icon"><i class="fa fa-calendar-check-o"></i></span>'
+                    +           '<h5 class="tile__content__title__text" >'+row.date+'</h5> '
                     +        '</div>'
                     +        '<div class="tile__content__data tile__content__data--numeric">'
                     +           '<div class="tile__content__data__metrics">'
-                    +               '<div class="tile__content__data__metrics__value">'+row.metricName+'</div>'
+                    +               '<h3 class="tile__content__data__metrics__value" style ="font-size :24px">'+row.value+'</h3>'
                     +               '<div class="tile__content__data__metrics__comparison">'
-                    +                   '<div class="tile__content__data__metrics__comparison__icon">'+row.value+'</div>'
+                    +                   '<div class="tile__content__data__metrics__comparison__icon" style ="font-size:14px">'+row.metricName+'</div>'
                     +               '</div>'
                     +            '</div>'
                     +        '</div>'
