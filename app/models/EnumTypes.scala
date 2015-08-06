@@ -91,3 +91,21 @@ case object Nature extends Enum[Nature] {
 
 }
 
+sealed trait Hierarchy extends EnumEntry
+
+case object Hierarchy extends Enum[Hierarchy] {
+
+  case object Root extends Hierarchy
+
+  case object Caisse extends Hierarchy
+
+  case object Groupe extends Hierarchy
+
+  case object Agence extends Hierarchy
+
+  case object Pdv extends Hierarchy
+
+  val values: Seq[Hierarchy] = findValues
+
+
+}
