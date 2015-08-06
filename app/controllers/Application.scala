@@ -48,7 +48,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   )
 
 
-  val mapMetricsToNames: Future[Map[String, String]] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
+  val mapMetricsToNames: Future[Metrics] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
 
 
   def data() = AuthenticatedAction() {
@@ -117,7 +117,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def allUsedMetrics(): Action[AnyContent] = AuthenticatedAction().async { implicit request =>
     mapMetricsToNames.map { mapMtN =>
-      val allMetrics = mapMtN.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2)).toSet
+      val allMetrics = mapMtN.metrics.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2.label,tuple._2.formatString)).toSet
       val usedMetricsWithID: List[CodeMetric] = MetricRepository.list()
       val usedMetrics = usedMetricsWithID.map(new CodeMetricWithoutId(_)).toSet
       val unusedMetrics = allMetrics.diff(usedMetrics)
@@ -128,7 +128,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def addMetric(code: String): Action[AnyContent] = AuthenticatedAction().async {
     mapMetricsToNames.map { mapMtN =>
-      MetricRepository.create(CodeMetricWithoutId(code, mapMtN(code)))
+      MetricRepository.create(CodeMetricWithoutId(code, mapMtN.metrics(code).label,mapMtN.metrics(code).formatString))
       Redirect(routes.Application.allUsedMetrics())
     }
   }
@@ -147,7 +147,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def sendUsedMetrics: Action[AnyContent] = AuthenticatedAction().async { implicit request =>
     mapMetricsToNames.map { mapMtN =>
-      val allMetrics = mapMtN.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2)).toSet
+      val allMetrics = mapMtN.metrics.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2.label,tuple._2.formatString)).toSet
       val usedMetricsWithID: List[CodeMetric] = MetricRepository.list()
       val usedMetrics = usedMetricsWithID.map(new CodeMetricWithoutId(_))
       val usedMetricsForJSON = usedMetrics.map(metric =>
@@ -159,7 +159,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def sendUnusedMetrics: Action[AnyContent] = AuthenticatedAction().async { implicit request =>
     mapMetricsToNames.map { mapMtN =>
-      val allMetrics = mapMtN.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2)).toSet
+      val allMetrics = mapMtN.metrics.toList.map(tuple => CodeMetricWithoutId(tuple._1, tuple._2.label,tuple._2.formatString)).toSet
       val usedMetricsWithID: List[CodeMetric] = MetricRepository.list()
       val usedMetrics = usedMetricsWithID.map(new CodeMetricWithoutId(_)).toSet
       val unusedMetrics = allMetrics.diff(usedMetrics).toList
@@ -173,7 +173,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def sendData(parameter: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val suspectRows = parameter match {
-      case "all" => SuspectRow.all()
+      case "all" => SuspectRow.filterByMetrics()
       case "mytasks" => SuspectRow.findByAdmin(request.user.email)
       case _ => List.empty[SuspectRow]
     }
@@ -214,7 +214,12 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       "firstDate" -> suspectRow.firstDate,
       "admin" -> suspectRow.admin,
       "comment" -> suspectRow.comment,
-      "reasonsForDetection" -> suspectRow.reasonsForDetection.map(_.toString).mkString
+      "reasonsForDetection" -> suspectRow.reasonsForDetection.map(_.toString).mkString,
+      "format" -> (MetricRepository.findByCode(suspectRow.metric) match {
+        case None => ".d"
+        case Some(metric:CodeMetric)=> metric.format
+      })
+
     )
   }
 

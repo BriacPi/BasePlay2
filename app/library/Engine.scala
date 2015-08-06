@@ -4,7 +4,7 @@ import java.util.Calendar
 
 import library.AbnormalityDetection._
 import library.CaissesToNames._
-import models.{Configuration, Row}
+import models.{Metrics, Configuration, Row}
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.{WS, WSRequest, WSResponse}
@@ -28,7 +28,7 @@ object Engine {
       month <- 1 to 12
     } yield year + "-" + month + "-1").toList
 
-    val mapMetricsToNames: Future[Map[String, String]] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
+    val mapMetricsToNames: Future[Metrics] = library.MetricsToNames.getMapMetricsToNames(MetricsToNames.makeMetricRequest())
 
     // List of metrics to analyse
     val metrics = MetricRepository.listCodes()
@@ -50,7 +50,7 @@ object Engine {
   }
 
   def filterAbnormalitiesForAllConfigurations(caisseList: List[String], configurationList: List[Configuration], monthList: List[String]
-                                              , mapCaissesToNames: Map[String, String], mapMetricsToNames: Map[String, String]): Future[List[Unit]] = {
+                                              , mapCaissesToNames: Map[String, String], mapMetricsToNames: Metrics): Future[List[Unit]] = {
     configurationList.foldLeft(Future.successful(List.empty[Unit]))((acc: Future[List[Unit]], config: Configuration) =>
       acc.flatMap((action: List[Unit]) => getDataForAllCaisses(caisseList, config, monthList).map((rows: List[Row]) => {
          filterAllAbnormalities(rows, mapCaissesToNames, config.metric, mapMetricsToNames)::action

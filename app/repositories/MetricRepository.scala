@@ -7,10 +7,10 @@ import play.api.db.DB
 
 import scala.language.postfixOps
 
-case class CodeMetric(id: Long, code: String, metricName: String)
+case class CodeMetric(id: Long, code: String, metricName: String,format:String)
 
-case class CodeMetricWithoutId( code: String, metricName: String) {
-  def this(codeMetric:CodeMetric)= this(codeMetric.code,codeMetric.metricName)
+case class CodeMetricWithoutId( code: String, metricName: String,format:String) {
+  def this(codeMetric:CodeMetric)= this(codeMetric.code,codeMetric.metricName,codeMetric.format)
 }
 
 
@@ -19,9 +19,10 @@ trait MetricRepository {
   private[repositories] val recordMapper = {
     long("metrics.id") ~
       str("metrics.metric") ~
-      str("metrics.metric_name") map {
-      case id ~ code ~ metricName => {
-        CodeMetric(id, code, metricName)
+      str("metrics.metric_name")~
+      str("metrics.format") map {
+      case id ~ code ~ metricName~format => {
+        CodeMetric(id, code, metricName,format)
       }
     }
   }
@@ -30,10 +31,11 @@ trait MetricRepository {
     if (exist(metric)) {}
     else {
     DB.withConnection { implicit c =>
-      SQL("insert into metrics (metric,metric_name) values " +
-        "({metric},{metric_name})").on(
+      SQL("insert into metrics (metric,metric_name,format) values " +
+        "({metric},{metric_name},{format})").on(
           'metric -> metric.code,
-          'metric_name -> metric.metricName
+          'metric_name -> metric.metricName,
+          'format -> metric.format
         ).executeInsert()
     }
   }

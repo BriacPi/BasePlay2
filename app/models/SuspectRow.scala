@@ -40,8 +40,8 @@ case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, group
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
     this(id, date, caisse, "Aggregated", "Aggregated", "Aggregated", metric,metricName,value, status, nature, firstDate, admin, comment)
 
-  def this(row: Row, metric: String,map:Map[String,String]) =
-    this(0, row.date, row.dimensions.head, row.dimensions(1), row.dimensions(2), row.dimensions(3), metric,map(metric),row.metric, Status.DetectedOnly, Nature.NotSpecified, java.time.LocalDate.now, "", "")
+  def this(row: Row, metric: String,map:Metrics) =
+    this(0, row.date, row.dimensions.head, row.dimensions(1), row.dimensions(2), row.dimensions(3), metric,map.metrics(metric).label,row.metric, Status.DetectedOnly, Nature.NotSpecified, java.time.LocalDate.now, "", "")
 
   //Methodes
   def isAbnormal: Boolean = this.nature match {
@@ -128,6 +128,16 @@ object SuspectRow {
     ).filter(suspectRow =>
       suspectRow.date.isAfter(java.time.LocalDate.parse("2013-12-31"))
       )
+  }
+
+  def filterByMetrics():List[SuspectRow]={
+    val metrics = MetricRepository.listCodes()
+    all().filter ( suspectRow =>
+      metrics.contains(suspectRow.metric)
+    ).filter(suspectRow =>
+      suspectRow.date.isAfter(java.time.LocalDate.parse("2013-12-31"))
+      )
+
   }
 
   def findByKey(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Option[SuspectRow] = DB.withConnection { implicit c =>

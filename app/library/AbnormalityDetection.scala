@@ -2,7 +2,7 @@ package library
 
 import library.utils.Math
 import models.ReasonForDetection.{TooFarFromMeanByDimensions, TooFarFromMeanByDate}
-import models.{Row, SuspectRow}
+import models.{Metrics, Row, SuspectRow}
 
 object AbnormalityDetection {
   // List of operations
@@ -37,7 +37,7 @@ object AbnormalityDetection {
 
 
   // Ways to Detect Abnormalities
-  def filterAbnormalitiesFromDistanceToMean(rows: List[Row], numberOfStdDev: Int, metric: String,map:Map[String,String]): Unit = {
+  def filterAbnormalitiesFromDistanceToMean(rows: List[Row], numberOfStdDev: Int, metric: String,map:Metrics): Unit = {
     val groupedByDate = groupByDate(rows)
     rows.foreach { row =>
       val averageByDate = operationByDate(groupedByDate, average, row)
@@ -58,7 +58,7 @@ object AbnormalityDetection {
   }
 
 
-  def filterAllAbnormalities(rows: List[Row], mapCodesToNames: Map[String, String], metric: String,map:Map[String,String]): Unit = {
+  def filterAllAbnormalities(rows: List[Row], mapCodesToNames: Map[String, String], metric: String,map:Metrics): Unit = {
     val rowsWithNames = rows.map(row => {
       val dimensionsWithNames = row.dimensions.map(dimension =>
         if (mapCodesToNames.contains(dimension)) mapCodesToNames(dimension)
