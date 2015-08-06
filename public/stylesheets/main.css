@@ -172,7 +172,7 @@ a {
 
 .empty-separator {
 width:100%;
-height:10px;
+height:0px;
 background-color:red;
 }
 .named-separator {
@@ -180,6 +180,7 @@ width:100%;
 height:80px;
 background-color:#253240;
 color:white;
+padding-left: 20px;
 }
 
 /*base code*/

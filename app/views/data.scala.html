@@ -14,23 +14,25 @@
 </div>
 
 
-<div class="button-group filter-button-group-metric">
+<div class="button-group filter-button-group-metric" style ="padding-bottom :20px;padding-left :20px;">
     <select id="metric-filter" data-filter="metric"></select>
 </div>
 
-<div class="button-group filter-button-group-hierarchies">
+<div class="button-group filter-button-group-hierarchies" style ="padding-bottom :20px;padding-left :20px;">
     <select id="caisses-filter" data-filter="caisse"></select>
     <select id="groupes-filter" data-filter="groupe"></select>
     <select id="agences-filter" data-filter="agence"></select>
     <select id="pdvs-filter" data-filter="pdv"></select>
+
 </div>
 
-<div class="button-group groupby-button-group">
+<div class="button-group groupby-button-group" style ="padding-bottom :20px;padding-left :20px;">
     <button id="sort-by-status-button" data-groupby="status">@Messages("field.status")</button>
     <button id="sort-by-hierarchy-button" data-groupby="caisse">Hierarchie</button>
 </div>
 
-<div id="content" style="background-color: rgba(245,245,245,1) "></div>
+
+<div id="content" style="background-color: rgba(245,245,245,1);"></div>
 
 
 <script src="@routes.Assets.versioned("javascripts/suspectRowsDisplay.js")" type="text/javascript" class="all"></script>
