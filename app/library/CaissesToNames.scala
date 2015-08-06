@@ -22,9 +22,8 @@ object CaissesToNames {
 
   def getMapCaissesToNames(answer: Future[WSResponse]): Future[Map[String, String]] = {
     answer.flatMap { response =>
-      val text = response.body.replaceAll("cv.labels =","")
-      val indexOfEnd = text.indexOf("/**")
-      val json: JsValue = Json.parse(text.take(indexOfEnd))
+      val text = response.body.replaceAll("cv.labels =","").dropRight(1)
+      val json: JsValue = Json.parse(text)
       val result = json.validate[Labels]
       result.fold(
         errors => {

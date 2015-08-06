@@ -29,7 +29,9 @@ class RefreshActor extends Actor {
         stateUpdateActor ! "maj"
         Engine.sendRequestToApi().onComplete {
           case Success(e) => stateUpdateActor ! "success"
-          case Failure(e) => stateUpdateActor ! "failure"
+          case Failure(e) => {
+            println(e)
+            stateUpdateActor ! "failure"}
         }
       }
   }
