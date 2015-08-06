@@ -159,12 +159,12 @@ $(document).ready(function () {
 
         $('.groupby-button-group button').click( function() {
                     if ($(this).hasClass('selected')){
-                          $(this).removeClass('selected');
+                          $(this).removeClass('selected').removeClass('active');
                           removeEmptySeparators();
                           $content.isotope('layout');
                     } else {
-                          $('.groupby-button-group button').removeClass('selected');
-                          $(this).addClass('selected');
+                          $('.groupby-button-group button').removeClass('selected').removeClass('active');
+                          $(this).addClass('selected').addClass('active');
                           var dimensionToGroupBy = $('.groupby-button-group button.selected').data('groupby');
                           groupBy(dimensionToGroupBy);
                     }
