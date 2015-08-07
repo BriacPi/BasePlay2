@@ -11,6 +11,8 @@ $(document).ready(function () {
 
         if (!rows) return;
         var items = rows.map(function(row){
+        if (navigator.language == 'fr'){var language ='fr'} else {var language ='en'}
+        var value = sprintf(language)(row.format, row.value);
 
             return $('<div class="tile not-separator tile--width-1 tile--height-1'
                     +'" data-status="' + row.status
@@ -30,7 +32,7 @@ $(document).ready(function () {
                     +        '</div>'
                     +        '<div class="tile__content__data tile__content__data--numeric">'
                     +           '<div class="tile__content__data__metrics">'
-                    +               '<h3 class="tile__content__data__metrics__value" style ="font-size :24px; color: #676767">'+row.value+'</h3>'
+                    +               '<h3 class="tile__content__data__metrics__value" style ="font-size :24px; color: #676767">'+value+'</h3>'
                     +               '<div class="tile__content__data__metrics__comparison">'
                     +                   '<div class="tile__content__data__metrics__comparison__icon" style ="font-size:14px; color:#006699">'+row.metricName+'</div>'
                     +               '</div>'

@@ -143,10 +143,23 @@ a {
 
 
 }
-  @media  (max-width: 1279px) {
+
+  @media  (max-width: 1500px) {
   .tile{
-    width: 25%;}
+    width: 16%;}
+  @media  (max-width: 1300px) {
+  .tile{
+    width: 20%;}
   }
+  @media  (max-width: 1000px) {
+      .tile{
+        width: 25%;}
+      }
+
+    @media  (max-width: 850px) {
+    .tile{
+      width: 33%;}
+    }
 
 .empty-separator {
 width:100%;
