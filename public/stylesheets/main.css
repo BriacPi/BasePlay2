@@ -135,12 +135,18 @@ a {
 .tile {
   background-color: #wheat;
   display: inline-block;
-  margin-bottom: 3%;
-  margin-right: 3.1%;
+  margin-bottom: 10px;
+  margin-right: 0;
   position: relative;
   vertical-align: top;
-  width: 20%;
+  width: 14%;
+
+
 }
+  @media  (max-width: 1279px) {
+  .tile{
+    width: 25%;}
+  }
 
 .empty-separator {
 width:100%;

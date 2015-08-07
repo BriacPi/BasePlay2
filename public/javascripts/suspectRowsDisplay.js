@@ -262,7 +262,7 @@ $(document).ready(function () {
                  var fillFilter = function(selectId,listOfHierarchies){
                      var filters=[];
                      filters.push('<option value=""> Tout </option>')
-                     listOfHierarchies.forEach(function(hierarchy){
+                     listOfHierarchies.sort().forEach(function(hierarchy){
                             filters.push('<option value="'+hierarchy+'"> '+hierarchy+'</option>');
                      });
                      $('#'+selectId+'-filter').html(filters);
@@ -313,7 +313,7 @@ $(document).ready(function () {
              var fillFilter = function(selectId,listOfHierarchies){
                                  var filters=[];
                                  filters.push('<option value=""> Tout </option>')
-                                 listOfHierarchies.forEach(function(hierarchy){
+                                 listOfHierarchies.sort().forEach(function(hierarchy){
                                         filters.push('<option value="'+hierarchy+'"> '+hierarchy+'</option>');
                                  });
                                  $('#'+selectId+'-filter').html(filters);
