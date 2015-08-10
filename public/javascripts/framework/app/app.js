@@ -2,27 +2,37 @@
 
 /* App Module */
 
-var phonecatApp = angular.module('phonecatApp', [
-  'ngRoute',
-  'phonecatAnimations',
+var dashBoardApp = angular.module('dashBoardApp', ['ngRoute','gridshore.c3js.chart']);
 
-  'phonecatControllers',
-  'phonecatFilters',
-  'phonecatServices'
-]);
-
-phonecatApp.config(['$routeProvider',
+dashBoardApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-      when('/phones', {
-        templateUrl: 'partials/phone-list.html',
-        controller: 'PhoneListCtrl'
+
+      when('/dashboard/all', {
+        templateUrl: 'assets/javascripts/framework/partials/one.html',
+        controller: 'dashBoardAllCtrl'
       }).
-      when('/phones/:phoneId', {
-        templateUrl: 'partials/phone-detail.html',
-        controller: 'PhoneDetailCtrl'
+      when('/dashboard/all_caisses', {
+        templateUrl: 'assets/javascripts/framework/partials/many.html',
+        controller: 'dashBoardAllCaissesCtrl'
+      }).
+      when('/dashboard/caisse/:caisse', {
+        templateUrl: 'assets/javascripts/framework/partials/many.html',
+        controller: 'dashBoardCaisseCtrl'
+      }).
+      when('/dashboard/caisse/:caisse/groupe/:groupe', {
+        templateUrl: 'assets/javascripts/framework/partials/many.html',
+        controller: 'dashBoardGroupeCtrl'
+      }).
+      when('/dashboard/caisse/:caisse/groupe/:groupe/agence/:agence', {
+        templateUrl: 'assets/javascripts/framework/partials/many.html',
+        controller: 'dashBoardAgenceCtrl'
+      }).
+      when('/tiles/caisse/:caisse/groupe/:groupe/agence/:agence/pdv/:pdv', {
+        templateUrl: 'assets/javascripts/framework/partials/tiles.html',
+        controller: 'tilesCtrl'
       }).
       otherwise({
-        redirectTo: '/phones'
+        redirectTo: '/dashboard/all'
       });
   }]);

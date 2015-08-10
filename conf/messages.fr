@@ -97,4 +97,6 @@ edit.profile = Editer:profil
 edit.save = Sauvegarder
 edit.edit = Editer
 
+dashboard.title = Centre de contrôle
+
 

@@ -1,0 +1,73 @@
+.fiche {
+
+
+  display: inline-block;
+  margin-bottom: 3%;
+  margin-right: 3.1%;
+  position: relative;
+  vertical-align: top;
+  width:28%;
+  -moz-box-shadow: 0 0 2px rgba(245,245,245,1);
+      -webkit-box-shadow: 0 0 2px rgba(245,245,245,1);
+      box-shadow: 0 0 2px rgba(245,245,245,1);
+
+}
+.fiche-unique {
+
+   width:50%;
+
+  display: inline-block;
+    margin-top: 10px;
+  margin-bottom: 20px;
+  margin-left: 25%;
+  vertical-align: top;
+  -moz-box-shadow: 0 0 2px rgba(245,245,245,1);
+      -webkit-box-shadow: 0 0 2px rgba(245,245,245,1);
+      box-shadow: 0 0 2px rgba(245,245,245,1);
+
+}
+.ficheContainer-unique{
+margin-left : 25%;
+background-color: white;
+}
+.separator{
+   border-bottom :3px solid rgba(245,245,245,1);
+}
+.pad {
+ padding-left: 20px;
+}
+
+.c3 g text {
+font-size:0.8rem;
+}
+.ficheContainer{
+margin-left : 3px;
+background-color: white;
+}
+.background{
+margin-left : 10px;
+margin-right : 10px;
+background-color : rgba(245,245,245,1);
+padding-top :10px;
+}
+.ficheTitle{
+color: #676767 ;
+}
+
+.ficheTotal{
+color:#006699 ;
+}
+
+.ficheTop{
+color :#33CC99 ;
+}
+
+.ficheDown{
+color: #FF9999 ;
+}
+
+.titre{
+padding-top : 5px;
+padding-left :7px;
+color: #676767 ;
+}

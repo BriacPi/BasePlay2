@@ -5,7 +5,7 @@ import javax.inject.Inject
 import akka.actor._
 import components.mvc.AuthController
 import library.Engine._
-import library.MetricsToNames
+import library.{DashBoardGenerator, MetricsToNames}
 import library.actors.{StateUpdateActor, RefreshActor}
 import library.actors.RefreshActor.Refresh
 import models.authentication.User
@@ -242,6 +242,25 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     }
 
     Ok(Json.toJson(stateMessage))
+  }
+
+  def dashBoardPdvs(caisse: String , groupe: String, agence: String )= AuthenticatedAction() { implicit request =>
+    Ok(Json.toJson(DashBoardGenerator.getDashBoardsForAgence(caisse, groupe, agence)))
+  }
+  def dashBoardAgences(caisse: String , groupe: String)= AuthenticatedAction() { implicit request =>
+    Ok(Json.toJson(DashBoardGenerator.getDashBoardsForGroupe(caisse, groupe)))
+  }
+  def dashBoardGroupes(caisse: String )= AuthenticatedAction() { implicit request =>
+    Ok(Json.toJson(DashBoardGenerator.getDashBoardsForCaisse(caisse)))
+  }
+  def dashBoardCaisses()= AuthenticatedAction() { implicit request =>
+    Ok(Json.toJson(DashBoardGenerator.getDashBoardsForAllCaisses()))
+  }
+  def dashBoardAll()= AuthenticatedAction() { implicit request =>
+    Ok(Json.toJson(DashBoardGenerator.getDashBoardsForAll()))
+  }
+  def dashBoard()= AuthenticatedAction() { implicit request =>
+    Ok(views.html.dashboard(request.user))
   }
 
 

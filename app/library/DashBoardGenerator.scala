@@ -1,36 +1,149 @@
 package library
 
-import models.{Status, SuspectRow, DashBoard, Hierarchy}
+import breeze.linalg.unique
+import models._
 
 object DashBoardGenerator {
-  def createDashBoard(hierarchy:Hierarchy,caisse: String = "all", groupe: String = "all", agence: String = "all", pdv: String = "all"): DashBoard = {
+  def getDashBoardsForAgence(caisse: String, groupe: String , agence: String  ):List[DashBoard]={
     val suspectRows = SuspectRow.all().filter(suspectRow => {
-      (caisse == "all" || caisse==suspectRow.caisse) &&(groupe == "all" || groupe==suspectRow.groupe) &&
-        (agence == "all" || agence==suspectRow.agence) &&(pdv == "all" || pdv==suspectRow.pdv)
+      caisse==suspectRow.caisse && groupe==suspectRow.groupe &&  agence==suspectRow.agence
+    })
+    val pdvList= suspectRows.map(_.pdv).distinct
+    pdvList.map(pdv => createDashBoard(caisse, groupe , agence , pdv,suspectRows ))
+  }
+
+  def getDashBoardsForGroupe(caisse: String, groupe: String ):List[DashBoard]={
+    val suspectRows = SuspectRow.all().filter(suspectRow => {
+      caisse==suspectRow.caisse && groupe==suspectRow.groupe
+    })
+    val agenceList= suspectRows.map(_.agence).distinct
+    agenceList.map(agence => createDashBoard(caisse, groupe , agence,suspectRows ))
+  }
+
+  def getDashBoardsForCaisse(caisse: String ):List[DashBoard]={
+    val suspectRows = SuspectRow.all().filter(suspectRow => {
+      caisse==suspectRow.caisse
+    })
+    val groupeList= suspectRows.map(_.groupe).distinct
+    groupeList.map(groupe => createDashBoard(caisse, groupe ,suspectRows ))
+  }
+
+  def getDashBoardsForAllCaisses():List[DashBoard]={
+    val suspectRows = SuspectRow.all()
+    val caisseList= suspectRows.map(_.caisse).distinct
+    caisseList.map(caisse => createDashBoard(caisse ,suspectRows ))
+  }
+
+  def getDashBoardsForAll():DashBoard={
+   createDashBoard()
+  }
+
+
+
+
+  def createDashBoard(caisse: String, groupe: String , agence: String , pdv: String,suspectRowsUnfiltered:List[SuspectRow] ): DashBoard = {
+    val suspectRows = suspectRowsUnfiltered.filter(suspectRow => {
+      caisse==suspectRow.caisse && groupe==suspectRow.groupe &&  agence==suspectRow.agence && pdv==suspectRow.pdv
+    })
+    buildDashBoardForPdv(suspectRows)
+  }
+
+  def createDashBoard(caisse: String, groupe: String , agence: String,suspectRowsUnfiltered:List[SuspectRow]  ): DashBoard = {
+    val suspectRows = suspectRowsUnfiltered.filter(suspectRow => {
+       caisse==suspectRow.caisse && groupe==suspectRow.groupe && agence==suspectRow.agence
+    })
+    buildDashBoardForAgence(suspectRows)
+  }
+
+  def createDashBoard(caisse: String, groupe: String,suspectRowsUnfiltered:List[SuspectRow]  ): DashBoard = {
+    val suspectRows = suspectRowsUnfiltered.filter(suspectRow => {
+      caisse==suspectRow.caisse &&groupe==suspectRow.groupe
+    })
+    buildDashBoardForGroupe(suspectRows)
+  }
+
+  def createDashBoard(caisse: String,suspectRowsUnfiltered:List[SuspectRow] ): DashBoard = {
+    val suspectRows = suspectRowsUnfiltered.filter(suspectRow => {
+ caisse==suspectRow.caisse
     }
     )
-    val leaderBoard = createLeaderBoard(hierarchy,caisse, groupe, agence, pdv,suspectRows)
-    val statusChart = createStatusChart(caisse, groupe, agence, pdv,suspectRows)
-    val natureChart = createNatureChart(caisse, groupe, agence, pdv,suspectRows)
-
-    DashBoard(leaderBoard,statusChart,natureChart)
+    buildDashBoardForCaisse(suspectRows)
   }
 
-  def createLeaderBoard(hierarchy:Hierarchy,caisse: String, groupe: String , agence: String , pdv: String ,suspectRows:List[SuspectRow]): List[(String,Long)] = {
-    if (hierarchy==Hierarchy.Pdv) {
-      List.empty[(String,Long)]
-    } else if(hierarchy==Hierarchy.Agence){
-      val underHierarchy:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.pdv)
-      underHierarchy.mapValues(suspectRows => suspectRows.count(suspectRow=>suspectRow.status!=Status.Solved).toLong).toList
-    } else if(hierarchy==Hierarchy.Groupe){
-      val underHierarchy:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.agence)
-      underHierarchy.mapValues(suspectRows => suspectRows.count(suspectRow=>suspectRow.status!=Status.Solved).toLong).toList
-    } else if(hierarchy==Hierarchy.Caisse){
-      val underHierarchy:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.groupe)
-      underHierarchy.mapValues(suspectRows => suspectRows.count(suspectRow=>suspectRow.status!=Status.Solved).toLong).toList
-    } else {
-      val underHierarchy:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.caisse)
-      underHierarchy.mapValues(suspectRows => suspectRows.count(suspectRow=>suspectRow.status!=Status.Solved).toLong).toList
+  def createDashBoard(): DashBoard = {
+    val suspectRows = SuspectRow.all()
+    buildDashBoardForAll(suspectRows)
+  }
+
+  def buildDashBoardForAll(suspectRows: List[SuspectRow]):DashBoard={
+    val leaderBoard = createLeaderBoardForAll(suspectRows)
+    val statusChart = createStatusChart(suspectRows)
+    val natureChart = createNatureChart(suspectRows)
+
+    DashBoard("Toutes les caisses",suspectRows.length,leaderBoard,statusChart,natureChart)
+  }
+  def buildDashBoardForCaisse(suspectRows: List[SuspectRow]):DashBoard={
+    val leaderBoard = createLeaderBoardForCaisse(suspectRows)
+    val statusChart = createStatusChart(suspectRows)
+    val natureChart = createNatureChart(suspectRows)
+
+    DashBoard(suspectRows.head.caisse,suspectRows.length,leaderBoard,statusChart,natureChart)
+  }
+  def buildDashBoardForGroupe(suspectRows: List[SuspectRow]):DashBoard={
+    val leaderBoard = createLeaderBoardForGroupe(suspectRows)
+    val statusChart = createStatusChart(suspectRows)
+    val natureChart = createNatureChart(suspectRows)
+
+    DashBoard(suspectRows.head.groupe,suspectRows.length,leaderBoard,statusChart,natureChart)
+  }
+  def buildDashBoardForAgence(suspectRows: List[SuspectRow]):DashBoard={
+    val leaderBoard = createLeaderBoardForAgence(suspectRows)
+    val statusChart = createStatusChart(suspectRows)
+    val natureChart = createNatureChart(suspectRows)
+
+    DashBoard(suspectRows.head.agence,suspectRows.length,leaderBoard,statusChart,natureChart)
+  }
+  def buildDashBoardForPdv(suspectRows: List[SuspectRow]):DashBoard={
+    val leaderBoard = createLeaderBoardForPdv(suspectRows)
+    val statusChart = createStatusChart(suspectRows)
+    val natureChart = createNatureChart(suspectRows)
+
+    DashBoard(suspectRows.head.pdv,suspectRows.length,leaderBoard,statusChart,natureChart)
+  }
+
+  def createLeaderBoardForPdv( suspectRows:List[SuspectRow]):List[LeaderBoardLign] = {
+      List.empty[LeaderBoardLign]
     }
+
+  def createLeaderBoardForAgence( suspectRows:List[SuspectRow]): List[LeaderBoardLign] = {
+      val underHierarchy:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.pdv)
+      underHierarchy.mapValues(suspectRows => suspectRows.count(suspectRow=>suspectRow.status!=Status.Solved).toLong).toList.map(couple => LeaderBoardLign(couple._1,couple._2))
+    }
+  def createLeaderBoardForGroupe(suspectRows:List[SuspectRow]): List[LeaderBoardLign] = {
+    val underHierarchy:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.agence)
+    underHierarchy.mapValues(suspectRows => suspectRows.count(suspectRow=>suspectRow.status!=Status.Solved).toLong).toList.map(couple => LeaderBoardLign(couple._1,couple._2))
   }
+  def createLeaderBoardForCaisse(suspectRows:List[SuspectRow]): List[LeaderBoardLign] = {
+    val underHierarchy:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.groupe)
+    underHierarchy.mapValues(suspectRows => suspectRows.count(suspectRow=>suspectRow.status!=Status.Solved).toLong).toList.map(couple => LeaderBoardLign(couple._1,couple._2))
+  }
+  def createLeaderBoardForAll(suspectRows:List[SuspectRow]): List[LeaderBoardLign] = {
+    val underHierarchy:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.caisse)
+    underHierarchy.mapValues(suspectRows => suspectRows.count(suspectRow=>suspectRow.status!=Status.Solved).toLong).toList.map(couple => LeaderBoardLign(couple._1,couple._2))
+  }
+
+  def createStatusChart(suspectRows:List[SuspectRow]): Chart ={
+    val groupedByStatus:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.status.toString)
+    val chartAsMap= groupedByStatus.mapValues(suspectRows => suspectRows.length)
+    val (labels,data) = chartAsMap.toList.sortBy(_._2).unzip
+    Chart(labels,data)
+  }
+
+  def createNatureChart(suspectRows:List[SuspectRow]): Chart ={
+    val groupedByNature:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.nature.toString)
+    val chartAsMap=groupedByNature.mapValues(suspectRows => suspectRows.length)
+    val (labels,data) = chartAsMap.toList.sortBy(_._2).unzip
+    Chart(labels,data)
+  }
+
 }

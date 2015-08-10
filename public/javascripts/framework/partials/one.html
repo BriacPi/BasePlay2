@@ -1,0 +1,54 @@
+<div class="background">
+
+    <div class="container fiche-unique ficheContainer-unique">
+        <div class="row separator pad"><h3 class="ficheTitle">{{dashboard.title}}</h3></div>
+        <div class="row separator pad"><h4 class="ficheTotal">Nombre total d'anomalies: {{dashboard.numberOfRows}}</h4>
+        </div>
+        <div class="row separator">
+
+            <div class="row">
+                <div class="col-xs-6 ficheTop">
+                    <p> TOP 3 </p>
+                    <ol>
+
+                        <li ng-repeat="lign in dashboard.leaderboard | orderBy:'-numberOfUnsolvedAnomalies'| limitTo: 3">
+                            {{lign.name}} : {{lign.numberOfUnsolvedAnomalies}}
+                        </li>
+
+                    </ol>
+                </div>
+                <div class="col-xs-6 ficheDown">
+                    <p> FLOP 3 </p>
+                    <ol>
+
+                        <li ng-repeat="lign in dashboard.leaderboard | orderBy:'numberOfUnsolvedAnomalies'| limitTo: 3">
+                            {{lign.name}} : {{lign.numberOfUnsolvedAnomalies}}
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="titre">Etats des ruptures</div>
+                <c3chart bindto-id="status" chart-data="statusData" chart-columns="statusColumns">
+                    <chart-legend show-legend="false" />
+                </c3chart>
+
+            </div>
+            <div class="col-xs-6">
+                <div class="titre">Taux d'anormalité</div>
+                <c3chart bindto-id="nature" chart-data="natureData" chart-columns="natureColumns">
+                    <chart-legend show-legend="false" />
+                </c3chart>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
