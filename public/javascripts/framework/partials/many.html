@@ -17,7 +17,7 @@
 
 
                 <div class="ficheTop">
-                    <p> TOP 3 </p>
+                    <p> TOP 3 : Anomalies non résolues</p>
                     <ol>
 
                         <li ng-repeat="lign in dashboard.leaderboard | orderBy:'-numberOfUnsolvedAnomalies'| limitTo: 3">
@@ -28,7 +28,7 @@
                     </ol>
                 </div>
                 <div class=" ficheDown">
-                    <p> FLOP 3 </p>
+                    <p> FLOP 3 : Anomalies non résolues</p>
                     <ol>
 
                         <li ng-repeat="lign in dashboard.leaderboard | orderBy:'numberOfUnsolvedAnomalies'| limitTo: 3">

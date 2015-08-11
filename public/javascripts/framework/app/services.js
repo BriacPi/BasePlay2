@@ -94,7 +94,8 @@ dashBoardApp.factory('breadCrumbs', ['$routeParams',
              return {
                 metricName:tile.metricName,
                 date:tile.date,
-                value:value
+                value:value,
+                id:tile.id
              }
          });
         }
