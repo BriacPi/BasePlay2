@@ -1,0 +1,67 @@
+.breadcrumbcustom { 
+			list-style: none; 
+			overflow: hidden; 
+			font: 18px Helvetica, Arial, Sans-Serif;
+		}
+		.breadcrumbcustom li { 
+			float: left; 
+		}
+		.breadcrumbcustom li a {
+			color: white;
+			text-decoration: none; 
+			padding: 10px 0 10px 55px;
+			background: #253240;
+			position: relative; 
+			display: block;
+			float: left;
+		}
+		.breadcrumbcustom li a:after { 
+			content: " "; 
+			display: block; 
+			width: 0; 
+			height: 0;
+			border-top: 22px solid transparent;           /* Go big on the size, and let overflow hide */
+			border-bottom: 22px solid transparent;
+			border-left: 30px solid #253240;
+			position: absolute;
+			top: 50%;
+			margin-top: -22px;
+			left: 100%;
+			z-index: 2; 
+		}	
+		.breadcrumbcustom li a:before { 
+			content: " "; 
+			display: block; 
+			width: 0; 
+			height: 0;
+			border-top: 22px solid transparent;           /* Go big on the size, and let overflow hide */
+			border-bottom: 22px solid transparent;
+			border-left: 30px solid white;
+			position: absolute;
+			top: 50%;
+			margin-top: -22px;
+			margin-left: 1px;
+			left: 100%;
+			z-index: 1; 
+		}	
+		.breadcrumbcustom li:first-child a {
+			padding-left: 10px;
+		}
+		.breadcrumbcustom li:nth-child(2) a       { background:        #253240; }
+		.breadcrumbcustom li:nth-child(2) a:after { border-left-color: #253240); }
+		.breadcrumbcustom li:nth-child(3) a       { background:        #253240; }
+		.breadcrumbcustom li:nth-child(3) a:after { border-left-color: #253240; }
+		.breadcrumbcustom li:nth-child(4) a       { background:        #253240; }
+		.breadcrumbcustom li:nth-child(4) a:after { border-left-color: #253240; }
+		.breadcrumbcustom li:nth-child(5) a       { background:        #253240; }
+		.breadcrumbcustom li:nth-child(5) a:after { border-left-color: #253240; }
+		.breadcrumbcustom li:last-child a {
+			background: white !important;
+			color: black;
+			pointer-events: none;
+ 			cursor: default;
+		}
+		.breadcrumbcustom li:last-child a:after { border: 0; }
+		.breadcrumbcustom li a:hover { background:#2e3f50; }
+		.breadcrumbcustom li a:hover:after { border-left-color: #2e3f50 !important; }
+		

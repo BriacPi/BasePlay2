@@ -1,0 +1,31 @@
+@import models.authentication.User
+@(currentUser :User)(implicit lang:Lang)
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+@import models.SuspectRow._
+
+
+@main(Messages("home.header"))("cr")(currentUser) {
+
+
+
+<link href="@routes.Assets.versioned("stylesheets/c3.min.css")" rel="stylesheet">
+<link href="@routes.Assets.versioned("stylesheets/pie.css")" rel="stylesheet">
+<link href="@routes.Assets.versioned("stylesheets/breadcrumbs.css")" rel="stylesheet">
+<script src="@routes.Assets.versioned("javascripts/framework/angular/c3.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/framework/angular/d3.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/framework/angular/angular.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/framework/angular/angular-route.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/framework/angular/c3js-directive.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/framework/app/app.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/framework/app/services.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/framework/app/controllers.js")" type="text/javascript"></script>
+
+<div ng-app="dashBoardApp">
+<div ng-view></div>
+
+</div>
+
+}

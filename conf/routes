@@ -42,3 +42,11 @@ GET /deleteuser/:email                                                          
 GET /profile/:id                                                                     controllers.UserController.profile(id :Long)
 GET /myprofile/:id                                                                   controllers.UserController.myProfile(id :Long)
 GET /users                                                                           controllers.UserController.allUsers
+
+GET /dashboard_data/caisse/:caisse/groupe/:groupe/agence/:agence                     controllers.Application.dashBoardPdvs(caisse:String,groupe:String,agence:String)
+GET /dashboard_data/caisse/:caisse/groupe/:groupe                                    controllers.Application.dashBoardAgences(caisse:String,groupe:String)
+GET /dashboard_data/caisse/:caisse                                                   controllers.Application.dashBoardGroupes(caisse:String)
+GET /dashboard_data/all_caisses                                                      controllers.Application.dashBoardCaisses()
+GET /dashboard_data/all                                                              controllers.Application.dashBoardAll()
+
+GET /dashboard                                                                       controllers.Application.dashBoard()

@@ -5,7 +5,7 @@ import javax.inject.Inject
 import akka.actor._
 import components.mvc.AuthController
 import library.Engine._
-import library.MetricsToNames
+import library.{DashBoardGenerator, MetricsToNames}
 import library.actors.{StateUpdateActor, RefreshActor}
 import library.actors.RefreshActor.Refresh
 import models.authentication.User
@@ -244,6 +244,37 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     }
 
     Ok(Json.toJson(stateMessage))
+  }
+
+    def translate[A](dashboard:DashBoard)(implicit request :Request[A]):DashBoard= {
+      dashboard.copy(statusChart=dashboard.statusChart.copy(labelsForDisplay=dashboard.statusChart.labels.map(Messages(_))),
+        natureChart=dashboard.natureChart.copy(labelsForDisplay=dashboard.natureChart.labels.map(Messages(_)))
+      )
+    }
+
+
+  def dashBoardPdvs(caisse: String , groupe: String, agence: String )= AuthenticatedAction() { implicit request =>
+    val dashboards = DashBoardGenerator.getDashBoardsForAgence(caisse, groupe, agence)
+    Ok(Json.toJson(dashboards.map(translate(_)(request))))
+  }
+  def dashBoardAgences(caisse: String , groupe: String)= AuthenticatedAction() { implicit request =>
+    val dashboards =DashBoardGenerator.getDashBoardsForGroupe(caisse, groupe)
+    Ok(Json.toJson(dashboards.map(translate(_)(request))))
+  }
+  def dashBoardGroupes(caisse: String )= AuthenticatedAction() { implicit request =>
+    val dashboards =DashBoardGenerator.getDashBoardsForCaisse(caisse)
+    Ok(Json.toJson(dashboards.map(translate(_)(request))))
+  }
+  def dashBoardCaisses()= AuthenticatedAction() { implicit request =>
+    val dashboards =DashBoardGenerator.getDashBoardsForAllCaisses()
+    Ok(Json.toJson(dashboards.map(translate(_)(request))))
+  }
+  def dashBoardAll()= AuthenticatedAction() { implicit request =>
+    val dashboard =DashBoardGenerator.getDashBoardsForAll()
+    Ok(Json.toJson(translate(dashboard)(request)))
+  }
+  def dashBoard()= AuthenticatedAction() { implicit request =>
+    Ok(views.html.dashboard(request.user))
   }
 
 

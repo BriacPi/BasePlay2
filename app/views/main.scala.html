@@ -59,7 +59,7 @@
 
 
 <nav class="navbar navbar-default" role="navigation">
-    <div class="container">
+    <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -83,19 +83,15 @@
                     <li><a style="background-color: #253240; color :white;" onclick="href='/myprofile/@currentUser.id';">@Messages("user.profile")</a></li>
                     <li><a style="background-color: #253240; color :white;"  href="/logout">@Messages("menu.logout") @("("+currentUser.firstName+")")</a></li>
 
-
-
-
                 </ul>
         </div>
 
         <!-- the collapsing menu -->
         <div class="collapse navbar-collapse navbar-left"  id="navbar-collapse-1">
             <ul class="nav navbar-nav">
-
-
                 @if(selected =="d" ){<li class="active white">} else {<li>}<a href="/all">@Messages("menu.data")</a></li>
                 @if(selected =="t" ){<li class="active">}else {<li>}<a onclick="href='/owntasks';">@Messages("user.tasks")</a></li>
+                @if(selected =="cr" ){<li class="active">}else {<li>}<a onclick="href='/dashboard';">@Messages("dashboard.title")</a></li>
                 @if(selected =="u" ){<li class="dropdown active">} else {<li class="dropdown">}
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Messages("menu.users") <span class="glyphicon glyphicon-menu-down"></span></a>
                 <ul class="dropdown-menu"  style="background-color: #253240; color :white;">
