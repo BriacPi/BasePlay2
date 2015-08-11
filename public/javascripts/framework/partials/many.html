@@ -1,47 +1,60 @@
+
+    <ul class="breadcrumbcustom">
+      <li ng-repeat="crumb in breadCrumbs">
+         <a ng-href={{crumb.url}}>{{crumb.display}}</a>
+      </li>
+    </ul>
+
+
 <div class="background">
 
-    <div ng-repeat="dashboard in dashboards| orderBy:'-dashboard.numberOfUnsolvedAnomalies'" class="container fiche ficheContainer">
-        <div class="row separator pad"><h3 class="ficheTitle">{{dashboard.title}}</h3></div>
+    <div ng-repeat="dashboard in dashboards| orderBy:'-dashboard.numberOfUnsolvedAnomalies'"
+         class="container fiche ficheContainer">
+        <div class="row separator pad"><a ng-href={{dashboard.link}}> <h3 class="ficheTitle">{{dashboard.title}}</h3></a></div>
         <div class="row separator pad"><h4 class="ficheTotal">Nombre total d'anomalies: {{dashboard.numberOfRows}}</h4>
         </div>
-        <div class="row separator">
+        <div ng-if="dashboard.level!='pdv'" class="row separator">
 
-            <div class="row">
-                <div class="col-xs-6 ficheTop">
+
+                <div class="ficheTop">
                     <p> TOP 3 </p>
                     <ol>
 
                         <li ng-repeat="lign in dashboard.leaderboard | orderBy:'-numberOfUnsolvedAnomalies'| limitTo: 3">
-                            {{lign.name}} : {{lign.numberOfUnsolvedAnomalies}}
+                            <span class="leaderboard-line-name"> {{lign.name}}</span><!--
+                             --><span class="leaderboard-line-value">{{lign.numberOfUnsolvedAnomalies}}</span>
                         </li>
 
                     </ol>
                 </div>
-                <div class="col-xs-6 ficheDown">
+                <div class=" ficheDown">
                     <p> FLOP 3 </p>
                     <ol>
 
                         <li ng-repeat="lign in dashboard.leaderboard | orderBy:'numberOfUnsolvedAnomalies'| limitTo: 3">
-                            {{lign.name}} : {{lign.numberOfUnsolvedAnomalies}}
+                            <span class="leaderboard-line-name"> {{lign.name}}</span><!--
+                            --><span class="leaderboard-line-value">{{lign.numberOfUnsolvedAnomalies}}</span>
                         </li>
                     </ol>
                 </div>
-            </div>
+
 
         </div>
 
         <div class="row">
             <div class="col-xs-6">
                 <div class="titre">Etats des ruptures</div>
-                <c3chart bindto-id="{{'status'+$index}}" chart-data="dashboard.statusData" chart-columns="dashboard.statusColumns">
-                    <chart-legend show-legend="false" />
+                <c3chart bindto-id="{{'status'+$index}}" chart-data="dashboard.statusData"
+                         chart-columns="dashboard.statusColumns">
+                    <chart-legend show-legend="false"/>
                 </c3chart>
 
             </div>
             <div class="col-xs-6">
                 <div class="titre">Taux d'anormalité</div>
-                <c3chart bindto-id="{{'nature'+$index}}" chart-data="dashboard.natureData" chart-columns="dashboard.natureColumns">
-                    <chart-legend show-legend="false" />
+                <c3chart bindto-id="{{'nature'+$index}}" chart-data="dashboard.natureData"
+                         chart-columns="dashboard.natureColumns">
+                    <chart-legend show-legend="false"/>
                 </c3chart>
 
             </div>

@@ -80,35 +80,35 @@ object DashBoardGenerator {
     val statusChart = createStatusChart(suspectRows)
     val natureChart = createNatureChart(suspectRows)
 
-    DashBoard("Toutes les caisses",suspectRows.length,leaderBoard,statusChart,natureChart)
+    DashBoard("Toutes les caisses","all",suspectRows.length,leaderBoard,statusChart,natureChart)
   }
   def buildDashBoardForCaisse(suspectRows: List[SuspectRow]):DashBoard={
     val leaderBoard = createLeaderBoardForCaisse(suspectRows)
     val statusChart = createStatusChart(suspectRows)
     val natureChart = createNatureChart(suspectRows)
 
-    DashBoard(suspectRows.head.caisse,suspectRows.length,leaderBoard,statusChart,natureChart)
+    DashBoard(suspectRows.head.caisse,"caisse",suspectRows.length,leaderBoard,statusChart,natureChart)
   }
   def buildDashBoardForGroupe(suspectRows: List[SuspectRow]):DashBoard={
     val leaderBoard = createLeaderBoardForGroupe(suspectRows)
     val statusChart = createStatusChart(suspectRows)
     val natureChart = createNatureChart(suspectRows)
 
-    DashBoard(suspectRows.head.groupe,suspectRows.length,leaderBoard,statusChart,natureChart)
+    DashBoard(suspectRows.head.groupe,"groupe",suspectRows.length,leaderBoard,statusChart,natureChart)
   }
   def buildDashBoardForAgence(suspectRows: List[SuspectRow]):DashBoard={
     val leaderBoard = createLeaderBoardForAgence(suspectRows)
     val statusChart = createStatusChart(suspectRows)
     val natureChart = createNatureChart(suspectRows)
 
-    DashBoard(suspectRows.head.agence,suspectRows.length,leaderBoard,statusChart,natureChart)
+    DashBoard(suspectRows.head.agence,"agence",suspectRows.length,leaderBoard,statusChart,natureChart)
   }
   def buildDashBoardForPdv(suspectRows: List[SuspectRow]):DashBoard={
     val leaderBoard = createLeaderBoardForPdv(suspectRows)
     val statusChart = createStatusChart(suspectRows)
     val natureChart = createNatureChart(suspectRows)
 
-    DashBoard(suspectRows.head.pdv,suspectRows.length,leaderBoard,statusChart,natureChart)
+    DashBoard(suspectRows.head.pdv,"pdv",suspectRows.length,leaderBoard,statusChart,natureChart)
   }
 
   def createLeaderBoardForPdv( suspectRows:List[SuspectRow]):List[LeaderBoardLign] = {
@@ -136,14 +136,14 @@ object DashBoardGenerator {
     val groupedByStatus:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.status.toString)
     val chartAsMap= groupedByStatus.mapValues(suspectRows => suspectRows.length)
     val (labels,data) = chartAsMap.toList.sortBy(_._2).unzip
-    Chart(labels,data)
+    Chart(labels,data,List())
   }
 
   def createNatureChart(suspectRows:List[SuspectRow]): Chart ={
     val groupedByNature:Map[String,List[SuspectRow]]=suspectRows.groupBy(suspectRow => suspectRow.nature.toString)
     val chartAsMap=groupedByNature.mapValues(suspectRows => suspectRows.length)
     val (labels,data) = chartAsMap.toList.sortBy(_._2).unzip
-    Chart(labels,data)
+    Chart(labels,data,List())
   }
 
 }

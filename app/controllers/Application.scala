@@ -244,20 +244,32 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     Ok(Json.toJson(stateMessage))
   }
 
+    def translate[A](dashboard:DashBoard)(implicit request :Request[A]):DashBoard= {
+      dashboard.copy(statusChart=dashboard.statusChart.copy(labelsForDisplay=dashboard.statusChart.labels.map(Messages(_))),
+        natureChart=dashboard.natureChart.copy(labelsForDisplay=dashboard.natureChart.labels.map(Messages(_)))
+      )
+    }
+
+
   def dashBoardPdvs(caisse: String , groupe: String, agence: String )= AuthenticatedAction() { implicit request =>
-    Ok(Json.toJson(DashBoardGenerator.getDashBoardsForAgence(caisse, groupe, agence)))
+    val dashboards = DashBoardGenerator.getDashBoardsForAgence(caisse, groupe, agence)
+    Ok(Json.toJson(dashboards.map(translate(_)(request))))
   }
   def dashBoardAgences(caisse: String , groupe: String)= AuthenticatedAction() { implicit request =>
-    Ok(Json.toJson(DashBoardGenerator.getDashBoardsForGroupe(caisse, groupe)))
+    val dashboards =DashBoardGenerator.getDashBoardsForGroupe(caisse, groupe)
+    Ok(Json.toJson(dashboards.map(translate(_)(request))))
   }
   def dashBoardGroupes(caisse: String )= AuthenticatedAction() { implicit request =>
-    Ok(Json.toJson(DashBoardGenerator.getDashBoardsForCaisse(caisse)))
+    val dashboards =DashBoardGenerator.getDashBoardsForCaisse(caisse)
+    Ok(Json.toJson(dashboards.map(translate(_)(request))))
   }
   def dashBoardCaisses()= AuthenticatedAction() { implicit request =>
-    Ok(Json.toJson(DashBoardGenerator.getDashBoardsForAllCaisses()))
+    val dashboards =DashBoardGenerator.getDashBoardsForAllCaisses()
+    Ok(Json.toJson(dashboards.map(translate(_)(request))))
   }
   def dashBoardAll()= AuthenticatedAction() { implicit request =>
-    Ok(Json.toJson(DashBoardGenerator.getDashBoardsForAll()))
+    val dashboard =DashBoardGenerator.getDashBoardsForAll()
+    Ok(Json.toJson(translate(dashboard)(request)))
   }
   def dashBoard()= AuthenticatedAction() { implicit request =>
     Ok(views.html.dashboard(request.user))

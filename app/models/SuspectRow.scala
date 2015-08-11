@@ -17,31 +17,31 @@ import scala.language.postfixOps
 import scala.util.Try
 
 
-case class SuspectRowsForJSON(data:List[List[String]])
+case class SuspectRowsForJSON(data: List[List[String]])
 
 
 case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, agence: String, pdv: String,
-                      metric: String,metricName: String,value:Double, status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) {
+                      metric: String, metricName: String, value: Double, status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) {
 
   // Constructeurs
-  def this(date: java.time.LocalDate, caisse: String, groupe: String, agence: String, pdv: String, metric: String,metricName: String,value:Double,
+  def this(date: java.time.LocalDate, caisse: String, groupe: String, agence: String, pdv: String, metric: String, metricName: String, value: Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(0, date, caisse, groupe, agence, pdv, metric,metricName,value, status, nature, firstDate, admin, comment)
+    this(0, date, caisse, groupe, agence, pdv, metric, metricName, value, status, nature, firstDate, admin, comment)
 
-  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, agence: String, metric: String,metricName: String,value:Double,
+  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, agence: String, metric: String, metricName: String, value: Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(id: Long, date, caisse, groupe, agence, "Aggregated", metric,metricName,value, status, nature, firstDate, admin, comment)
+    this(id: Long, date, caisse, groupe, agence, "Aggregated", metric, metricName, value, status, nature, firstDate, admin, comment)
 
-  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, metric: String,metricName: String,value:Double,
+  def this(id: Long, date: java.time.LocalDate, caisse: String, groupe: String, metric: String, metricName: String, value: Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(id, date, caisse, groupe, "Aggregated", "Aggregated", metric,metricName,value, status, nature, firstDate, admin, comment)
+    this(id, date, caisse, groupe, "Aggregated", "Aggregated", metric, metricName, value, status, nature, firstDate, admin, comment)
 
-  def this(id: Long, date: java.time.LocalDate, caisse: String, metric: String,metricName: String,value:Double,
+  def this(id: Long, date: java.time.LocalDate, caisse: String, metric: String, metricName: String, value: Double,
            status: Status, nature: Nature, firstDate: java.time.LocalDate, admin: String, comment: String) =
-    this(id, date, caisse, "Aggregated", "Aggregated", "Aggregated", metric,metricName,value, status, nature, firstDate, admin, comment)
+    this(id, date, caisse, "Aggregated", "Aggregated", "Aggregated", metric, metricName, value, status, nature, firstDate, admin, comment)
 
-  def this(row: Row, metric: String,map:Metrics) =
-    this(0, row.date, row.dimensions.head, row.dimensions(1), row.dimensions(2), row.dimensions(3), metric,map.metrics(metric).label,row.metric, Status.DetectedOnly, Nature.NotSpecified, java.time.LocalDate.now, "", "")
+  def this(row: Row, metric: String, map: Metrics) =
+    this(0, row.date, row.dimensions.head, row.dimensions(1), row.dimensions(2), row.dimensions(3), metric, map.metrics(metric).label, row.metric, Status.DetectedOnly, Nature.NotSpecified, java.time.LocalDate.now, "", "")
 
   //Methodes
   def isAbnormal: Boolean = this.nature match {
@@ -53,8 +53,9 @@ case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, group
   def reasonsForDetection: List[ReasonForDetection] = {
     ReasonForDetection.getReasonsForDetection(id)
   }
-  def withMetricName(myMap:Map[String,String]): SuspectRow ={
-    this.copy( metric= myMap(this.metric))
+
+  def withMetricName(myMap: Map[String, String]): SuspectRow = {
+    this.copy(metric = myMap(this.metric))
   }
 
 }
@@ -76,8 +77,8 @@ object SuspectRow {
       get[String]("admin") ~
       get[String]("comment") ~
       get[String]("date") map {
-      case id ~ caisse ~ groupe ~ agence ~ pdv ~ metric~ metricName~value ~ status ~ nature ~ firstDate ~ admin ~ comment ~ date =>
-        SuspectRow(id, java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric,metricName,value, Status.withName(status),
+      case id ~ caisse ~ groupe ~ agence ~ pdv ~ metric ~ metricName ~ value ~ status ~ nature ~ firstDate ~ admin ~ comment ~ date =>
+        SuspectRow(id, java.time.LocalDate.parse(date), caisse, groupe, agence, pdv, metric, metricName, value, Status.withName(status),
           Nature.withName(nature), java.time.LocalDate.parse(firstDate), admin, comment)
     }
   }
@@ -123,16 +124,16 @@ object SuspectRow {
     DB.withConnection {
       implicit c =>
         SQL("select * from suspect_rows where status = {status}").on('status -> status.toString).as(suspectRows *)
-    }.filter ( suspectRow =>
+    }.filter(suspectRow =>
       metrics.contains(suspectRow.metric)
     ).filter(suspectRow =>
       suspectRow.date.isAfter(java.time.LocalDate.parse("2013-12-31"))
       )
   }
 
-  def filterByMetrics():List[SuspectRow]={
+  def filterByMetrics(): List[SuspectRow] = {
     val metrics = MetricRepository.listCodes()
-    all().filter ( suspectRow =>
+    all().filter(suspectRow =>
       metrics.contains(suspectRow.metric)
     ).filter(suspectRow =>
       suspectRow.date.isAfter(java.time.LocalDate.parse("2013-12-31"))
@@ -156,10 +157,11 @@ object SuspectRow {
       'id -> id
     ).as(suspectRows.singleOpt)
   }
-  def findByAdmin (admin : String): List[SuspectRow] = DB.withConnection{
+
+  def findByAdmin(admin: String): List[SuspectRow] = DB.withConnection {
     implicit c =>
       SQL("select * from suspect_rows where admin={admin}").on(
-      'admin -> admin
+        'admin -> admin
       ).as(suspectRows *)
   }
 
@@ -185,8 +187,8 @@ object SuspectRow {
     }
   }
 
-  def edit(id:Long,newAdmin: String, newComment: String,newNature: Nature, newStatus: Status) = {
-    DB.withTransaction(){
+  def edit(id: Long, newAdmin: String, newComment: String, newNature: Nature, newStatus: Status) = {
+    DB.withTransaction() {
       implicit c =>
         SQL("update suspect_rows set   admin = {admin}, comment = {comment}, nature = {nature}, status = {status} where id = {id}").on(
           'id -> id,
@@ -200,7 +202,7 @@ object SuspectRow {
   }
 
 
-  def editNature(id:Long, newNature: Nature) = {
+  def editNature(id: Long, newNature: Nature) = {
     DB.withConnection {
       implicit c =>
         SQL("update suspect_rows set  nature = {nature} where id = {id}").on(
@@ -210,8 +212,8 @@ object SuspectRow {
     }
   }
 
-  def editAdmin(id:Long, newAdmin: String) = {
-    DB.withTransaction(){
+  def editAdmin(id: Long, newAdmin: String) = {
+    DB.withTransaction() {
       implicit c =>
         SQL("update suspect_rows set  admin = {admin} where id = {id}").on(
           'id -> id,
@@ -220,7 +222,7 @@ object SuspectRow {
     }
   }
 
-  def editComment(id:Long, newComment: String) = {
+  def editComment(id: Long, newComment: String) = {
     DB.withConnection {
       implicit c =>
         SQL("update suspect_rows set  comment = {comment} where id = {id}").on(
@@ -230,11 +232,11 @@ object SuspectRow {
     }
   }
 
-  def editStatus(id:Long, newStatus: Status) = {
+  def editStatus(id: Long, newStatus: Status) = {
     DB.withConnection {
       implicit c =>
         SQL("update suspect_rows set  status = {status} where id = {id}").on(
-          'id ->id,
+          'id -> id,
           'status -> newStatus.toString
         ).executeUpdate()
     }
