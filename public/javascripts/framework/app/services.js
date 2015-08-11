@@ -13,7 +13,7 @@ dashBoardApp.factory('dashboardsTransformations', ['$routeParams',
         }else if (dashboard.level=="agence") {
             link= "dashboard#/dashboard/caisse/"+$routeParams.caisse+"/groupe/"+$routeParams.groupe+"/agence/"+dashboard.title
         }else if (dashboard.level=="pdv") {
-            link= "dashboard#/dashboard/caisse/"+$routeParams.caisse+"/groupe/"+$routeParams.roupe+"/agence/"+$routeParams.agence+"/pdv/"+dashboard.title
+            link= "dashboard#/tiles/caisse/"+$routeParams.caisse+"/groupe/"+$routeParams.groupe+"/agence/"+$routeParams.agence+"/pdv/"+dashboard.title
         }
 
 
@@ -71,7 +71,7 @@ dashBoardApp.factory('breadCrumbs', ['$routeParams',
                         ,display:$routeParams.agence})
              }
              if (level=="pdv") {
-                        breadCrumbs.push({url:"dashboard#/dashboard/caisse/"+$routeParams.caisse+
+                        breadCrumbs.push({url:"dashboard#/tiles/caisse/"+$routeParams.caisse+
                         "/groupe/"+$routeParams.groupe+
                         "/agence/"+$routeParams.agence+
                         "/pdv/"+$routeParams.pdv
@@ -82,3 +82,21 @@ dashBoardApp.factory('breadCrumbs', ['$routeParams',
     }
 } }
  ]);
+
+ dashBoardApp.factory('tilesTransformations', ['$routeParams',
+   function($routeParams){
+     return {
+        transformTiles : function(tiles){
+            if (navigator.language == 'fr'){var language ='fr'} else {var language ='en'}
+
+            return tiles.map(function(tile){
+             var value = sprintf(language)(tile.format, tile.value);
+             return {
+                metricName:tile.metricName,
+                date:tile.date,
+                value:value
+             }
+         });
+        }
+     };
+   }]);

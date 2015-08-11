@@ -126,8 +126,6 @@ object SuspectRow {
         SQL("select * from suspect_rows where status = {status}").on('status -> status.toString).as(suspectRows *)
     }.filter(suspectRow =>
       metrics.contains(suspectRow.metric)
-    ).filter(suspectRow =>
-      suspectRow.date.isAfter(java.time.LocalDate.parse("2013-12-31"))
       )
   }
 
@@ -135,11 +133,21 @@ object SuspectRow {
     val metrics = MetricRepository.listCodes()
     all().filter(suspectRow =>
       metrics.contains(suspectRow.metric)
-    ).filter(suspectRow =>
-      suspectRow.date.isAfter(java.time.LocalDate.parse("2013-12-31"))
-      )
-
+    )
   }
+
+  def filterByPdv(caisse: String, groupe: String, agence: String, pdv: String): List[SuspectRow] = DB.withConnection { implicit c =>
+    val metrics = MetricRepository.listCodes()
+    SQL("select * from suspect_rows where   caisse = {caisse} and groupe = {groupe} and agence ={agence} and pdv ={pdv} ").on(
+      'caisse -> caisse,
+      'groupe -> groupe,
+      'agence -> agence,
+      'pdv -> pdv
+    ).as(suspectRows *).filter(suspectRow =>
+      metrics.contains(suspectRow.metric)
+      )
+  }
+
 
   def findByKey(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Option[SuspectRow] = DB.withConnection { implicit c =>
     SQL("select * from suspect_rows where date={date} and caisse = {caisse} and groupe = {groupe} and agence ={agence} and pdv ={pdv} and metric = {metric}").on(

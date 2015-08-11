@@ -179,11 +179,12 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       case "mytasks" => SuspectRow.findByAdmin(request.user.email)
       case _ => List.empty[SuspectRow]
     }
-
-
     Ok(Json.toJson(suspectRows))
-
   }
+  def sendTiles(caisse:String,groupe:String,agence:String,pdv:String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
+    Ok(Json.toJson(SuspectRow.filterByPdv(caisse,groupe,agence,pdv)))
+  }
+
   implicit val metricsWrites = new Writes[MetricsForJSON] {
     def writes(metricsForJSON: MetricsForJSON) = Json.obj(
       "data" -> metricsForJSON.data

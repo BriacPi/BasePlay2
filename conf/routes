@@ -50,3 +50,5 @@ GET /dashboard_data/all_caisses                                                 
 GET /dashboard_data/all                                                              controllers.Application.dashBoardAll()
 
 GET /dashboard                                                                       controllers.Application.dashBoard()
+
+GET /tiles/caisse/:caisse/groupe/:groupe/agence/:agence/pdv/:pdv                     controllers.Application.sendTiles(caisse:String,groupe:String,agence:String,pdv:String)

@@ -76,25 +76,13 @@ dashBoardApp.controller('dashBoardAgenceCtrl', ['$scope', '$routeParams','$http'
       $scope.breadCrumbs= breadCrumbs.getBreadCrumbs("agence")
     }]);
 
-dashBoardApp.controller('dashBoardPdvCtrl', ['$scope', '$routeParams','$http','dashboardsTransformations','breadCrumbs',
-  function($scope, $routeParams, $http,dashboardsTransformations,breadCrumbs) {
-    $scope.dashboard = {};
 
-    $scope.dashboard.natureData = [];
-    $scope.dashboard.natureColumns = [{type:'donut'}];
-    $scope.dashboard.statusData = [];
-    $scope.dashboard.statusColumns = [{type:'donut'}];
-    $http.get('dashboard_data/caisse/'+$routeParams.caisse+'/groupe/'+$routeParams.groupe+'/agence/'+$routeParams.agence+'/pdv/'+$routeParams.pdv).success(function(data) {
-        $scope.dashboards = dashboardsTransformations.transformDashboards(data);
-      });
-      $scope.breadCrumbs= breadCrumbs.getBreadCrumbs("pdv")
-    }]);
-
-dashBoardApp.controller('tilesCtrl', ['$scope', '$routeParams','$http',
-  function($scope, $routeParams, $http) {
+dashBoardApp.controller('tilesCtrl', ['$scope', '$routeParams','$http','breadCrumbs','tilesTransformations',
+  function($scope, $routeParams, $http,breadCrumbs,tilesTransformations) {
       $http.get('tiles/caisse/'+$routeParams.caisse+'/groupe/'+$routeParams.groupe+'/agence/'+$routeParams.agence+'/pdv/'+$routeParams.pdv).success(function(data) {
-        $scope.tiles = data;
+        $scope.tiles = tilesTransformations.transformTiles(data);
       });
+       $scope.breadCrumbs= breadCrumbs.getBreadCrumbs("pdv")
     }]);
 
 
