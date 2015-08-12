@@ -7,15 +7,13 @@
 </div>
 
 <div class="background">
-
     <div ng-repeat="dashboard in dashboards| orderBy:'-numberOfRows'"
          class="container fiche ficheContainer">
         <div class="row separator pad">
-
             <h3 class="ficheTitle">
                 <a ng-href={{dashboard.linkTitle}}>
-            {{dashboard.title}}
-                 </a>
+                    {{dashboard.title}}
+                </a>
             </h3>
         </div>
         <div class="row separator pad"><h4 class="ficheTotal">Nombre total d'anomalies: {{dashboard.numberOfRows}}</h4>

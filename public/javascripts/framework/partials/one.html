@@ -6,14 +6,13 @@
     </ul>
 </div>
 
-
 <div class="background">
-
+    
     <div class="container fiche-unique ficheContainer-unique">
         <div class="row separator pad">
             <h3 class="ficheTitle">
                 <a href="dashboard#/dashboard/all_caisses">
-                     {{dashboard.title}}
+                    {{dashboard.title}}
                 </a>
             </h3>
         </div>
@@ -21,33 +20,33 @@
         </div>
         <div class="row separator">
 
-            <div class="row">
-                <div class="col-xs-6 ficheTop">
-                    <p class="top-bottom"> TOP 3 : Anomalies non résolues</p>
-                    <ol>
 
-                        <li ng-repeat="lign in dashboard.leaderboard | orderBy:'-numberOfUnsolvedAnomalies'| limitTo: 3">
-                            <a ng-href={{lign.link}}>
-                                <span class="leaderboard-line-name"> {{lign.name}}</span><!--
+            <div class="ficheTop">
+                <p class="top-bottom"> TOP 3 : Anomalies non résolues</p>
+                <ol>
+
+                    <li ng-repeat="lign in dashboard.leaderboard | orderBy:'-numberOfUnsolvedAnomalies'| limitTo: 3">
+                        <a ng-href={{lign.link}}>
+                            <span class="leaderboard-line-name"> {{lign.name}}</span><!--
                              --><span class="leaderboard-line-value">{{lign.numberOfUnsolvedAnomalies}}</span>
-                            </a>
-                        </li>
+                        </a>
+                    </li>
 
-                    </ol>
-                </div>
-                <div class="col-xs-6 ficheDown">
-                    <p class="top-bottom"> BOTTOM 3 : Anomalies non résolues</p>
-                    <ol>
-
-                        <li ng-repeat="lign in dashboard.leaderboard | orderBy:'numberOfUnsolvedAnomalies'| limitTo: 3">
-                            <a ng-href="{{lign.link}}">
-                                <span class="leaderboard-line-name"> {{lign.name}}</span><!--
-                             --><span class="leaderboard-line-value">{{lign.numberOfUnsolvedAnomalies}}</span>
-                            </a>
-                        </li>
-                    </ol>
-                </div>
+                </ol>
             </div>
+            <div class="ficheDown">
+                <p class="top-bottom"> BOTTOM 3 : Anomalies non résolues</p>
+                <ol>
+
+                    <li ng-repeat="lign in dashboard.leaderboard | orderBy:'numberOfUnsolvedAnomalies'| limitTo: 3">
+                        <a ng-href="{{lign.link}}">
+                            <span class="leaderboard-line-name"> {{lign.name}}</span><!--
+                             --><span class="leaderboard-line-value">{{lign.numberOfUnsolvedAnomalies}}</span>
+                        </a>
+                    </li>
+                </ol>
+            </div>
+
 
         </div>
 
