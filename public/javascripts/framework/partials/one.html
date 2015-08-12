@@ -18,7 +18,7 @@
 
             <div class="row">
                 <div class="col-xs-6 ficheTop">
-                    <p> TOP 3 : Anomalies non résolues</p>
+                    <p class="top-bottom"> TOP 3 : Anomalies non résolues</p>
                     <ol>
 
                         <li ng-repeat="lign in dashboard.leaderboard | orderBy:'-numberOfUnsolvedAnomalies'| limitTo: 3">
@@ -28,7 +28,7 @@
                     </ol>
                 </div>
                 <div class="col-xs-6 ficheDown">
-                    <p> FLOP 3 : Anomalies non résolues</p>
+                    <p class="top-bottom"> BOTTOM 3 : Anomalies non résolues</p>
                     <ol>
 
                         <li ng-repeat="lign in dashboard.leaderboard | orderBy:'numberOfUnsolvedAnomalies'| limitTo: 3">

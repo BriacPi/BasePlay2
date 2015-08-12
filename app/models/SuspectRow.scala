@@ -57,10 +57,11 @@ case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, group
   def withMetricName(myMap: Map[String, String]): SuspectRow = {
     this.copy(metric = myMap(this.metric))
   }
-  def format:String = {
+
+  def format: String = {
     MetricRepository.findByCode(this.metric) match {
       case None => ".d"
-      case Some(metric:CodeMetric)=> metric.format
+      case Some(metric: CodeMetric) => metric.format
     }
   }
 
@@ -90,7 +91,9 @@ object SuspectRow {
   }
 
   def all(): List[SuspectRow] = DB.withConnection { implicit c =>
-    SQL("select * from suspect_rows order by date").as(suspectRows *)
+    val metrics = MetricRepository.listCodes()
+    SQL("select * from suspect_rows order by date").as(suspectRows *).filter(suspectRow =>
+      metrics.contains(suspectRow.metric))
   }
 
 
@@ -135,12 +138,6 @@ object SuspectRow {
       )
   }
 
-  def filterByMetrics(): List[SuspectRow] = {
-    val metrics = MetricRepository.listCodes()
-    all().filter(suspectRow =>
-      metrics.contains(suspectRow.metric)
-    )
-  }
 
   def filterByPdv(caisse: String, groupe: String, agence: String, pdv: String): List[SuspectRow] = DB.withConnection { implicit c =>
     val metrics = MetricRepository.listCodes()

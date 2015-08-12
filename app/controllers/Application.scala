@@ -175,7 +175,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
 
   def sendData(parameter: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val suspectRows = parameter match {
-      case "all" => SuspectRow.filterByMetrics()
+      case "all" => SuspectRow.all()
       case "mytasks" => SuspectRow.findByAdmin(request.user.email)
       case _ => List.empty[SuspectRow]
     }
