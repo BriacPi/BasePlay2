@@ -10,9 +10,16 @@
     <div ng-repeat="tile in tiles|orderBy:'-date'" class="tile not-separator tile--width-1 tile--height-1 forcontrolroom">
         <div class="tile__content">
             <a class="black" style="background-color :white; padding :20px" href="/row/{{tile.id}}">
-                <div class="tile__content__title">
-                    <span class="tile__content__title__icon"><i class="fa fa-calendar"></i></span>
-                    <h5 class="tile__content__title__text" style="color :#00C5A2">{{tile.date}}</h5>
+                <div ng-switch="tile.status" class="tile__content__title">
+                    <div ng-switch-when="Solved">
+                        <span class="tile__content__title__icon_status"><i class="fa fa-check"></i></span>
+                        <h5 class="tile__content__title__text" style="color :#00C5A2">{{tile.date}}</h5>
+                    </div>
+                    <div ng-switch-default>
+                        <span class="tile__content__title__icon_status"><i class="fa fa-times"></i></span>
+                        <h5 class="tile__content__title__text" style="color :#00C5A2">{{tile.date}}</h5>
+                    </div>
+
                 </div>
                 <div class="tile__content__data tile__content__data--numeric">
                     <div class="tile__content__data__metrics">
