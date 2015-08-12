@@ -4,9 +4,7 @@
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET  /row/:date/:caisse/:groupe/:agence/:pdv/:metric                                 controllers.Application.find(date : String,caisse : String, groupe : String, agence :String,pdv :String,metric :String)
 GET  /row/:id                                                                        controllers.Application.findWithId(id:Long)
-GET  /edition/:id                                                                    controllers.Application.edit(id:Long)
 POST /update/:id                                                                     controllers.Application.saveEdition(id:Long)
 GET  /all                                                                            controllers.Application.allData()
 GET  /data/:parameter                                                                controllers.Application.sendData(parameter:String)

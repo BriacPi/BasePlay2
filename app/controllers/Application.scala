@@ -78,25 +78,8 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   //    Ok(views.html.detectedOnly(SuspectRow.filterByStatus(models.Status.DetectedOnly)))
   //  }
 
-  def find(date: String, caisse: String, groupe: String, agence: String, pdv: String, metric: String): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    val optionOfSuspectRow = SuspectRow.findByKey(date, caisse, groupe, agence, pdv, metric)
-    optionOfSuspectRow match {
-      case Some(e) => Ok(views.html.suspectRow(e, request.user))
-      case None => Ok(views.html.data( request.user))
-    }
-  }
 
   def findWithId(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
-    val optionOfSuspectRow = SuspectRow.findById(id)
-    optionOfSuspectRow match {
-      case Some(e) =>
-        val filledForm = editionForm.fill(EditionValues(e.admin, e.comment, e.nature.toString, e.status.toString))
-        Ok(views.html.edit(e,e.format, filledForm, request.user))
-      case None => Ok(views.html.data( request.user))
-    }
-  }
-
-  def edit(id: Long): Action[AnyContent] = AuthenticatedAction() { implicit request =>
     val optionOfSuspectRow = SuspectRow.findById(id)
     optionOfSuspectRow match {
       case Some(e) =>
@@ -112,7 +95,9 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       errors => Ok(views.html.data( request.user)),
       l => {
         SuspectRow.edit(id, l.admin, l.comment, models.Nature.withName(l.nature), models.Status.withName(l.status))
-        Redirect(routes.Application.findWithId(id))
+        Redirect(routes.Application.findWithId(id))flashing(
+          "success" -> "edit.success"
+          )
       }
     )
   }

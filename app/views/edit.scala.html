@@ -1,5 +1,5 @@
 @import models.authentication.User
-@(suspectRow:SuspectRow,formatDa:String,editionValues:Form[EditionValues],currentUser :User)(implicit lang:Lang)
+@(suspectRow:SuspectRow,formatDa:String,editionValues:Form[EditionValues],currentUser :User)(implicit lang:Lang, flash: Flash)
 
 
 @import helper._
@@ -13,14 +13,16 @@
 
 @helper.form(action = routes.Application.saveEdition(suspectRow.id)) {
 
-<section id="pricing-table" style="margin: auto;margin-left: 20%;">
+<section id="pricing-table" style="margin: auto;">
     <div class="container">
         <div class="row">
             <div class="pricing">
 
-                <div class="col-md-4 col-sm-12 col-xs-12">
+                <div class="col-md-6 col-sm-12 col-xs-12">
                     <div class="pricing-table">
+                        <div>
 
+                        </div>
 
                         <div class="pricing-list">
                             <ul>
@@ -57,7 +59,7 @@
 
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-12 col-xs-12">
+                <div class="col-md-6 col-sm-12 col-xs-12">
                     <div class="pricing-table">
 
 
@@ -65,7 +67,7 @@
                             <ul>
 
 
-                                <li><i class="fa fa-question"></i>
+                                <li>
                                     @inputRadioGroup(
                                     editionValues("nature"),
                                     options =
@@ -73,7 +75,7 @@
                                     "NotAbnormality"-> Messages("NotAbnormality")),
                                     '_label -> Messages("field.nature"),'required -> Messages("input.required"))
                                 </li>
-                                <li><i class="fa fa-wrench"></i>
+                                <li>
                                     @inputRadioGroup(
                                     editionValues("status"),
                                     options =
@@ -81,22 +83,31 @@
                                     "DetectedOnly"-> Messages("DetectedOnly")),
                                     '_label -> Messages("field.status"),'required -> Messages("input.required"))
                                 </li>
-                                <li><i class="fa fa-pencil"></i><span> @inputText(editionValues("comment"), '_label ->
-                                    Messages("field.comment"))</span>
+                                <li> @inputText(editionValues("comment"), '_label ->
+                                    Messages("field.comment"))
                                 </li>
-                                <li><i class="fa fa-user"></i><span>@inputText(editionValues("admin"), '_label ->
-                                    Messages("field.admin"))</span>
+                                <li>@inputText(editionValues("admin"), '_label ->
+                                    Messages("field.admin"))
                                 </li>
                                 <li><input type="submit" class="btn btn-custom" value="Sauvegarder"
-                                           style=" color: white;background-color: #253240;border-color: white;"></li>
+                                           style=" color: white;background-color: #253240;border-color: white;">
+
+
+                                           </li>
+
+
+
 
                             </ul>
+
                         </div>
 
                     </div>
                 </div>
             </div>
+
         </div>
+        <span class="edition-message"> @Messages(flash.get("success").getOrElse("")) </span>
     </div>
 </section>
 

@@ -99,4 +99,6 @@ edit.edit = Editer
 
 dashboard.title = Centre de contrôle
 
+edit.success= Modifications sauvegardées.
+
 
