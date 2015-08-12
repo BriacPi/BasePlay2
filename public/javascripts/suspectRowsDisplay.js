@@ -13,6 +13,7 @@ $(document).ready(function () {
         var items = rows.map(function(row){
         if (navigator.language == 'fr'){var language ='fr'} else {var language ='en'}
         var value = sprintf(language)(row.format, row.value);
+        if (row.statusCode=="Solved") {var icon ="check"} else {var icon ="times"}
 
             return $('<div class="tile not-separator tile--width-1 tile--height-1'
                     +'" data-status="' + row.status
@@ -27,7 +28,7 @@ $(document).ready(function () {
                     +'<div class="tile__content">'
                     +   ' <a class="black" style="background-color :white; padding :20px" href="/row/'+row.id+'">'
                     +       '<div class="tile__content__title">'
-                    +           '<span class="tile__content__title__icon"><i class="fa fa-calendar"></i></span>'
+                    +           '<span class="tile__content__title__icon_status"><i class="fa fa-'+icon+'"></i></span>'
                     +           '<h5 class="tile__content__title__text" style="color :#00C5A2" >'+row.date+'</h5> '
                     +        '</div>'
                     +        '<div class="tile__content__data tile__content__data--numeric">'
