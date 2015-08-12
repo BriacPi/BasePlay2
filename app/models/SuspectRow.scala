@@ -8,7 +8,7 @@ import play.api.Play.current
 import play.api.db.DB
 
 import play.api.i18n.Messages
-import repositories.MetricRepository
+import repositories.{CodeMetric, MetricRepository}
 
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
@@ -56,6 +56,12 @@ case class SuspectRow(id: Long, date: java.time.LocalDate, caisse: String, group
 
   def withMetricName(myMap: Map[String, String]): SuspectRow = {
     this.copy(metric = myMap(this.metric))
+  }
+  def format:String = {
+    MetricRepository.findByCode(this.metric) match {
+      case None => ".d"
+      case Some(metric:CodeMetric)=> metric.format
+    }
   }
 
 }

@@ -91,7 +91,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     optionOfSuspectRow match {
       case Some(e) =>
         val filledForm = editionForm.fill(EditionValues(e.admin, e.comment, e.nature.toString, e.status.toString))
-        Ok(views.html.edit(e, filledForm, request.user))
+        Ok(views.html.edit(e,e.format, filledForm, request.user))
       case None => Ok(views.html.data( request.user))
     }
   }
@@ -101,7 +101,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
     optionOfSuspectRow match {
       case Some(e) =>
         val filledForm = editionForm.fill(EditionValues(e.admin, e.comment, e.nature.toString, e.status.toString))
-        Ok(views.html.edit(e, filledForm, request.user))
+        Ok(views.html.edit(e,e.format, filledForm, request.user))
       case None => Ok(views.html.data( request.user))
     }
   }

@@ -7,7 +7,6 @@
 @import play.api.i18n.Messages.Implicits._
 
 
-
 @main(Messages("home.header"))("c")(currentUser){
 <div class="page-header" style="margin-left:1em;">
     <h1>@Messages("metric.title")</h1>
@@ -17,7 +16,7 @@
 
     <form action="@routes.Application.data()" method="get" style="margin-left:1em;">
 
-        <input type="submit" value=@Messages("menu.refresh") >
+        <input type="submit" value=@Messages("menu.refresh")>
     </form>
 </div>
 
@@ -45,7 +44,8 @@
 
 
             } );
-</script>
+
+        </script>
 
         <table id="MetricsUnused" class="display" cellspacing="0" width="99%" style="margin-left:0.5em;">
             <thead>
@@ -58,17 +58,16 @@
             </thead>
 
 
-
         </table>
-        <div class ="margin"></div>
+        <div class="margin"></div>
 
 
     </div>
-<div class="col-md-6">
-    <div class="page-header" style="margin-left:1em;">
-        <h2>@Messages("metric.used")</h2>
-    </div>
-    <script type="text/javascript" class="init">
+    <div class="col-md-6">
+        <div class="page-header" style="margin-left:1em;">
+            <h2>@Messages("metric.used")</h2>
+        </div>
+        <script type="text/javascript" class="init">
             $(document).ready(function() {
 	        oTable=$('#MetricsUsed').DataTable(
 	        {    "ajax": '../configuration/used',
@@ -85,24 +84,24 @@
             }
 	        );
             } );
-</script>
 
-    <table id="MetricsUsed" class="display" cellspacing="0" width="99%">
-        <thead>
-        <tr>
+        </script>
 
-            <th>@Messages("metric.metric")</th>
-            <th>@Messages("metric.name")</th>
+        <table id="MetricsUsed" class="display" cellspacing="0" width="99%">
+            <thead>
+            <tr>
 
-
-        </tr>
-        </thead>
+                <th>@Messages("metric.metric")</th>
+                <th>@Messages("metric.name")</th>
 
 
-    </table>
+            </tr>
+            </thead>
+
+
+        </table>
+    </div>
 </div>
-</div>
-
 
 
 }

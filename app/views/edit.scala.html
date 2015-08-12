@@ -1,5 +1,5 @@
 @import models.authentication.User
-@(suspectRow:SuspectRow,editionValues:Form[EditionValues],currentUser :User)(implicit lang:Lang)
+@(suspectRow:SuspectRow,formatDa:String,editionValues:Form[EditionValues],currentUser :User)(implicit lang:Lang)
 
 
 @import helper._
@@ -9,131 +9,10 @@
 
 
 @main(Messages("home.header"))("")(currentUser) {
-<!--<div class="page-header" style="margin-left:1em;">
-    <h1>@Messages("home.title")</h1>
-</div>
-<ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" ><a href="/detected">@Messages("home.header.detectedOnly")</a></li>
-    <li role="presentation" ><a href="/processed">@Messages("home.header.beingProcessed")</a></li>
-    <li role="presentation" ><a href="/solved">@Messages("home.header.solved")</a></li>
-</ul>
-
-
-<div class="col-md-6" style="margin-left:1em;">
-
-    @form(routes.Application.saveEdition(suspectRow.id)) {
-    <table class="table table-striped" class="display" cellspacing="10" width="100%">
-        <thead>
-        <tr>
-            <th>@Messages("sr.parameters")</th>
-            <th>@Messages("sr.values")</th>
-            <th>@Messages("sr.edition")</th>
-        </tr>
-        </thead>
-        <tbody>
-
-
-        <tr>
-            <th>@Messages("field.dates")</th>
-            <td>@suspectRow.date</td>
-            <td></td>
-        </tr>
-        <tr>
-            <th>@Messages("field.caisse")</th>
-            <td>@suspectRow.caisse</td>
-            <td></td>
-        </tr>
-        <tr>
-            <th>@Messages("field.groupe")</th>
-            <td>@suspectRow.groupe</td>
-            <td></td>
-        </tr>
-        <tr>
-            <th>@Messages("field.agence")</th>
-            <td>@suspectRow.agence</td>
-            <td></td>
-        </tr>
-        <tr>
-            <th>@Messages("field.pdv")</th>
-            <td>@suspectRow.pdv</td>
-            <td></td>
-        </tr>
-        <tr>
-            <th>@Messages("field.metric")</th>
-            <td>@suspectRow.metricName</td>
-            <td></td>
-        </tr>
-        <tr>
-            <th>@Messages("field.value")</th>
-            <td>@Math.ceil(suspectRow.value)</td>
-            <td></td>
-        </tr>
-        <tr>
-            <th>@Messages("field.nature")</th>
-            <td>@Messages(suspectRow.nature.toString)</td>
-            <td>
-
-                @inputRadioGroup(
-                editionValues("nature"),
-                options = Seq("NotSpecified"->Messages("NotSpecified"),"Abnormality"->Messages("Abnormality"), "NotAbnormality"-> Messages("NotAbnormality")),
-                '_label -> Messages("field.nature"),'required -> Messages("input.required"))
-
-                </td>
-        </tr>
-        <tr>
-            <th>@Messages("field.detectionDate")</th>
-            <td>@suspectRow.firstDate</td>
-            <td></td>
-        </tr>
-        <tr>
-            <th>@Messages("field.status")</th>
-            <td>@Messages(suspectRow.status.toString)</td>
-            <td>
-
-                @inputRadioGroup(
-                editionValues("status"),
-                options = Seq("Solved"->Messages("Solved"),"BeingProcessed"->Messages("BeingProcessed"), "DetectedOnly"-> Messages("DetectedOnly")),
-                '_label -> Messages("field.status"),'required -> Messages("input.required"))
-
-
-                </td>
-        </tr>
-        <tr>
-            <th>@Messages("field.comment")</th>
-            <td>@suspectRow.comment</td>
-            <td>
-
-                @inputText(editionValues("comment"), '_label -> Messages("field.comment"))
-
-                </td>
-        </tr>
-        <tr>
-            <th>@Messages("field.admin")</th>
-            <td>@suspectRow.admin</td>
-            <td>
-
-                @inputText(editionValues("admin"), '_label -> Messages("field.admin"))
-
-                </td>
-        </tr>
-        <tr>
-            <th>@Messages("field.reasonsForDetection")</th>
-            <td>@suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</td>
-            <td></td>
-        </tr>
-
-        </tbody>
-    </table>
-
-
-</div>
-<div>
-
-    <input type="submit" value=@Messages("edit.save")>}
-
-</div>-->
+<script src="@routes.Assets.versioned("javascripts/editDisplayValue.js")" type="text/javascript"></script>
 
 @helper.form(action = routes.Application.saveEdition(suspectRow.id)) {
+
 <section id="pricing-table" style="margin: auto;margin-left: 20%;">
     <div class="container">
         <div class="row">
@@ -145,27 +24,30 @@
 
                         <div class="pricing-list">
                             <ul>
-                                <li><i class="fa fa-calendar-times-o" style ="padding-left :10px;"></i>@Messages("field.dates")<span> @suspectRow.date</span>
+                                <li><i class="fa fa-calendar-times-o" style="padding-left :10px;"></i>@Messages("field.dates")<span> @suspectRow.date</span>
                                 </li>
-                                <li><i class="fa fa-university" style ="padding-left :10px;"></i>@Messages("field.caisse")
+                                <li><i class="fa fa-university" style="padding-left :10px;"></i>@Messages("field.caisse")
                                     <span> @suspectRow.caisse</span>
                                 </li>
-                                <li><i class="fa fa-university" style ="padding-left :10px;"></i>@Messages("field.groupe") <span> @suspectRow.groupe</span>
+                                <li><i class="fa fa-university" style="padding-left :10px;"></i>@Messages("field.groupe")
+                                    <span> @suspectRow.groupe</span>
                                 </li>
-                                <li><i class="fa fa-university" style ="padding-left :10px;"></i>@Messages("field.agence")
-                                   <span> @suspectRow.agence</span>
+                                <li><i class="fa fa-university" style="padding-left :10px;"></i>@Messages("field.agence")
+                                    <span> @suspectRow.agence</span>
                                 </li>
-                                <li><i class="fa fa-university" style ="padding-left :10px;"></i>@Messages("field.pdv") <span> @suspectRow.pdv</span>
+                                <li><i class="fa fa-university" style="padding-left :10px;"></i>@Messages("field.pdv")
+                                    <span> @suspectRow.pdv</span>
                                 </li>
-                                <li><i class="fa fa-tag" style ="padding-left :10px;"></i>@Messages("field.metric")
+                                <li><i class="fa fa-tag" style="padding-left :10px;"></i>@Messages("field.metric")
                                     <span> @suspectRow.metric</span>
                                 </li>
-                                <li><i class="fa fa-signal" style ="padding-left :10px;"></i>@Messages("field.value") <span> @Math.ceil(suspectRow.value)</span>
+                                <li><i class="fa fa-signal" style="padding-left :10px;"></i>@Messages("field.value")
+                                    <span id="value">@{formatDa+","+Math.ceil(suspectRow.value)}</span>
                                 </li>
-                                <li><i class="fa fa-calendar-times-o" style ="padding-left :10px;"></i>@Messages("field.detectionDate")
+                                <li><i class="fa fa-calendar-times-o" style="padding-left :10px;"></i>@Messages("field.detectionDate")
                                     <span> @Messages(suspectRow.firstDate.toString)</span>
                                 </li>
-                                <li><i class="fa fa-times" style ="padding-left :10px;"></i>@Messages("field.reasonsForDetection")
+                                <li><i class="fa fa-times" style="padding-left :10px;"></i>@Messages("field.reasonsForDetection")
                                     <span> @suspectRow.reasonsForDetection.map(msg=>Messages(msg.toString)+'\n')</span>
                                 </li>
 
@@ -177,7 +59,7 @@
                 </div>
                 <div class="col-md-4 col-sm-12 col-xs-12">
                     <div class="pricing-table">
-                        
+
 
                         <div class="pricing-list">
                             <ul>
@@ -205,7 +87,8 @@
                                 <li><i class="fa fa-user"></i><span>@inputText(editionValues("admin"), '_label ->
                                     Messages("field.admin"))</span>
                                 </li>
-                                <li><input type="submit" class="btn btn-custom" value="Sauvegarder" style=" color: white;background-color: #253240;border-color: white;"></li>
+                                <li><input type="submit" class="btn btn-custom" value="Sauvegarder"
+                                           style=" color: white;background-color: #253240;border-color: white;"></li>
 
                             </ul>
                         </div>
