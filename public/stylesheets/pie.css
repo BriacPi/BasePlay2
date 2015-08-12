@@ -73,23 +73,41 @@ margin-right : 10px;
 background-color : rgba(245,245,245,1);
 padding-top :10px;
 }
-.ficheTitle{
+.ficheTitle a{
 color: #676767 ;
+}
+.ficheTitle a:hover{
+color: #000000 ;
 }
 
 .ficheTotal{
 color:#006699 ;
 }
 
-.ficheTop{
+.ficheTop a{
 color :#33CC99 ;
-
 }
 
-.ficheDown{
+.ficheDown a{
 color: #FF9999 ;
-
 }
+
+.ficheTop a:hover{
+color :#000000 ;
+}
+
+.ficheDown a:hover{
+color: #000000 ;
+}
+
+.ficheTop {
+color :#33CC99 ;
+}
+
+.ficheDown {
+color: #FF9999 ;
+}
+
 .leaderboard-line-name {
 vertical-align: top;
 display:inline-block;

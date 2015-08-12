@@ -5,21 +5,33 @@ dashBoardApp.factory('dashboardsTransformations', ['$routeParams',
     return {
        transformDashboards : function(dashboards){
         return dashboards.map(function(dashboard){
-              var link;
+              var linkTitle;
         if (dashboard.level=="caisse")  {
-            link= "dashboard#/dashboard/caisse/"+dashboard.title
+            linkTitle= "dashboard#/dashboard/caisse/"+dashboard.title
         } else if (dashboard.level=="groupe") {
-            link= "dashboard#/dashboard/caisse/"+$routeParams.caisse+"/groupe/"+dashboard.title
+            linkTitle= "dashboard#/dashboard/caisse/"+$routeParams.caisse+"/groupe/"+dashboard.title
         }else if (dashboard.level=="agence") {
-            link= "dashboard#/dashboard/caisse/"+$routeParams.caisse+"/groupe/"+$routeParams.groupe+"/agence/"+dashboard.title
+            linkTitle= "dashboard#/dashboard/caisse/"+$routeParams.caisse+"/groupe/"+$routeParams.groupe+"/agence/"+dashboard.title
         }else if (dashboard.level=="pdv") {
-            link= "dashboard#/tiles/caisse/"+$routeParams.caisse+"/groupe/"+$routeParams.groupe+"/agence/"+$routeParams.agence+"/pdv/"+dashboard.title
+            linkTitle= "dashboard#/tiles/caisse/"+$routeParams.caisse+"/groupe/"+$routeParams.groupe+"/agence/"+$routeParams.agence+"/pdv/"+dashboard.title
         }
 
 
             return {title:dashboard.title,
-                numberOfRows:dashboard.numberOfRows,
-                leaderboard:dashboard.leaderboard,
+                    numberOfRows:dashboard.numberOfRows,
+                    leaderboard:dashboard.leaderboard.map(function(line){
+                        var link;
+                        if (dashboard.level=="all" )  {
+                            link= "dashboard#/dashboard/caisse/"+line.name;
+                        }else if (dashboard.level=="caisse")  {
+                            link= "dashboard#/dashboard/caisse/"+dashboard.title+"/groupe/"+line.name;
+                        }else if (dashboard.level=="groupe") {
+                            link= "dashboard#/dashboard/caisse/"+$routeParams.caisse+"/groupe/"+dashboard.title+"/agence/"+line.name;
+                        }else if (dashboard.level=="agence") {
+                            link= "dashboard#/tiles/caisse/"+$routeParams.caisse+"/groupe/"+$routeParams.groupe+"/agence/"+dashboard.title+"/pdv/"+line.name;
+                        }
+                        return {name:line.name,numberOfUnsolvedAnomalies:line.numberOfUnsolvedAnomalies,link:link};
+                    }),
                 natureData: [_.zipObject(dashboard.natureChart.labelsForDisplay,dashboard.natureChart.data)],
                 natureColumns :
                              _.zip(dashboard.natureChart.labels,dashboard.natureChart.labelsForDisplay).map(function(labelObject){
@@ -36,7 +48,7 @@ dashBoardApp.factory('dashboardsTransformations', ['$routeParams',
                             else {var color = "red"}
                             return {id:labelObject[1], type:'donut',color:color};
                          }),
-                link: link,
+                linkTitle: linkTitle,
                 level:dashboard.level
             }
         });

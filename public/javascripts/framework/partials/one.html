@@ -7,11 +7,16 @@
 </div>
 
 
-
 <div class="background">
 
     <div class="container fiche-unique ficheContainer-unique">
-        <div class="row separator pad"><a href="dashboard#/dashboard/all_caisses"> <h3 class="ficheTitle">{{dashboard.title}}</h3> </a> </div>
+        <div class="row separator pad">
+            <h3 class="ficheTitle">
+                <a href="dashboard#/dashboard/all_caisses">
+                     {{dashboard.title}}
+                </a>
+            </h3>
+        </div>
         <div class="row separator pad"><h4 class="ficheTotal">Nombre total d'anomalies: {{dashboard.numberOfRows}}</h4>
         </div>
         <div class="row separator">
@@ -22,7 +27,10 @@
                     <ol>
 
                         <li ng-repeat="lign in dashboard.leaderboard | orderBy:'-numberOfUnsolvedAnomalies'| limitTo: 3">
-                            {{lign.name}} : {{lign.numberOfUnsolvedAnomalies}}
+                            <a ng-href={{lign.link}}>
+                                <span class="leaderboard-line-name"> {{lign.name}}</span><!--
+                             --><span class="leaderboard-line-value">{{lign.numberOfUnsolvedAnomalies}}</span>
+                            </a>
                         </li>
 
                     </ol>
@@ -32,7 +40,10 @@
                     <ol>
 
                         <li ng-repeat="lign in dashboard.leaderboard | orderBy:'numberOfUnsolvedAnomalies'| limitTo: 3">
-                            {{lign.name}} : {{lign.numberOfUnsolvedAnomalies}}
+                            <a ng-href="{{lign.link}}">
+                                <span class="leaderboard-line-name"> {{lign.name}}</span><!--
+                             --><span class="leaderboard-line-value">{{lign.numberOfUnsolvedAnomalies}}</span>
+                            </a>
                         </li>
                     </ol>
                 </div>
@@ -44,14 +55,14 @@
             <div class="col-xs-6">
                 <div class="titre">Etats des ruptures</div>
                 <c3chart bindto-id="status" chart-data="dashboard.statusData" chart-columns="dashboard.statusColumns">
-                    <chart-legend show-legend="false" />
+                    <chart-legend show-legend="false"/>
                 </c3chart>
 
             </div>
             <div class="col-xs-6">
                 <div class="titre">Taux d'anormalité</div>
                 <c3chart bindto-id="nature" chart-data="dashboard.natureData" chart-columns="dashboard.natureColumns">
-                    <chart-legend show-legend="false" />
+                    <chart-legend show-legend="false"/>
                 </c3chart>
 
             </div>
