@@ -1,6 +1,6 @@
-var dashBoardApp = angular.module('dashBoardApp');
+var serviceModule = angular.module('ServiceModule', []);
 
-dashBoardApp.factory('dashboardsTransformations', ['$routeParams',
+serviceModule.factory('dashboardsTransformations', ['$routeParams',
   function($routeParams){
     return {
        transformDashboards : function(dashboards){
@@ -56,7 +56,7 @@ dashBoardApp.factory('dashboardsTransformations', ['$routeParams',
     };
   }]);
 
-dashBoardApp.factory('breadCrumbs', ['$routeParams',
+serviceModule.factory('breadCrumbs', ['$routeParams',
  function($routeParams){
     return {
         getBreadCrumbs : function(level){
@@ -95,7 +95,7 @@ dashBoardApp.factory('breadCrumbs', ['$routeParams',
 } }
  ]);
 
- dashBoardApp.factory('tilesTransformations', ['$routeParams',
+ serviceModule.factory('tilesTransformations', ['$routeParams',
    function($routeParams){
      return {
         transformTiles : function(tiles){
@@ -108,9 +108,82 @@ dashBoardApp.factory('breadCrumbs', ['$routeParams',
                 date:tile.date,
                 value:value,
                 id:tile.id,
-                status:tile.statusCode
+                status:tile.statusCode,
+                caisse:tile.caisse,
+                groupe:tile.groupe,
+                agence:tile.agence,
+                pdv:tile.pdv
              }
          });
         }
      };
    }]);
+   
+ serviceModule.factory('hierarchy', [
+    function($routeParams){
+       return {
+          getHierarchy : function(tiles){
+                function tileToPdv(tile){
+                    return {caisse:tile.caisse,groupe:tile.groupe,agence:tile.agence,type:'pdv',name:tile.pdv,children:[]};
+                };
+                function tileToAgence(tile){
+                    return {caisse:tile.caisse,groupe:tile.groupe,agence:"",type:'agence',name:tile.agence,children:[tileToPdv(tile)]};
+                };
+                function tileToGroupe(tile){
+                    return {caisse:tile.caisse,groupe:"",agence:"",type:'groupe',name:tile.groupe,children:[tileToAgence(tile)]};
+                };
+                function tileToCaisse(tile){
+                    return {caisse:"",groupe:"",agence:"",type:'caisse',name:tile.caisse,children:[tileToGroupe(tile)]};
+                };
+
+                var caisses =[];
+                tiles.forEach(function(tile){
+                var caissesNames = _.unique(caisses.map(function(caisse){return caisse.name;}));
+                    var indexOfCaisse = _.indexOf(caissesNames,tile.caisse);
+                    if (indexOfCaisse>=0){
+                        var groupes = caisses[indexOfCaisse].children;
+                        var groupesNames = _.unique(groupes.map(function(groupe){return groupe.name;}));
+                                    var indexOfGroupe = _.indexOf(groupesNames,tile.groupe);
+                                    if (indexOfGroupe>=0){
+                                        var agences = caisses[indexOfCaisse].children[indexOfGroupe].children;
+                                        var agencesNames = _.unique(agences.map(function(agence){return agence.name;}));
+                                                                    var indexOfAgence = _.indexOf(agencesNames,tile.agence);
+                                                                    if (indexOfAgence>=0){
+                                                                             var pdvs = caisses[indexOfCaisse].children[indexOfGroupe].children[indexOfAgence].children;
+                                                                             var pdvsNames = _.unique(pdvs.map(function(pdv){return pdv.name;}));
+                                                                                                         var indexOfPdv = _.indexOf(pdvsNames,tile.pdv);
+                                                                                                         if (indexOfPdv>=0){
+        
+                                                                                                         } else {
+                                                                                                             caisses[indexOfCaisse].children[indexOfGroupe].children[indexOfAgence].children.push(tileToAgence(tile))
+                                                                                                         }
+                                                                    } else {
+                                                                        caisses[indexOfCaisse].children[indexOfGroupe].children.push(tileToAgence(tile))
+                                                                    }
+                                    } else {
+                                        caisses[indexOfCaisse].children.push(tileToGroupe(tile))
+                                    }
+                    } else {
+                        caisses.push(tileToCaisse(tile))
+                    }
+        
+                });
+                var sortRec = function(levels){
+                    return levels.map(function(level){
+                        return {caisse:level.caisse,groupe:level.groupe,agence:level.agence,type:level.type,name:level.name,children:sortRec(level.children)}
+                    }).sort(function (a, b) {
+                         if (a.name > b.name) {
+                           return 1;
+                         }
+                         if (a.name < b.name) {
+                           return -1;
+                         }
+                         // a must be equal to b
+                         return 0;
+                       });
+                };
+                return sortRec(caisses);
+                  }
+       };
+    }
+ ]);

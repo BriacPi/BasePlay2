@@ -87,4 +87,95 @@ dashBoardApp.controller('tilesCtrl', ['$scope', '$routeParams','$http','breadCru
     }]);
 
 
+var dataApp = angular.module('dataApp');
+
+dataApp.controller('dataCtrl', ['$scope', '$routeParams','$http','tilesTransformations','hierarchy',
+  function($scope, $routeParams, $http,tilesTransformations,hierarchy) {
+      var tiles = [];
+       $scope.hierarchytree = []
+       $scope.metricstree=[];
+      $http.get('data/all').success(function(data) {
+         tiles = tilesTransformations.transformTiles(data);
+         $scope.tiles=tiles;
+         $scope.metricstree = _.unique(tiles.map(function(tile){
+            return tile.metricName;
+         })).sort().map(function(metricName){
+            return {name:metricName,children:[]}
+         });
+         $scope.hierarchytree = hierarchy.getHierarchy(tiles);
+         console.log($scope.metricstree,$scope.hierarchytree);
+      });
+
+      $scope.caisse="";
+      $scope.groupe="";
+      $scope.agence="";
+      $scope.pdv="";
+      $scope.metrics=[];
+
+      $scope.filteredTiles=tiles
+      $scope.filter = {};
+
+      $scope.filterTiles= function(){
+        $scope.tiles=tiles.filter(function(tile){
+
+            return ($scope.metrics.length==0 || (_.indexOf($scope.metrics,tile.metricName)>=0)) &&
+                ($scope.caisse=="" || tile.caisse==$scope.caisse)&&
+                ($scope.groupe=="" || tile.groupe==$scope.groupe)&&
+                ($scope.agence=="" || tile.agence==$scope.agence)&&
+                ($scope.pdv=="" || tile.pdv==$scope.pdv);
+        });
+      };
+      $scope.setHierarchy= function(items){
+          if(items){
+            var item=items[0];
+            if (item.type == 'caisse') {
+                $scope.caisse=item.name;
+                $scope.groupe="";
+                $scope.agence="";
+                $scope.pdv="";
+            }
+            if (item.type == 'groupe') {
+                $scope.caisse=item.caisse;
+                $scope.groupe=item.name;
+                $scope.agence="";
+                $scope.pdv="";
+            }
+            if (item.type == 'agence') {
+                $scope.caisse=item.caisse;
+                $scope.groupe=item.groupe;
+                $scope.agence=item.name;
+                $scope.pdv="";
+            }
+            if (item.type == 'pdv') {
+                $scope.caisse=item.caisse;
+                $scope.groupe=item.groupe;
+                $scope.agence=item.agence;
+                $scope.pdv=item.name;
+            }
+
+          } else {
+                  $scope.caisse="";
+                  $scope.groupe="";
+                  $scope.agence="";
+                  $scope.pdv="";
+          }
+          $scope.filterTiles();
+      };
+
+
+      $scope.setMetrics= function(items){
+          if(items){
+             $scope.metrics=items.map(function(item){
+                return item.name;
+             });
+
+          } else {
+             $scope.metrics=[];
+          }
+          $scope.filterTiles();
+      };
+  }
+]);
+
+
 

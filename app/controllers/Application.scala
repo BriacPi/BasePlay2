@@ -263,7 +263,9 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
   def dashBoard()= AuthenticatedAction() { implicit request =>
     Ok(views.html.dashboard(request.user))
   }
-
+def data2() = AuthenticatedAction() { implicit request =>
+  Ok(views.html.data2(request.user))
+}
 
   //  def findById(date : String,caisse : String, groupe : String, agence :String,pdv :String, metric :String): Action[AnyContent] = Action{
   //    val error = ErrorBPCE(date,caisse,groupe,agence,pdv,metric,"To be specified","","Not treated","","To be specified","Unknown")
