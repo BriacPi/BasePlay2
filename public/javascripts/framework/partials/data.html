@@ -3,16 +3,28 @@
         <div style="padding-bottom :5px;padding-left :20px;">Filtrer par métrique :</div>
         <hierarchical-selector  data="metricstree" multi-select="true" on-selection-changed="setMetrics(items)" />
     </div>
-    <div class="col-md-9 col-sm-12 col-xs-12">
+    <div class="col-md-7 col-sm-12 col-xs-12">
         <div style="padding-bottom :5px;padding-left :20px;">Filtrer par hiérarchie :</div>
         <hierarchical-selector data="hierarchytree" on-selection-changed="setHierarchy(items)" />
+    </div>
+    <div class="col-md-2 col-sm-12 col-xs-12">
+        <div style ="padding-bottom :5px;padding-left :20px;">Grouper par :</div>
+        <div class="btn-group  groupby-button-group" role="group" style ="padding-bottom :20px;padding-left :20px;">
+            <button type="button" class="btn btn-default" ng-click="byStatus(underCurrentHierarchy)"   style=" border-color: white; color: white; background-color: #00C5A2;text-transform: capitalize;">{{underCurrentHierarchy}}</button>
+            <button type="button" class="btn btn-default" ng-click="byStatus('status')"   style ="margin-left :10px; border-color: white; color: white; background-color: #00C5A2;text-transform: capitalize;">statut</button>
+        </div>
     </div>
 </div>
 </div>
 
 
+
 <div class="content" style="background-color: rgba(245,245,245,1);">
-    <div ng-repeat="tile in tiles|orderBy:'-date'"
+    <div ng-repeat="(status,group) in tiles|groupBy:groupByVar">
+        <div class="tile named-separator" >
+       <h2>{{status}}</h2>
+        </div>
+    <div ng-repeat="tile in group|orderBy:'-date'"
          class="tile not-separator tile--width-1 tile--height-1 forcontrolroom">
         <div class="tile__content">
             <a class="black" style="background-color :white; padding :20px" href="/row/{{tile.id}}">
@@ -42,4 +54,4 @@
             </a>
         </div>
     </div>
-</div>
+</div></div>

@@ -37,7 +37,7 @@ dashBoardApp.config(['$routeProvider',
       });
   }]);
 
-var dataApp = angular.module('dataApp', ['ngRoute','ServiceModule','hierarchical-selector']);
+var dataApp = angular.module('dataApp', ['ngRoute','ServiceModule','hierarchical-selector','angular.filter']);
 
 dataApp.config(['$routeProvider',
   function($routeProvider) {

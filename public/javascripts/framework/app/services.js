@@ -109,6 +109,7 @@ serviceModule.factory('breadCrumbs', ['$routeParams',
                 value:value,
                 id:tile.id,
                 status:tile.statusCode,
+                statusName:tile.status,
                 caisse:tile.caisse,
                 groupe:tile.groupe,
                 agence:tile.agence,
@@ -187,3 +188,4 @@ serviceModule.factory('breadCrumbs', ['$routeParams',
        };
     }
  ]);
+

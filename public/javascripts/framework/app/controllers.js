@@ -111,6 +111,8 @@ dataApp.controller('dataCtrl', ['$scope', '$routeParams','$http','tilesTransform
       $scope.agence="";
       $scope.pdv="";
       $scope.metrics=[];
+      $scope.groupByVar='statusName';
+      $scope.underCurrentHierarchy='caisse';
 
       $scope.filteredTiles=tiles
       $scope.filter = {};
@@ -133,24 +135,28 @@ dataApp.controller('dataCtrl', ['$scope', '$routeParams','$http','tilesTransform
                 $scope.groupe="";
                 $scope.agence="";
                 $scope.pdv="";
+                $scope.underCurrentHierarchy='groupe'
             }
             if (item.type == 'groupe') {
                 $scope.caisse=item.caisse;
                 $scope.groupe=item.name;
                 $scope.agence="";
                 $scope.pdv="";
+                $scope.underCurrentHierarchy='agence'
             }
             if (item.type == 'agence') {
                 $scope.caisse=item.caisse;
                 $scope.groupe=item.groupe;
                 $scope.agence=item.name;
                 $scope.pdv="";
+                $scope.underCurrentHierarchy='pdv';
             }
             if (item.type == 'pdv') {
                 $scope.caisse=item.caisse;
                 $scope.groupe=item.groupe;
                 $scope.agence=item.agence;
                 $scope.pdv=item.name;
+                $scope.underCurrentHierarchy='pdv';
             }
 
           } else {
@@ -160,6 +166,8 @@ dataApp.controller('dataCtrl', ['$scope', '$routeParams','$http','tilesTransform
                   $scope.pdv="";
           }
           $scope.filterTiles();
+          if ( $scope.groupByVar!='statusName'){$scope.byStatus('hierarchy');}
+
       };
 
 
@@ -173,6 +181,17 @@ dataApp.controller('dataCtrl', ['$scope', '$routeParams','$http','tilesTransform
              $scope.metrics=[];
           }
           $scope.filterTiles();
+      };
+
+
+      $scope.byStatus= function(string){
+        if (string=='status'){
+         $scope.groupByVar='statusName';
+        }
+        else {
+         $scope.groupByVar=$scope.underCurrentHierarchy;
+        }
+
       };
   }
 ]);
