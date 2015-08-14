@@ -34,7 +34,9 @@ object AbnormalityDetection {
   def operationByDimensions(grouped: Map[List[String], List[Row]], operation: List[Row] => Double, row: Row,filter: Row => Boolean): Double = {
     operation(grouped(row.dimensions).filter(filter))
   }
-
+  def testCompleteness(grouped: Map[List[String], List[Row]], row: Row,filter: Row => Boolean,numberOfMonthsToLookBefore:Int):Boolean={
+    grouped(row.dimensions).count(filter) >=numberOfMonthsToLookBefore*4
+  }
 
   // Ways to Detect Abnormalities
   def filterAbnormalitiesFromDistanceToMean(rows: List[Row], numberOfStdDev: Int, metric: String,map:Metrics): Unit = {
@@ -47,15 +49,17 @@ object AbnormalityDetection {
 //        SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDimensions)
 //      }
 //    }
+    val numberOfMonthsToLookBefore = 8
     val groupedByDimensions = groupByDimensions(rows)
     def  filter(row:Row)(row2:Row):Boolean = {
-      row.date.minusMonths(4).isBefore(row2.date) && row.date.isAfter(row2.date)
+      row.date.minusMonths(numberOfMonthsToLookBefore).isBefore(row2.date) && row.date.isAfter(row2.date)
     }
     rows.foreach { row =>
-      if(row.date.isAfter(java.time.LocalDate.of(2014,5,1))){
+      if(row.date.isAfter(java.time.LocalDate.of(2014,6,1))){
       val averageByDimensions = operationByDimensions(groupedByDimensions, average, row, filter(row))
       val standardDeviationByDimensions = operationByDimensions(groupedByDimensions, standardDeviation, row,filter(row))
-      if ((row.metric > averageByDimensions + numberOfStdDev * averageByDimensions ||
+      if (testCompleteness(groupedByDimensions,row,filter(row),numberOfMonthsToLookBefore) &&
+        (row.metric > averageByDimensions + numberOfStdDev * averageByDimensions ||
         row.metric < averageByDimensions - numberOfStdDev * averageByDimensions) &&
         (row.metric > averageByDimensions + numberOfStdDev * standardDeviationByDimensions ||
         row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions))
