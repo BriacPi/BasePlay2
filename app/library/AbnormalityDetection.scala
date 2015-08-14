@@ -44,7 +44,7 @@ object AbnormalityDetection {
 //      val standardDeviationByDate = operationByDate(groupedByDate, standardDeviation, row)
 //      if (row.metric > averageByDate + numberOfStdDev * standardDeviationByDate ||
 //        row.metric < averageByDate - numberOfStdDev * standardDeviationByDate) {
-//        SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDate)
+//        SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDimensions)
 //      }
 //    }
     val groupedByDimensions = groupByDimensions(rows)
@@ -53,7 +53,7 @@ object AbnormalityDetection {
       val standardDeviationByDimensions = operationByDimensions(groupedByDimensions, standardDeviation, row)
       if (row.metric > averageByDimensions + numberOfStdDev * standardDeviationByDimensions ||
         row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions)
-        SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDimensions)
+        SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDate)
     }
   }
 
