@@ -41,7 +41,7 @@
                                     <span> @suspectRow.pdv</span>
                                 </li>
                                 <li><i class="fa fa-tag" style="padding-left :10px;"></i>@Messages("field.metric")
-                                    <span> @suspectRow.metric</span>
+                                    <span> @(suspectRow.metric+" : "+suspectRow.metricName)</span>
                                 </li>
                                 <li><i class="fa fa-signal" style="padding-left :10px;"></i>@Messages("field.value")
                                     <span id="value">@{formatDa+","+Math.ceil(suspectRow.value)}</span>
