@@ -77,8 +77,8 @@ dashBoardApp.controller('dashBoardAgenceCtrl', ['$scope', '$routeParams','$http'
     }]);
 
 
-dashBoardApp.controller('tilesCtrl', ['$scope', '$routeParams','$http','breadCrumbs','tilesTransformations','urlGenerator',
-  function($scope, $routeParams, $http,breadCrumbs,tilesTransformations,urlGenerator) {
+dashBoardApp.controller('tilesCtrl', ['$scope', '$routeParams','$http','breadCrumbs','tilesTransformations',
+  function($scope, $routeParams, $http,breadCrumbs,tilesTransformations) {
       $http.get('tiles/caisse/'+$routeParams.caisse+'/groupe/'+$routeParams.groupe+'/agence/'+$routeParams.agence+'/pdv/'+$routeParams.pdv).success(function(data) {
          $scope.tiles = tilesTransformations.transformTiles(data);
       });
