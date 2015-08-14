@@ -54,9 +54,8 @@ object AbnormalityDetection {
     rows.foreach { row =>
       if(row.date.isAfter(java.time.LocalDate.of(2014,5,1))){
       val averageByDimensions = operationByDimensions(groupedByDimensions, average, row, filter(row))
-      val standardDeviationByDimensions = operationByDimensions(groupedByDimensions, standardDeviation, row,filter(row))
-      if (row.metric > averageByDimensions + numberOfStdDev * standardDeviationByDimensions ||
-        row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions)
+      if (row.metric > averageByDimensions + numberOfStdDev * averageByDimensions ||
+        row.metric < averageByDimensions - numberOfStdDev * averageByDimensions)
         SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDate)
     }
     }
@@ -71,7 +70,7 @@ object AbnormalityDetection {
       Row(row.date,dimensionsWithNames,row.metric)
     }
     )
-    filterAbnormalitiesFromDistanceToMean(rowsWithNames, 20, metric,map)
+    filterAbnormalitiesFromDistanceToMean(rowsWithNames, 6, metric,map)
 
   }
 }
