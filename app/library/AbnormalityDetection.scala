@@ -31,8 +31,8 @@ object AbnormalityDetection {
     operation(grouped(row.date))
   }
 
-  def operationByDimensions(grouped: Map[List[String], List[Row]], operation: List[Row] => Double, row: Row): Double = {
-    operation(grouped(row.dimensions))
+  def operationByDimensions(grouped: Map[List[String], List[Row]], operation: List[Row] => Double, row: Row,filter: Row => Boolean): Double = {
+    operation(grouped(row.dimensions).filter(filter))
   }
 
 
@@ -48,9 +48,12 @@ object AbnormalityDetection {
 //      }
 //    }
     val groupedByDimensions = groupByDimensions(rows)
+    def  filter(row:Row)(row2:Row):Boolean = {
+      row.date.minusMonths(4).isBefore(row2.date) && row.date.isAfter(row2.date)
+    }
     rows.foreach { row =>
-      val averageByDimensions = operationByDimensions(groupedByDimensions, average, row)
-      val standardDeviationByDimensions = operationByDimensions(groupedByDimensions, standardDeviation, row)
+      val averageByDimensions = operationByDimensions(groupedByDimensions, average, row, filter(row))
+      val standardDeviationByDimensions = operationByDimensions(groupedByDimensions, standardDeviation, row,filter(row))
       if (row.metric > averageByDimensions + numberOfStdDev * standardDeviationByDimensions ||
         row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions)
         SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDate)
