@@ -5,7 +5,7 @@ authentication.password = Mot de passe
 authentication.login = Connexion
 
 home.header = Détection de ruptures Iperf
-home.title = Données en rupture BPCE
+home.title = Données en rupture
 home.header.solved = Résolu
 home.header.beingProcessed = En cours
 home.header.detectedOnly = Non affecté
