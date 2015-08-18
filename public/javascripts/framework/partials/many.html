@@ -16,13 +16,13 @@
                 </a>
             </h3>
         </div>
-        <div class="row separator pad"><h4 class="ficheTotal">Nombre total d'anomalies: {{dashboard.numberOfRows}}</h4>
+        <div class="row separator pad"><h4 class="ficheTotal">Nombre total de ruptures: {{dashboard.numberOfRows}}</h4>
         </div>
         <div ng-if="dashboard.level!='pdv'" class="row separator">
 
 
             <div class="ficheTop">
-                <p class="top-bottom"> TOP 3 : Anomalies non résolues</p>
+                <p class="top-bottom"> TOP 3 : Ruptures non résolues</p>
                 <ol>
 
                     <li ng-repeat="lign in dashboard.leaderboard | orderBy:'-numberOfUnsolvedAnomalies'| limitTo: 3">
@@ -35,7 +35,7 @@
                 </ol>
             </div>
             <div class=" ficheDown">
-                <p class="top-bottom"> BOTTOM 3 : Anomalies non résolues</p>
+                <p class="top-bottom"> BOTTOM 3 : Ruptures non résolues</p>
                 <ol>
 
                     <li ng-repeat="lign in dashboard.leaderboard | orderBy:'numberOfUnsolvedAnomalies'| limitTo: 3">
