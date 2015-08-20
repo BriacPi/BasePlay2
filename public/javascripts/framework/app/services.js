@@ -156,7 +156,7 @@ serviceModule.factory('breadCrumbs', ['$routeParams',
                                                                                                          if (indexOfPdv>=0){
         
                                                                                                          } else {
-                                                                                                             caisses[indexOfCaisse].children[indexOfGroupe].children[indexOfAgence].children.push(tileToAgence(tile))
+                                                                                                             caisses[indexOfCaisse].children[indexOfGroupe].children[indexOfAgence].children.push(tileToPdv(tile))
                                                                                                          }
                                                                     } else {
                                                                         caisses[indexOfCaisse].children[indexOfGroupe].children.push(tileToAgence(tile))

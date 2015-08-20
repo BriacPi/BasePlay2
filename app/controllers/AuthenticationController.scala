@@ -36,10 +36,6 @@ class AuthenticationController @Inject()(cache: CacheApi) extends Controller {
 
   }
 
-  def createUser(email: String, firstName: String, lastName: String, password: String, company: String): Action[AnyContent] = Action { implicit request =>
-
-    Ok("User created")
-  }
 
   def login: Action[AnyContent] = Action { implicit request =>
 
