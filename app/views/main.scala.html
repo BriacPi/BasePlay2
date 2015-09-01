@@ -80,7 +80,7 @@
                 @if(selected =="t" ){<li class="active">}else {<li>}
                 <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class ="glyphicon glyphicon-user"></span>@("       "+currentUser.firstName+" "+currentUser.lastName) <span class="glyphicon glyphicon-menu-down"></span></a>
                 <ul class="dropdown-menu" style="background-color: #253240; color :white;">
-                    <li><a style="background-color: #253240; color :white;" onclick="href='/myprofile/@currentUser.id';">@Messages("user.profile")</a></li>
+                    <li><a style="background-color: #253240; color :white;" href="/myprofile/@currentUser.id">@Messages("user.profile")</a></li>
                     <li><a style="background-color: #253240; color :white;"  href="/logout">@Messages("menu.logout") @("("+currentUser.firstName+")")</a></li>
 
                 </ul>
