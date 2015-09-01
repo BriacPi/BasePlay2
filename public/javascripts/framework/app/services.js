@@ -35,8 +35,8 @@ serviceModule.factory('dashboardsTransformations', ['$routeParams',
                 natureData: [_.zipObject(dashboard.natureChart.labelsForDisplay,dashboard.natureChart.data)],
                 natureColumns :
                              _.zip(dashboard.natureChart.labels,dashboard.natureChart.labelsForDisplay).map(function(labelObject){
-                            if (labelObject[0]=="Solved"){var color = "green"}
-                            else if (labelObject[0]=="BeingProcessed") {var color ="orange"}
+                            if (labelObject[0]=="Abnormality"){var color = "orange"}
+                            else if (labelObject[0]=="NotAbnormality") {var color ="orange"}
                             else {var color = "red"}
                             return {id:labelObject[1], type:'donut',color:color};
                          }),
