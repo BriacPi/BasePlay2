@@ -84,6 +84,10 @@ trait UserRepository {
     }
   }
 
+  def getAllEmails: List[String]={
+    list().map(_.email).toList.sorted
+  }
+
   def findByEmail(email: String): Option[User] = {
     DB.withConnection { implicit current =>
       SQL(

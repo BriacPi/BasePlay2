@@ -6,7 +6,7 @@
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
 @import models.SuspectRow._
-
+@import repositories.authentication.UserRepository
 
 @main(Messages("home.header"))("")(currentUser) {
 <script src="@routes.Assets.versioned("javascripts/editDisplayValue.js")" type="text/javascript"></script>
@@ -86,8 +86,12 @@
                                 <li> @inputText(editionValues("comment"), '_label ->
                                     Messages("field.comment"))
                                 </li>
-                                <li>@inputText(editionValues("admin"), '_label ->
-                                    Messages("field.admin"))
+                                <li>@select(
+                                        editionValues("admin"),
+                                        options(UserRepository.getAllEmails),
+                                        '_label -> Messages("field.admin"),
+                                        '_default -> ""
+                                    )
                                 </li>
                                 <li><input type="submit" class="btn btn-custom" value="Sauvegarder"
                                            style=" color: white;background-color: #253240;border-color: white;">
