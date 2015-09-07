@@ -1,57 +1,65 @@
 <div class="row">
     <div class="col-md-3 col-sm-12 col-xs-12">
         <div style="padding-bottom :5px;padding-left :20px;">Filtrer par métrique :</div>
-        <hierarchical-selector  data="metricstree" multi-select="true" on-selection-changed="setMetrics(items)" />
+        <hierarchical-selector data="metricstree" multi-select="true" on-selection-changed="setMetrics(items)"/>
     </div>
     <div class="col-md-7 col-sm-12 col-xs-12">
         <div style="padding-bottom :5px;padding-left :20px;">Filtrer par hiérarchie :</div>
-        <hierarchical-selector data="hierarchytree" on-selection-changed="setHierarchy(items)" />
+        <hierarchical-selector data="hierarchytree" on-selection-changed="setHierarchy(items)"/>
     </div>
     <div class="col-md-2 col-sm-12 col-xs-12">
-        <div style ="padding-bottom :5px;padding-left :20px;">Grouper par :</div>
-        <div class="btn-group  groupby-button-group" role="group" style ="padding-bottom :20px;padding-left :20px;">
-            <button type="button" class="btn btn-default" ng-click="byStatus(underCurrentHierarchy)"   style=" border-color: white; color: white; background-color: #00C5A2;text-transform: capitalize;">{{underCurrentHierarchy}}</button>
-            <button type="button" class="btn btn-default" ng-click="byStatus('status')"   style ="margin-left :10px; border-color: white; color: white; background-color: #00C5A2;text-transform: capitalize;">statut</button>
+        <div style="padding-bottom :5px;padding-left :20px;">Grouper par :</div>
+        <div class="btn-group  groupby-button-group" role="group" style="padding-bottom :20px;padding-left :20px;">
+            <button type="button" class="btn btn-default" ng-click="byStatus(underCurrentHierarchy)"
+                    style=" border-color: white; color: white; background-color: #00C5A2;text-transform: capitalize;">
+                {{underCurrentHierarchy}}
+            </button>
+            <button type="button" class="btn btn-default" ng-click="byStatus('status')"
+                    style="margin-left :10px; border-color: white; color: white; background-color: #00C5A2;text-transform: capitalize;">
+                statut
+            </button>
         </div>
     </div>
 </div>
 </div>
-
 
 
 <div class="content" style="background-color: rgba(245,245,245,1);">
     <div ng-repeat="(status,group) in tiles|groupBy:groupByVar">
-        <div class="tile named-separator" >
-       <h2>{{status}}</h2>
+        <div class="tile named-separator">
+            <h2>{{status}}</h2>
         </div>
-    <div ng-repeat="tile in group|orderBy:'-date'"
-         class="tile not-separator tile--width-1 tile--height-1 forcontrolroom">
-        <div class="tile__content">
-            <a class="black" style="background-color :white; padding :20px" href="/row/{{tile.id}}">
-                <div ng-switch="tile.status" class="tile__content__title">
-                    <div ng-switch-when="Solved">
-                        <span class="tile__content__title__icon_status"><i class="fa fa-check"></i></span>
-                        <h5 class="tile__content__title__text" style="color :#00C5A2">{{tile.date}}</h5>
-                    </div>
-                    <div ng-switch-default>
-                        <span class="tile__content__title__icon_status"><i class="fa fa-times"></i></span>
-                        <h5 class="tile__content__title__text" style="color :#00C5A2">{{tile.date}}</h5>
-                    </div>
+        <div ng-repeat="tile in group|orderBy:'-date'"
+             class="tile not-separator tile--width-1 tile--height-1 forcontrolroom">
+            <div class="tile__content">
+                <a class="black" style="background-color :white; padding :20px" href="/row/{{tile.id}}">
 
-                </div>
-                <div class="tile__content__data tile__content__data--numeric">
-                    <div class="tile__content__data__metrics">
-                        <h3 class="tile__content__data__metrics__value" style="font-size :24px; color: #676767">
-                            {{tile.value}}</h3>
 
-                        <div class="tile__content__data__metrics__comparison">
-                            <div class="tile__content__data__metrics__comparison__icon"
-                                 style="font-size:14px; color:#006699">{{tile.metricName}}
+                    <div class="tile__content__data tile__content__data--numeric row">
+                        <div class="col-xs-2 tile__content__data__criticity">
+                            <h3 class="fa fa-exclamation-triangle fa-lg {{tile.colorOfCriticity}}"> </h3>
+                        </div>
+                        <div class="col-xs-10">
+                            <div class="tile__content__title">
+
+                                <h5 class="tile__content__title__text">{{tile.date}}</h5>
+                            </div>
+                            <div class="tile__content__data__metrics">
+
+                                <h3 class="tile__content__data__metrics__value" style="font-size :24px; color: #676767">
+                                    {{tile.value}}</h3>
+
+                                <div class="tile__content__data__metrics__comparison">
+                                    <div class="tile__content__data__metrics__comparison__icon">
+                                         {{tile.metricName}}
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
     </div>
-</div></div>
+</div>

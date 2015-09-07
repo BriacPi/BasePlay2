@@ -62,10 +62,13 @@ object AbnormalityDetection {
         (row.metric > averageByDimensions + numberOfStdDev * averageByDimensions ||
         row.metric < averageByDimensions - numberOfStdDev * averageByDimensions) &&
         (row.metric > averageByDimensions + numberOfStdDev * standardDeviationByDimensions ||
-        row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions))
-        SuspectRow.create(new SuspectRow(row, metric,map),TooFarFromMeanByDate)
+        row.metric < averageByDimensions - numberOfStdDev * standardDeviationByDimensions)) {
+        val criticityScore = (row.metric-averageByDimensions)/(standardDeviationByDimensions+math.Pi-3.14)
+        println(criticityScore)
+        SuspectRow.create(new SuspectRow(row, metric,criticityScore,map),TooFarFromMeanByDate)}
     }
     }
+
   }
 
 

@@ -103,6 +103,10 @@ serviceModule.factory('breadCrumbs', ['$routeParams',
 
             return tiles.map(function(tile){
              var value = sprintf(language)(tile.format, tile.value);
+             if (Math.abs(tile.criticityScore)<15) {var colorOfCriticity="green"
+             }else if(Math.abs(tile.criticityScore)<20){var colorOfCriticity="orange"
+             }else {var colorOfCriticity="red"}
+
              return {
                 metricName:tile.metricName,
                 date:tile.date,
@@ -113,7 +117,9 @@ serviceModule.factory('breadCrumbs', ['$routeParams',
                 caisse:tile.caisse,
                 groupe:tile.groupe,
                 agence:tile.agence,
-                pdv:tile.pdv
+                pdv:tile.pdv,
+                colorOfCriticity:colorOfCriticity,
+                criticityScore:Math.abs(tile.criticityScore)
              }
          });
         }

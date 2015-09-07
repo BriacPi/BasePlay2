@@ -197,6 +197,7 @@ class Application @Inject()(ws: WSClient)(system: ActorSystem)(val messagesApi: 
       "pdv" -> suspectRow.pdv,
       "metricName" -> suspectRow.metricName,
       "value" -> Math.ceil(suspectRow.value),
+      "criticityScore" -> Math.ceil(suspectRow.criticityScore),
       "status" -> Json.toJson(suspectRow.status),
       "statusCode" -> suspectRow.status.toString,
       "nature" -> Json.toJson(suspectRow.nature),

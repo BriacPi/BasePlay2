@@ -86,12 +86,13 @@
                                 <li> @inputText(editionValues("comment"), '_label ->
                                     Messages("field.comment"))
                                 </li>
-                                <li>@select(
+                                <li>  @select(
                                         editionValues("admin"),
                                         options(UserRepository.getAllEmails),
                                         '_label -> Messages("field.admin"),
                                         '_default -> ""
                                     )
+
                                 </li>
                                 <li><input type="submit" class="btn btn-custom" value="Sauvegarder"
                                            style=" color: white;background-color: #253240;border-color: white;">

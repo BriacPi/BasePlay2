@@ -7,33 +7,37 @@
 </div>
 
 <div  class="content" style="background-color: rgba(245,245,245,1);">
-    <div ng-repeat="tile in tiles|orderBy:'-date'" class="tile not-separator tile--width-1 tile--height-1 forcontrolroom">
+    <div ng-repeat="tile in tiles|orderBy:'-date'"
+         class="tile not-separator tile--width-1 tile--height-1 forcontrolroom">
         <div class="tile__content">
             <a class="black" style="background-color :white; padding :20px" href="/row/{{tile.id}}">
-                <div ng-switch="tile.status" class="tile__content__title">
-                    <div ng-switch-when="Solved">
-                        <span class="tile__content__title__icon_status"><i class="fa fa-check"></i></span>
-                        <h5 class="tile__content__title__text" style="color :#00C5A2">{{tile.date}}</h5>
-                    </div>
-                    <div ng-switch-default>
-                        <span class="tile__content__title__icon_status"><i class="fa fa-times"></i></span>
-                        <h5 class="tile__content__title__text" style="color :#00C5A2">{{tile.date}}</h5>
-                    </div>
 
-                </div>
-                <div class="tile__content__data tile__content__data--numeric">
-                    <div class="tile__content__data__metrics">
-                        <h3 class="tile__content__data__metrics__value" style="font-size :24px; color: #676767">
-                            {{tile.value}}</h3>
 
-                        <div class="tile__content__data__metrics__comparison">
-                            <div class="tile__content__data__metrics__comparison__icon"
-                                 style="font-size:14px; color:#006699">{{tile.metricName}}
+                <div class="tile__content__data tile__content__data--numeric row">
+                    <div class="col-xs-2 tile__content__data__criticity">
+                        <h3 class="fa fa-exclamation-triangle fa-lg {{tile.colorOfCriticity}}"> </h3>
+                    </div>
+                    <div class="col-xs-10">
+                        <div class="tile__content__title">
+
+                            <h5 class="tile__content__title__text">{{tile.date}}</h5>
+                        </div>
+                        <div class="tile__content__data__metrics">
+
+                            <h3 class="tile__content__data__metrics__value" style="font-size :24px; color: #676767">
+                                {{tile.value}}</h3>
+
+                            <div class="tile__content__data__metrics__comparison">
+                                <div class="tile__content__data__metrics__comparison__icon">
+                                    {{tile.metricName}}
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </a>
         </div>
     </div>
 </div>
+
