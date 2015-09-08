@@ -164,6 +164,7 @@ dataApp.controller('dataCtrl', ['$scope', '$routeParams','$http','tilesTransform
                   $scope.groupe="";
                   $scope.agence="";
                   $scope.pdv="";
+                  $scope.underCurrentHierarchy='caisse';
           }
           $scope.filterTiles();
           if ( $scope.groupByVar!='statusName'){$scope.byStatus('hierarchy');}
